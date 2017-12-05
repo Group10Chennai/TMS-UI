@@ -32,11 +32,11 @@ angular
   $rootScope.$state = $state;
   return $rootScope.$stateParams = $stateParams;
 }]).run(['$rootScope',function($rootScope) {
-    $rootScope.HOST_TMS1 = "http://172.16.0.61:8080/TMS/";
-    $rootScope.HOST_TMS = "https://qas.placer.in/TMS/";
-    
+    $rootScope.HOST_TMS = "http://localhost:8080/TMS/";
+    $rootScope.HOST_TMS1 = "https://XXXXX/TMS/";
+
     $rootScope.rootSelectedDeportId = 0;
-    
+
     $rootScope.$on('handleEmit', function(event, args) {
       $rootScope.$broadcast('handleBroadcast', args);
     });
@@ -74,32 +74,32 @@ angular
 }).filter('DateTimeFormatter', function() {
   return function(longDate) {
     var dt =  new Date(longDate);
-    
+
     var date = dt.getDate();
     if(dt.getDate() < 10){
       date = 0+""+dt.getDate();
     }
-    
+
     var month = dt.getMonth();
     if((dt.getMonth()+1) < 10) {
       month = 0+""+(dt.getMonth()+1);
     }
-    
+
     var hr = dt.getHours();
     if(dt.getHours() < 10) {
       hr = 0+""+dt.getHours();
     }
-    
+
     var mm = dt.getMinutes();
     if(dt.getMinutes() < 10) {
       mm = 0+""+dt.getMinutes();
     }
-    
+
     var ss = dt.getSeconds();
     if(dt.getSeconds() < 10) {
       ss = 0+""+dt.getSeconds();
     }
-    
+
     var device_date_time = date +'-'+ month +'-'+ dt.getFullYear() +' '+ hr +':'+ mm +':'+ ss;
     return device_date_time;
   }
