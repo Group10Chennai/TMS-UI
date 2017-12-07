@@ -182,9 +182,9 @@ app.controller('NavController', ['$scope', '$rootScope', '$state', 'APIServices'
 	    $rootScope.logoutFun = function(msg){
 		try {
 		    try {
-			deleteAllCookies();
-			$rootScope.clearInterval_tmsTroubledVeh();
-			$rootScope.clearInterval_tmsDashboard();
+    			deleteAllCookies();
+    			$rootScope.clearInterval_tmsTroubledVeh();
+    			//$rootScope.clearInterval_tmsDashboard();
 		    } catch (e) { console.log(e); }
 
 		    try {
@@ -214,9 +214,10 @@ app.controller('NavController', ['$scope', '$rootScope', '$state', 'APIServices'
 	//Dashboard
 	// Get Troubled Vehicles count
 	// Get TMS Dashboard details
-	$rootScope.getDashboardDetails = function(callback) {
+	$rootScope.getDashboardDetails = function(vehStatus, tempPressureStatus, callback) {
     try {
-  		APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getDashboardDetails', false)
+      APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getDashboardDetails?vehStatus='
+        +vehStatus+'&tempPressureStatus='+tempPressureStatus, false)
   		.then(
   	    function(httpResponse) {	 // Success block
     			try {
@@ -233,12 +234,14 @@ app.controller('NavController', ['$scope', '$rootScope', '$state', 'APIServices'
       				} catch (e) { console.log(e); }
       				try {
       				    // Assigned Vehicles
-      				    DashboardDataSharingServices.setVehiclesList(httpResponse.data.result[0].vehicles);
-      				    angular.forEach(httpResponse.data.result[0].vehicles, function(vehicle, key){
-      					vehIdName_HashMap[vehicle.vehId] = vehicle.vehName;
-      				    });
-      				    DashboardDataSharingServices.setVehIdName_HashMap(vehIdName_HashMap);
-      				    $rootScope.allVehCount = httpResponse.data.result[0].vehicles.length;
+                  if(null != httpResponse.data.result[0].vehicles && httpResponse.data.result[0].vehicles.length > 0){
+        				    DashboardDataSharingServices.setVehiclesList(httpResponse.data.result[0].vehicles);
+        				    angular.forEach(httpResponse.data.result[0].vehicles, function(vehicle, key){
+        					         vehIdName_HashMap[vehicle.vehId] = vehicle.vehName;
+        				    });
+        				    DashboardDataSharingServices.setVehIdName_HashMap(vehIdName_HashMap);
+                  }
+                  $rootScope.allVehCount = httpResponse.data.result[0].total_fleets;
       				} catch (e) { console.log(e); }
       				try {
       				    // Vehicle - Tyre counts
@@ -257,7 +260,9 @@ app.controller('NavController', ['$scope', '$rootScope', '$state', 'APIServices'
       				    $rootScope.tyreCount_inspections = httpResponse.data.result[0].tireCount_inspections;
       				} catch (e) { console.log(e); }
       				callback(httpResponse.data);
-  			    }
+  			    } else {
+              $rootScope.logoutFun('Dashboard - Session Expired');
+            }
     			}
     			catch(error) {
     			    loading.finish();
@@ -495,7 +500,7 @@ app.controller('NavController', ['$scope', '$rootScope', '$state', 'APIServices'
 	}
 
 	// loading the service first time
-  $rootScope.getDashboardDetails( function(dashboardResponse) {
+  $rootScope.getDashboardDetails(true, true, function(dashboardResponse) {
     $scope.getTroubledVehCount();
   });
 
@@ -983,38 +988,38 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 	}
 
 	$scope.getTMSVehicles = function(id){
-	    if(id == "semi"){
-		$rootScope.showSemiConfigVehData = true;
-	    } else {
-		$rootScope.showSemiConfigVehData = false;
-	    }
-	    $scope.currentPage_vehicles = 1;
-	    $scope.pageChanged_vehicles();
+    if(id == "semi"){
+  		$rootScope.showSemiConfigVehData = true;
+    } else {
+  		$rootScope.showSemiConfigVehData = false;
+    }
+    $scope.currentPage_vehicles = 1;
+    $scope.pageChanged_vehicles();
 	}
 
 	$scope.getSemiConfiguredVehicles = function(startIndex) {
 	    APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getSemiConfiguredVehicles?limit='+$scope.itemsPerPage_vehicles+'&startIndex='+startIndex, true)
 	    .then(
-		function(httpResponse) { // Success block
-		    try {
-			loading.finish();
-			$scope.totalItems_vehicles = httpResponse.data.count;
-			$rootScope.processVehDetailsForView(httpResponse, function(response) {
-			    $rootScope.allVehicles = response;
-			});
-			    $location.url('/tms-vehicles');
-		    }
-		    catch(error) {
-			loading.finish();
-			console.log("Error :"+error);
-		    }
-		}, function(httpError) { 	// Error block
-		    loading.finish();
-		    console.log("Error while processing request");
-		}, function(httpInProcess){	// In process
-		    console.log(httpInProcess);
-		}
-	    );
+    		function(httpResponse) { // Success block
+  		    try {
+      			loading.finish();
+      			$scope.totalItems_vehicles = httpResponse.data.count;
+      			$rootScope.processVehDetailsForView(httpResponse, function(response) {
+      			    $rootScope.allVehicles = response;
+      			});
+  			    $location.url('/tms-vehicles');
+  		    }
+  		    catch(error) {
+      			loading.finish();
+      			console.log("Error :"+error);
+  		    }
+    		}, function(httpError) { 	// Error block
+    		    loading.finish();
+    		    console.log("Error while processing request");
+    		}, function(httpInProcess){	// In process
+    		    console.log(httpInProcess);
+    		}
+    );
 	}
 
 	$scope.getAllTMSVehiclesDetails = function(nextIndex_vehicle, searchWord, configType) {
@@ -1318,7 +1323,7 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
       				    $scope.pageChanged_vehicles();
       				    logger.logSuccess('Vehicle added successfully');
       				    $('#showTMSVehicleModalId').modal('hide');
-      				    $rootScope.getDashboardDetails();
+      				     $rootScope.getDashboardDetails(true, false);
       				} else {
       				    logger.logError(httpResponse.data.displayMsg);
       				}
@@ -1863,26 +1868,6 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 		},1000);
 	};
 
-	// Search vehicles by String
-	// $scope.getAllTMSSearchedTyres = function(searchWord)
-	// {
-	// 	try {
-	// 		APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/searchVehicles?searchWord='+searchWord, true)
-	// 		.then(
-	// 			function(httpResponse){ // Success block
-	// 				$rootScope.processVehDetailsForView(httpResponse);
-	// 			}, function(httpError) // Error block
-	// 			{
-	// 				loading.finish();
-	// 				console.log("Error while processing request");
-	// 			}, function(httpInProcess)// In process
-	// 			{
-	// 				console.log(httpInProcess);
-	// 			}
-	// 		);
-	// 	} catch (e) { console.log(e); }
-	// }
-
 	$scope.showTyreAddingForm = false;
 	$scope.showSensorChangeDiv = false;
 	$scope.getTyreDetailsFormForAdd = function(){
@@ -2100,7 +2085,7 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 	$scope.getTyreInspectionHistory = function(startIndex, searchWord){
 		try {
 			var Inspection_Param = 'limit='+$scope.itemsPerPage_inspection+'&startIndex='+startIndex;
-			if(searchWord != undefined && searchWord != null && searchWord.trim().length > 1)
+			if(searchWord != undefined && searchWord != null && searchWord.trim().length > 0)
 			{
 				Inspection_Param = Inspection_Param + "&searchWord=" + searchWord;
 			}
@@ -3111,7 +3096,7 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 
 
 	if($state.current.url == "/tms-vehicles") {
-	    $scope.pageChanged_vehicles();
+    $timeout(function() { $scope.pageChanged_vehicles(); }, 1000);
 	} else if($state.current.url == "/tms-tyre") {
 	    $scope.pageChanged_tyres();
 	} else if($state.current.url == "/tmsTyreService") {
