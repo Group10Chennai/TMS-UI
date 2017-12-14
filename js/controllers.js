@@ -256,6 +256,7 @@ app.controller('NavController', ['$scope', '$rootScope', '$state', 'APIServices'
       				    $rootScope.tyreCount_installed = httpResponse.data.result[0].tireCount_installed;
       				    $rootScope.tyreCount_scraped = httpResponse.data.result[0].tireCount_scraped;
       				    $rootScope.tyreCount_instock = httpResponse.data.result[0].tireCount_instock;
+                  $rootScope.tireCount_withoutSensor = httpResponse.data.result[0].tireCount_withoutSensor;
       				    $rootScope.tyreCount_services = httpResponse.data.result[0].tireCount_services;
       				    $rootScope.tyreCount_inspections = httpResponse.data.result[0].tireCount_inspections;
       				} catch (e) { console.log(e); }
@@ -285,9 +286,11 @@ app.controller('NavController', ['$scope', '$rootScope', '$state', 'APIServices'
     			try{
   			    loading.finish();
   			    if(httpResponse.data.status == true) {
-      				$scope.troubledVehCount = httpResponse.data.count;
+      				$rootScope.troubledVehCount = httpResponse.data.badTPVehCount;
+              $rootScope.NontroubledVehCount = httpResponse.data.goodTPVehCount;
+              $rootScope.totalTPVehCount = $rootScope.troubledVehCount + $rootScope.NontroubledVehCount;
       				var vehiclesList = DashboardDataSharingServices.getVehiclesList();
-              $scope.updatePieChart($scope.troubledVehCount, vehiclesList.length);
+              $scope.updatePieChart($rootScope.troubledVehCount, $rootScope.NontroubledVehCount);
   			    } else {
     				// logout the user
     				$rootScope.logoutFun("TMS getProblematicVehCount - true");
@@ -308,17 +311,16 @@ app.controller('NavController', ['$scope', '$rootScope', '$state', 'APIServices'
 	    } catch (e) { loading.finish(); console.log(e); }
 	}
 
-	$scope.updatePieChart = function(troubledVehCount, totalVehCount){
+	$scope.updatePieChart = function(troubledVehCount, nonTroubledVehCount){
 	    $rootScope.troubledVehChartData = [{
-		name:'Bad Pressure & Temp ( '+ troubledVehCount +' )',
-		id: 'TroubledVehicles1',
-		y: troubledVehCount
-	    },{
-		name:'Good Pressure & Temp ( '+ (totalVehCount - troubledVehCount) +' )',
-		id: 'TroubledVehicles0',
-		y: totalVehCount - troubledVehCount
-	    }
-	    ];
+    		name:'Bad Pressure & Temp ( '+ troubledVehCount +' )',
+    		id: 'TroubledVehicles1',
+    		y: troubledVehCount
+    	    },{
+    		name:'Good Pressure & Temp ( '+ (nonTroubledVehCount) +' )',
+    		id: 'TroubledVehicles0',
+    		y: nonTroubledVehCount
+	    }];
 	}
 
 	$rootScope.innerIdForvehTyreChart = "innerIdForvehTyreChart";
@@ -472,26 +474,25 @@ app.controller('NavController', ['$scope', '$rootScope', '$state', 'APIServices'
 				vehicle.tyres.push(tyre);
 			    }
 			    if (RROStatus ==  false) {
-				var tyre = new Object();
-				tyre.position = "RRO";
-				tyre.tyreId = 0;
-				tyre.pressure = '0';
-				tyre.temp = '0';
-				vehicle.tyres.push(tyre);
+    				var tyre = new Object();
+    				tyre.position = "RRO";
+    				tyre.tyreId = 0;
+    				tyre.pressure = '0';
+    				tyre.temp = '0';
+    				vehicle.tyres.push(tyre);
 			    }
-			}
-			allVehicles.push(vehicle);
-		    });
-		    console.log(allVehicles);
-		    callback(allVehicles);
+  			}
+  			allVehicles.push(vehicle);
+	    });
+	    callback(allVehicles);
 		} else if(httpResponse.data.displayMsg == "Session Expired. Please login again") {
-		    // Auto logout
-		    logger.logWarning(httpResponse.data.displayMsg);
-		    try {
-			deleteAllCookies();
-		    } catch (e) {
-			console.log(e);
-		    }
+	    // Auto logout
+	    logger.logWarning(httpResponse.data.displayMsg);
+	    try {
+  			deleteAllCookies();
+	    } catch (e) {
+  			console.log(e);
+	    }
 			$rootScope.logoutFun("TMS Vehicle View - false");
 		} else {
 		    logger.logWarning(httpResponse.data.displayMsg);
@@ -537,8 +538,11 @@ app.controller('TMSDashboardController', ['$scope', '$rootScope', '$state', 'API
 
 	$scope.getTroubledVehicles = function(id) {
 	    if(id == 'TroubledVehicles1') {
-	        $timeout(function() { $location.url('/tyreTempPressure'); }, 100);
-	    }
+          $rootScope.tempPressureType = "Bad";
+	    } else {
+          $rootScope.tempPressureType = "Good";
+      }
+      $timeout(function() { $location.url('/tyreTempPressure'); }, 100);
 	}
 
 	$scope.getSemiAssignedVehicles = function(id){
@@ -558,8 +562,8 @@ app.controller('TMSDashboardController', ['$scope', '$rootScope', '$state', 'API
 
 	$scope.getVehTyreDetails = function(id){
 	    try {
-		$rootScope.tyreDetailsType = id;
-		$timeout(function() { $location.url('/tms-tyre'); }, 100);
+    		$rootScope.tyreDetailsType = id;
+    		$timeout(function() { $location.url('/tms-tyre'); }, 100);
 	    } catch (e) { loading.finish(); console.log(e); }
 	}
 
@@ -584,41 +588,41 @@ app.controller('TMSTempPressureController', ['$scope', '$rootScope', '$state', '
 	try {
 	    $rootScope.troubledVehiclesDetails = [];
 	    $scope.callTroubledVehiclesAPI = function() {
-		try {
-		    APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getProblematicVehicles', true)
-		    .then(
-			function(httpResponse) { 	// Success block
-			    try {
-				loading.finish();
-				if(httpResponse.data.status == true){
-    				    var vehIdName_HashMap = DashboardDataSharingServices.getVehIdName_HashMap();
-				    $rootScope.processVehDetailsForView(httpResponse, function(response) {
-					console.log(response);
-					angular.forEach(response, function(troubledVehicle, key){
-					    troubledVehicle.vehName = vehIdName_HashMap[troubledVehicle.vehId];
-					    $rootScope.troubledVehiclesDetails.push(troubledVehicle);
-					});
-				    });
-				}
-			    }
-			    catch(error) {
-				loading.finish();
-				console.log("Error :"+error);
-			    }
-			}, function(httpError) {	// Error block
-			    loading.finish();
-			    console.log("Error while processing request");
-			}, function(httpInProcess){	// In process
-			    console.log(httpInProcess);
-			}
-		    );
-		} catch (e) { loading.finish(); console.log(e); }
-	    }
-	    $timeout(function() {$scope.callTroubledVehiclesAPI(); }, 1000);
-	} catch(e){
+		      try {
+    		    APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getProblematicVehicles?type='+$rootScope.tempPressureType, true)
+    		    .then(
+        			function(httpResponse) { 	// Success block
+      			    try {
+          				loading.finish();
+          				if(httpResponse.data.status == true){
+          				    var vehIdName_HashMap = DashboardDataSharingServices.getVehIdName_HashMap();
+          				    $rootScope.processVehDetailsForView(httpResponse, function(response) {
+              					console.log(response);
+              					angular.forEach(response, function(troubledVehicle, key){
+            					    troubledVehicle.vehName = vehIdName_HashMap[troubledVehicle.vehId];
+            					    $rootScope.troubledVehiclesDetails.push(troubledVehicle);
+              					});
+              		    });
+          				}
+      			    }
+      			    catch(error) {
+          				loading.finish();
+          				console.log("Error :"+error);
+      			    }
+        			}, function(httpError) {	// Error block
+        			    loading.finish();
+        			    console.log("Error while processing request");
+        			}, function(httpInProcess){	// In process
+        			    console.log(httpInProcess);
+        			}
+    		    );
+      		} catch (e) { loading.finish(); console.log(e); }
+  	    }
 
+        $timeout(function() {$scope.callTroubledVehiclesAPI(); }, 1000);
+    } catch(e){
 	}
-    }]);
+}]);
 // end TMSTempPressureController
 
 
@@ -1793,6 +1797,7 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 
 	$scope.getTMSAllTyres = function(status, nextIndex_tyres, fullDetailsStatus, searchString_tyres)
 	{
+
 		try {
 			var param = "";
 			if(fullDetailsStatus == true){
@@ -1810,7 +1815,7 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 			if(searchString_tyres != undefined && searchString_tyres != null && searchString_tyres != ""
 					&& searchString_tyres.trim().length > 0){
 						param = param + "&searchString="+searchString_tyres
-					}
+			}
 
 			if($rootScope.TMSDepotList == undefined || $rootScope.TMSDepotList.length == 0) {
 				$scope.getTMSDepotList();
@@ -1858,12 +1863,6 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
       $timeout.cancel(timer)
   	}
 	  timer= $timeout(function(){
-			// if($scope.searchStringForTyre == undefined || $scope.searchStringForTyre == null ||
-			// 		$scope.searchStringForTyre.length == 0){
-			// 			$scope.pageChanged_tyres();
-			// } else {
-			// 	$scope.getTMSAllTyres("", 0, true, $scope.searchStringForTyre);
-			// }
 			$scope.pageChanged_tyres();
 		},1000);
 	};
