@@ -32,7 +32,7 @@ angular
   $rootScope.$state = $state;
   return $rootScope.$stateParams = $stateParams;
 }]).run(['$rootScope',function($rootScope) {
-    $rootScope.HOST_TMS = "http://172.16.0.61:8080/TMS/";
+    $rootScope.HOST_TMS = "http://localhost:8080/TMS/";
     $rootScope.HOST_TMS1 = "https://*****/TMS/";
 
     $rootScope.rootSelectedDeportId = 0;
