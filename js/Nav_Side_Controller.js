@@ -30,6 +30,8 @@ app.controller('NavController', ['$scope', '$rootScope', '$state', 'APIServices'
 		    try {
     			deleteAllCookies();
     			$rootScope.clearInterval_tmsTroubledVeh();
+          sessionStorage.setItem('SIDEMENU', "");
+          sessionStorage.setItem('UserLevelId', "");
     			//$rootScope.clearInterval_tmsDashboard();
 		    } catch (e) { console.log(e); }
 
@@ -347,10 +349,13 @@ app.controller('NavController', ['$scope', '$rootScope', '$state', 'APIServices'
 	}
 
 	// loading the service first time
-  $rootScope.getDashboardDetails(true, true, function(dashboardResponse) {
-    $scope.getTroubledVehCount();
-  });
+  $scope.initDashboardData = function(){
+    $rootScope.getDashboardDetails(true, true, function(dashboardResponse) {
+      $scope.getTroubledVehCount();
+    });
+  }
 
+  $scope.initDashboardData();
 
 	//Updating the service every 30 sec once
 	var refreshInterval_tmsTroubledVeh = 30000;
@@ -369,4 +374,10 @@ app.controller('SideNavController', ['$scope' ,'$rootScope', 'limitToFilter','AP
     'DashboardDataSharingServices', '$state', '$cookieStore', '$location',
     function($scope, $rootScope, limitToFilter, APIServices, DashboardDataSharingServices, $state, $cookieStore, $location) {
 
-    }]); // End of SideNavController
+      $scope.logoutFun_JS = function(msg)
+      {
+        $rootScope.logoutFun(msg);
+      }
+      $('#dynamicSideMenu_id').append(sessionStorage.getItem('SIDEMENU'));
+
+}]); // End of SideNavController

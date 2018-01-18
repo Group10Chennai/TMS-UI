@@ -14,6 +14,9 @@ app.controller('TMSTempPressureController', ['$scope', '$rootScope', '$state', '
 	    $scope.callTroubledVehiclesAPI = function() {
 		      try {
             $rootScope.troubledVehiclesDetails = [];
+            if($rootScope.tempPressureType == undefined || $rootScope.tempPressureType == ""){
+              $rootScope.tempPressureType = 'All';
+            }
     		    APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getTPMSVehData?type='+$rootScope.tempPressureType, true)
     		    .then(
         			function(httpResponse) { 	// Success block
@@ -22,7 +25,6 @@ app.controller('TMSTempPressureController', ['$scope', '$rootScope', '$state', '
           				if(httpResponse.data.status == true){
           				    var vehIdName_HashMap = DashboardDataSharingServices.getVehIdName_HashMap();
           				    $rootScope.processVehDetailsForView(httpResponse, function(response) {
-              					console.log(response);
               					angular.forEach(response, function(troubledVehicle, key){
             					    troubledVehicle.vehName = vehIdName_HashMap[troubledVehicle.vehId];
             					    $rootScope.troubledVehiclesDetails.push(troubledVehicle);

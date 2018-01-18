@@ -35,6 +35,12 @@ app.controller('TMSDashboardController', ['$scope', '$rootScope', '$state', 'API
 	    }
 	}
 
+  $scope.gotoVehView = function(){
+      try {
+        $timeout(function() { $location.url('/tms-vehicles'); }, 100);
+      } catch (e) { loading.finish(); console.log(e); }
+  }
+
 	$scope.getVehTyreDetails = function(id){
 	    try {
     		$rootScope.tyreDetailsType = id;
@@ -42,7 +48,7 @@ app.controller('TMSDashboardController', ['$scope', '$rootScope', '$state', 'API
 	    } catch (e) { loading.finish(); console.log(e); }
 	}
 
-	$scope.getVehTyreInspectionDetail = function(id){
+  $scope.getVehTyreInspectionDetail = function(id){
 	    try {
 		$timeout(function() { $location.url('/tmsTyreInspection'); }, 100);
 	    } catch (e) { loading.finish(); console.log(e); }
@@ -53,4 +59,5 @@ app.controller('TMSDashboardController', ['$scope', '$rootScope', '$state', 'API
 		$timeout(function() { $location.url('/tmsTyreService'); }, 100);
 	    } catch (e) { loading.finish(); console.log(e); }
 	}
-    }]);
+  
+}]);

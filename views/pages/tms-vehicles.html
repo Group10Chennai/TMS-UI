@@ -20,7 +20,7 @@
       	    </div>
   	  </div> <!-- /form-group -->
   	  <!-- Organization -->
-  	  <!-- <div class="form-group row">
+  	  <div class="form-group row" ng-show="isSysAdmin == true">
       	    <div class="col-1"></div>
       	    <label class="col-3 control-label" for="tmsorg">Organization <em class="imp_asterisk">*</em></label>
       	    <div class="col-5">
@@ -54,15 +54,15 @@
         	</form>
     	      </div>
       	    </div>
-  	  </div>  -->
+  	  </div>
       <!-- Organization end-->
 	  <!-- Depot -->
   	  <div class="form-group row">
       	    <div class="col-1"></div>
       	    <label class="col-3 control-label" for="tmsdepot">Depot <em class="imp_asterisk">*</em></label>
       	    <div class="col-5">
-      	      <select id="vehicledepotId" ng-model="TMSVehDepotId">
-        		    <option ng-repeat="depot in TMSDepotList  | orderBy : 'depotName'" value="{{depot.depotId}}">{{depot.depotName}}</option>
+      	      <select id="vehicledepotId" ng-model="TMSVehDepot">
+        		    <option ng-repeat="depot in TMSDepotList  | orderBy : 'depotName'" value="{{depot}}">{{depot.depotName}}</option>
       	      </select>
       	    </div>
       	    <div class="col-2">
@@ -102,7 +102,7 @@
     		    <span ng-hide = "TMSVehRFUID">
           		    <select id="vehiclerfidId" ng-model="TMSVehRFID">
                     <option value=''></option>
-              			<option ng-repeat="rfid in TMSAllRFIDS" value="{{rfid.rfid}}">{{rfid.rfiduid}}</option>
+              			<option ng-repeat="rfid in TMSAllInstockRFID" value="{{rfid.rfid}}">{{rfid.rfiduid}}</option>
           		    </select>
     		    </span>
       		</div>
@@ -117,7 +117,7 @@
 		    </span>
 		    <span ng-hide = "TMSVehBControlerUID">
       		    <select id="vehiclebluetoothId" ng-model="TMSVehBControlerId">
-          			<option ng-repeat="bCtrl in TMSAllBController" value="{{bCtrl.controllerId}}">{{bCtrl.controllerUID}}</option>
+          			<option ng-repeat="bCtrl in TMSAllInstockBController" value="{{bCtrl.controllerId}}">{{bCtrl.controllerUID}}</option>
       		    </select>
 		    </span>
       		</div>

@@ -138,16 +138,33 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 	        allowClear: true,
 	        width: 278
 	    });
+      //sri
+      $('#tyreOrganizationId').select2 ({
+	        placeholder: "Organization",
+	        allowClear: true,
+	        width: 227
+	    });
+
 	    $('#deallocatedDeviceSelect_id').select2({
-		placeholder: "Select Status",
-		allowClear: true,
-		width: 227
+    		placeholder: "Select Status",
+    		allowClear: true,
+    		width: 227
 	    });
 
 	    // Tyre status
 	    $scope.tyreStatusList = ["InStock", "Retread", "Scrap"];
 	    $scope.DeviceStatusList = ["InStock", "Scrap"];
+
+      // Check whether user is SysAdmin or normal user
+      if(sessionStorage.UserLevelId > 0 && sessionStorage.UserLevelId < 5){
+        $rootScope.isSysAdmin = true;
+      } else {
+        $rootScope.isSysAdmin = false;
+      }
+
 	} catch (e) { console.log(e); }
+
+
 
 	$scope.getTMSDepotList = function() {
 	    try {
@@ -211,7 +228,7 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 			try{
 			    loading.finish();
 			    if(httpResponse.data.status == true) {
-				$rootScope.TMSOrgList = httpResponse.data.result;
+  				  $rootScope.TMSOrgList = httpResponse.data.result;
 			    }
 			}
 			catch(error) {
@@ -277,11 +294,112 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 	    } catch (e) { loading.finish(); console.log(e); }
 	}
 
+
 	$scope.getTMSDepotList();
 	$scope.tyreMakeList();
 	$scope.getTMSOrganizationList();
 	$scope.getTMSShortTireDetails();
 	$scope.getTMSShortVehDetails();
+
+  $scope.TMSAllInstockBController = new Array();
+  $scope.getTMSAllInstockBController = function()
+  {
+    try {
+      APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getBController?status=InStock'
+        +'&limit=0&startIndex=0&searchWord=', true)
+     .then(
+       function(httpResponse){ // Success block
+         try{
+           loading.finish();
+           if(httpResponse.data.status == true)
+           {
+             $scope.TMSAllInstockBController = httpResponse.data.result;
+           }
+         }
+         catch(error)
+         {
+           loading.finish();
+           console.log("Error :"+error);
+         }
+       }, function(httpError) // Error block
+       {
+         loading.finish();
+         console.log("Error while processing request");
+       }, function(httpInProcess)// In process
+       {
+         console.log(httpInProcess);
+       }
+     );
+    } catch (e) { loading.finish(); console.log(e); }
+  }
+
+  //sri
+  $scope.TMSAllInstockRFID = new Array();
+	$scope.getTMSInstockAllRFID = function()
+	{
+		try {
+
+			APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getRFID?status=Instock'
+        +'&limit=0&startIndex=0&searchWord=', true)
+ 		 .then(
+ 			 function(httpResponse){ // Success block
+ 				 try{
+ 					 loading.finish();
+					 if(httpResponse.data.status == true)
+					 {
+						 $scope.TMSAllInstockRFID = httpResponse.data.result;
+					 } else {
+						 logger.logError(httpResponse.data.displayMsg);
+					 }
+ 				 }
+ 				 catch(error)
+ 				 {
+ 					 loading.finish();
+ 					 console.log("Error :"+error);
+ 				 }
+ 			 }, function(httpError) // Error block
+ 			 {
+ 				 loading.finish();
+ 				 console.log("Error while processing request");
+ 			 }, function(httpInProcess)// In process
+ 			 {
+ 				 console.log(httpInProcess);
+ 			 }
+ 		 );
+		} catch (e) { loading.finish(); console.log(e); }
+	}
+
+  $scope.getTMSAllInstockSensors = function()
+	{
+    console.log('getTMSAllInstockSensors ');
+		try {
+			APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getSensors?status=Instock'
+			+'&limit=0&startIndex=0&searchWord=', true)
+ 		 .then(
+ 			 function(httpResponse){ // Success block
+ 				 try{
+ 					 loading.finish();
+					 if(httpResponse.data.status == true)
+					 {
+						$scope.TMSAllInstockSensors = httpResponse.data.result;
+					 }
+ 				 }
+ 				 catch(error)
+ 				 {
+ 					 loading.finish();
+ 					 console.log("Error :"+error);
+ 				 }
+ 			 }, function(httpError) // Error block
+ 			 {
+ 				 loading.finish();
+ 				 console.log("Error while processing request");
+ 			 }, function(httpInProcess)// In process
+ 			 {
+ 				 console.log(httpInProcess);
+ 			 }
+ 		 );
+		} catch (e) { loading.finish(); console.log(e); }
+	}
 
 	$scope.addNewDepot = function() {
 	    try {
@@ -547,9 +665,17 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 	$scope.showVehicleAddingFormForAdd = function() {
 	    try {
 		$('#showTMSVehicleModalId').modal('show');
-		$rootScope.getTMSAllBController('InStock');
-		$rootScope.getTMSAllRFID('InStock');
-		$scope.getTMSAllTyres('InStock');
+
+    console.log("vehicle adding");
+
+    // sri
+		$scope.getTMSAllInstockBController();
+		$scope.getTMSInstockAllRFID();
+
+    console.log("loaded Bluetooth & RFID details");
+
+    //$scope.getTMSAllTyres('InStock');
+
 		$scope.TMSVehName = '';
 		$scope.TMSVehOrgId = '';
 		$scope.TMSVehDepotId = '';
@@ -579,9 +705,11 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 
 	$scope.getVehDetailsFormForUpdate = function(TMSVehDetails) {
 	    $('#showTMSVehicleModalId').modal('show');
-	    $rootScope.getTMSAllBController('InStock');
-	    $rootScope.getTMSAllRFID('InStock');
-	    $scope.getTMSAllTyres('InStock');
+
+      $scope.getTMSAllInstockBController();
+      $scope.getTMSInstockAllRFID();
+
+      //$scope.getTMSAllTyres('InStock');
 
 	    $scope.TMSVehDetailsUpdate = TMSVehDetails;
 	    $scope.TMSVehName = TMSVehDetails.vehName;
@@ -1246,7 +1374,9 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 	$scope.showSensorChangeDiv = false;
 	$scope.getTyreDetailsFormForAdd = function(){
 		$('#showTMSTyreModalId').modal('show');
-		$rootScope.getTMSAllSensors("InStock");
+
+    $scope.getTMSAllInstockSensors();
+
 		$scope.tyreMakeList();
 		$scope.showSensorChangeDiv = false;
 		$scope.tyreNumber = "";
@@ -1254,6 +1384,8 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 		$scope.tireDepot = "";
 		$scope.tireThreadDepth = "";
 		$scope.selectedTyreSensorId = 0;
+    $scope.TMSTyreType = "";
+    $scope.tyreDepotId = 0;
 		$scope.tyreMakeId = $scope.DefaultTyreMakeId;
 		if($scope.tyreMakeId == null){
 			$scope.tyreMakeId == 4
@@ -1276,14 +1408,21 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 		try {
 				$("#tyreTypeId").val("").trigger('change');
 		} catch (e) { }
+
+    try {
+				$("#tyreOrganizationId").val("").trigger('change');
+		} catch (e) { }
 	}
 
 	$scope.getTyreDetailsFormForUpdate = function(tyreDetails)
 	{
 		$('#showTMSTyreModalId').modal('show');
 		//Get InStock Sensor Detials
-		$rootScope.getTMSAllSensors("InStock");
+
+    $scope.getTMSAllInstockSensors();
+
 		$scope.tyreMakeList();
+
 		$scope.showSensorChangeDiv = false;
 		$scope.tyreNumber = tyreDetails.tireNumber;
 		$scope.tyreMakeId = tyreDetails.tireMakeId;
@@ -1296,7 +1435,11 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 		$scope.showTyreAddingForm = true;
 		$scope.updateTyreButtonStatus = true;
 		$scope.addTyreButtonStatus = false;
+    $scope.TMSTyreOrgId = tyreDetails.orgId;
 
+    try {
+				$("#tyreOrganizationId").val($scope.TMSTyreOrgId).trigger('change');
+		} catch (e) { }
 		try {
 				$("#tyremakeId").val(tyreDetails.tireMakeId).trigger('change');
 		} catch (e) { }
@@ -1328,9 +1471,26 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 				reAssignedTyreMakeId = $scope.tyreMakeId;
 			}
 
-			APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/Tyre/Add?tyreNumber='+$scope.tyreNumber
-			+'&tyreMakeId='+reAssignedTyreMakeId+'&depotId='+$scope.tyreDepotId+'&threadDepth='+$scope.tireThreadDepth
-			+'&sensorId='+$scope.selectedTyreSensorId+'&tyreType='+$scope.TMSTyreType, true)
+      console.log("isSysAdmin: "+$rootScope.isSysAdmin);
+      if($rootScope.isSysAdmin == true){
+
+        $scope.TMSTyreOrgId = $("#tyreOrganizationId").val();
+        if($scope.TMSTyreOrgId == undefined || $scope.TMSTyreOrgId == ""){
+          $scope.TMSTyreOrgId = 0;
+        }
+        var params = 'api/tms/Tyre/Add?tyreNumber='+$scope.tyreNumber +'&tyreMakeId='+reAssignedTyreMakeId
+        +'&depotId='+$scope.tyreDepotId+'&threadDepth='+$scope.tireThreadDepth
+  			+'&sensorId='+$scope.selectedTyreSensorId+'&tyreType='+$scope.TMSTyreType
+        +'&orgId='+$scope.TMSTyreOrgId;
+      } else {
+        var params = 'api/tms/Tyre/Add?tyreNumber='+$scope.tyreNumber +'&tyreMakeId='+reAssignedTyreMakeId
+        +'&depotId='+$scope.tyreDepotId+'&threadDepth='+$scope.tireThreadDepth
+  			+'&sensorId='+$scope.selectedTyreSensorId+'&tyreType='+$scope.TMSTyreType;
+      }
+
+      console.log(params);
+
+			APIServices.callGET_API($rootScope.HOST_TMS + params, true)
 		 .then(
 			 function(httpResponse){ // Success block
 				 try{
@@ -1935,558 +2095,19 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 		} catch (e) { loading.finish(); console.log(e); }
 	}
 
-	// Bluetooth Details code starts Here
-	$scope.addBControllerButtonStatus = true;
-	$rootScope.TMSAllBController = new Array();
-	$rootScope.getTMSAllBController = function(status)
-	{
-		try {
-		    if (status == undefined || status == "" || status.length == 0) {
-			status = '';
-		    }
-			APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getBController?status='+status, true)
- 		 .then(
- 			 function(httpResponse){ // Success block
- 				 try{
- 					 loading.finish();
-					 if(httpResponse.data.status == true)
-					 {
-						 $rootScope.TMSAllBController = httpResponse.data.result;
-					 }
- 				 }
- 				 catch(error)
- 				 {
- 					 loading.finish();
- 					 console.log("Error :"+error);
- 				 }
- 			 }, function(httpError) // Error block
- 			 {
- 				 loading.finish();
- 				 console.log("Error while processing request");
- 			 }, function(httpInProcess)// In process
- 			 {
- 				 console.log(httpInProcess);
- 			 }
- 		 );
-		} catch (e) { loading.finish(); console.log(e); }
-	}
-
-	$scope.getBControllerDetailsFormForAdd = function()
-	{
-		$('#showTMSBluetoothModalId').modal('show');
-		$scope.showBControllerAddingForm = !$scope.showBControllerAddingForm;
-		$scope.updateBControllerButtonStatus = false;
-		$scope.showBControllerAddingForm = true;
-		$scope.addBControllerButtonStatus = true;
-		$scope.BControllerUID = '';
-		$scope.updateBControllerButtonStatus = false;
-	}
-
-	$scope.getBControllerDetailsFormForUpdate = function(BControllerDetails)
-	{
-		$('#showTMSBluetoothModalId').modal('show');
-		$scope.BControllerUID = BControllerDetails.controllerUID;
-		$scope.updateBController = BControllerDetails;
-		$scope.updateBControllerButtonStatus = true;
-		$scope.showBControllerAddingForm = true;
-		$scope.addBControllerButtonStatus = false;
-	}
-
-	$scope.AddBController = function()
-	{
-		try {
-
-			APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/BController/Add?BControllerUID='+$scope.BControllerUID, true)
- 		 .then(
- 			 function(httpResponse){ // Success block
- 				 try{
- 					 loading.finish();
-					 if(httpResponse.data.status == true)
-					 {
-						 logger.logSuccess('Bluetooth UID added successfully');
-						 $rootScope.getTMSAllBController();
-						 $('#showTMSBluetoothModalId').modal('hide');
-					 } else {
-					 	logger.logError(httpResponse.data.displayMsg);
-					 }
- 				 }
- 				 catch(error)
- 				 {
- 					 loading.finish();
- 					 console.log("Error :"+error);
- 				 }
- 			 }, function(httpError) // Error block
- 			 {
- 				 loading.finish();
- 				 console.log("Error while processing request");
- 			 }, function(httpInProcess)// In process
- 			 {
- 				 console.log(httpInProcess);
- 			 }
- 		 );
-		} catch (e) { loading.finish(); console.log(e); }
-	}
-
-	$scope.updateBControllerDetails = function()
-	{
-		try {
-			var UPDATE_URL =$rootScope.HOST_TMS + 'api/tms/BController/Update?BControllerId='
-			+$scope.updateBController.controllerId+'&BControllerUID='+$scope.BControllerUID;
-
-			APIServices.callGET_API(UPDATE_URL, true)
- 		 .then(
- 			 function(httpResponse){ // Success block
- 				 try{
- 					 loading.finish();
-					 if(httpResponse.data.status == true)
-					 {
-						 logger.logSuccess('Bluetooth UID udated successfully');
-						 $rootScope.getTMSAllBController();
-						 $('#showTMSBluetoothModalId').modal('hide');
-					 }
-					 else {
-					 	logger.logError(httpResponse.data.displayMsg);
-					 }
- 				 }
- 				 catch(error)
- 				 {
- 					 loading.finish();
- 					 console.log("Error :"+error);
- 				 }
- 			 }, function(httpError) // Error block
- 			 {
- 				 loading.finish();
- 				 console.log("Error while processing request");
- 			 }, function(httpInProcess)// In process
- 			 {
- 				 console.log(httpInProcess);
- 			 }
- 		 );
-		} catch (e) { loading.finish(); console.log(e); }
-	}
-
-	// RFID Details code starts Here
-	$scope.addRFIDButtonStatus = true;
-	$rootScope.TMSAllRFID = new Array();
-	$rootScope.getTMSAllRFID = function(status)
-	{
-		try {
-		    if (status == undefined || status == "" || status.length == 0) {
-			status = '';
-		    }
-			APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getRFID?status='+status, true)
- 		 .then(
- 			 function(httpResponse){ // Success block
- 				 try{
- 					 loading.finish();
-					 if(httpResponse.data.status == true)
-					 {
-						 $rootScope.TMSAllRFIDS = httpResponse.data.result;
-					 } else {
-						 logger.logError(httpResponse.data.displayMsg);
-					 }
- 				 }
- 				 catch(error)
- 				 {
- 					 loading.finish();
- 					 console.log("Error :"+error);
- 				 }
- 			 }, function(httpError) // Error block
- 			 {
- 				 loading.finish();
- 				 console.log("Error while processing request");
- 			 }, function(httpInProcess)// In process
- 			 {
- 				 console.log(httpInProcess);
- 			 }
- 		 );
-		} catch (e) { loading.finish(); console.log(e); }
-	}
-
-	$scope.getRFIDDetailsFormForAdd = function()
-	{
-		$('#showTMSRfidModalId').modal('show');
-		$scope.showRFIDAddingForm = !$scope.showRFIDAddingForm;
-		$scope.updateRFIDButtonStatus = false;
-		$scope.showRFIDAddingForm = true;
-		$scope.addRFIDButtonStatus = true;
-		$scope.RFIDUID = '';
-		$scope.updateRFIDButtonStatus = false;
-	}
-
-	$scope.getRFIDDetailsFormForUpdate = function(RFIDDetails)
-	{
-		$('#showTMSRfidModalId').modal('show');
-		$scope.RFIDUID = RFIDDetails.rfiduid;
-		$scope.updateRFID = RFIDDetails;
-		$scope.updateRFIDButtonStatus = true;
-		$scope.showRFIDAddingForm = true;
-		$scope.addRFIDButtonStatus = false;
-	}
-
-	$scope.AddRFID = function()
-	{
-		try {
-			APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/RFID/Add?RFIDUID='+$scope.RFIDUID, true)
- 		 .then(
- 			 function(httpResponse){ // Success block
- 				 try{
- 					 loading.finish();
-					 if(httpResponse.data.status == true)
-					 {
-						 logger.logSuccess('RFID UID added successfully');
-						 $rootScope.getTMSAllRFID();
-						 $('#showTMSRfidModalId').modal('hide');
-					 } else {
-					 	logger.logError(httpResponse.data.displayMsg);
-					 }
- 				 }
- 				 catch(error)
- 				 {
- 					 loading.finish();
- 					 console.log("Error :"+error);
- 				 }
- 			 }, function(httpError) // Error block
- 			 {
- 				 loading.finish();
- 				 console.log("Error while processing request");
- 			 }, function(httpInProcess)// In process
- 			 {
- 				 console.log(httpInProcess);
- 			 }
- 		 );
-		} catch (e) { loading.finish(); console.log(e); }
-	}
-
-	$scope.updateRFIDDetails = function()
-	{
-		try {
-			var UPDATE_URL =$rootScope.HOST_TMS + 'api/tms/RFID/Update?RFID='
-			+$scope.updateRFID.rfid+'&RFIDUID='+$scope.RFIDUID;
-
-			APIServices.callGET_API(UPDATE_URL, true)
- 		 .then(
- 			 function(httpResponse){ // Success block
- 				 try{
- 					 loading.finish();
-					 if(httpResponse.data.status == true)
-					 {
-						 logger.logSuccess('RFID UID updated successfully');
-						 $rootScope.getTMSAllRFID()
-						 $('#showTMSRfidModalId').modal('hide');
-					 }
-					 else {
-					 	logger.logError(httpResponse.data.displayMsg);
-					 }
- 				 }
- 				 catch(error)
- 				 {
- 					 loading.finish();
- 					 console.log("Error :"+error);
- 				 }
- 			 }, function(httpError) // Error block
- 			 {
- 				 loading.finish();
- 				 console.log("Error while processing request");
- 			 }, function(httpInProcess)// In process
- 			 {
- 				 console.log(httpInProcess);
- 			 }
- 		 );
-		} catch (e) { loading.finish(); console.log(e); }
-	}
-
-	// Sensor Details Code Starts Here
-	$scope.addSensorButtonStatus = true;
-	$scope.sensorStatusList = ["All", "InStock", "Installed", "Scraped"];
-	$rootScope.TMSAllSensors = new Array();
-	$scope.limit_sensor = 10;
-	$scope.startIndex_sensor = 0;
-
-	$scope.AddSensor = function()
-	{
-		try {
-			APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/Sensor/Add?sensorUID='+$scope.sensorUID, true)
- 		 .then(
- 			 function(httpResponse){ // Success block
- 				 try{
- 					 loading.finish();
-					 if(httpResponse.data.status == true)
-					 {
-						 logger.logSuccess('Sensor UID added successfully');
-						 $rootScope.getTMSAllSensors();
-						 $('#showTMSSensorModalId').modal('hide');
-					 } else {
-					 	logger.logError(httpResponse.data.displayMsg);
-					 }
- 				 }
- 				 catch(error)
- 				 {
- 					 loading.finish();
- 					 console.log("Error :"+error);
- 				 }
- 			 }, function(httpError) // Error block
- 			 {
- 				 loading.finish();
- 				 console.log("Error while processing request");
- 			 }, function(httpInProcess)// In process
- 			 {
- 				 console.log(httpInProcess);
- 			 }
- 		 );
-		} catch (e) { loading.finish(); console.log(e); }
-	}
-
-	$scope.sensorStatusFilter = "All";
-	$scope.sensorStatusChanged = function(){
-		$scope.limit_sensor = 10;
-		$scope.startIndex_sensor = 0;
-		$rootScope.getTMSAllSensors($scope.sensorStatusFilter);
-		// By default prev is disabled
-		$('#prevBtnId_sensor').attr('disabled', true).css('background-color','gray');
-		$('#prevBtnId_sensor').css('cursor', 'not-allowed');
-
-
-	}
-
-	// By default prev is disabled
-	if($scope.startIndex_sensor == 0){
-		$('#prevBtnId_sensor').attr('disabled', true).css('background-color','gray');
-		$('#prevBtnId_sensor').css('cursor', 'not-allowed');
-	}
-
-	$scope.sensorSID = 0;
-	$rootScope.getTMSAllSensors = function(status)
-	{
-		try {
-			if(status == undefined || status == 'All')
-			{
-				status ='';
-			}
-			$scope.sensorSID = $scope.startIndex_sensor;
-			APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getSensors?status=' + status
-			+'&limit='+$scope.limit_sensor+'&startIndex='+$scope.startIndex_sensor, true)
- 		 .then(
- 			 function(httpResponse){ // Success block
- 				 try{
- 					 loading.finish();
-					 if(httpResponse.data.status == true)
-					 {
-						 $rootScope.TMSAllSensors = httpResponse.data.result;
-						 if($rootScope.TMSAllSensors.length < $scope.limit_sensor){
-				 			// Disable the Next button
-							    $('#nextBtnId_sensor').attr('disabled', true).css('background-color','gray');
-							    $('#nextBtnId_sensor').css('cursor', 'not-allowed');
-
-					 		} else {
-								$('#nextBtnId_sensor').attr('disabled', false);
-								$('#nextBtnId_sensor').css('background-color','#2C98DE');
-								$('#nextBtnId_sensor').css('cursor', 'pointer');
-
-					 		}
-					 }
- 				 }
- 				 catch(error)
- 				 {
- 					 loading.finish();
- 					 console.log("Error :"+error);
- 				 }
- 			 }, function(httpError) // Error block
- 			 {
- 				 loading.finish();
- 				 console.log("Error while processing request");
- 			 }, function(httpInProcess)// In process
- 			 {
- 				 console.log(httpInProcess);
- 			 }
- 		 );
-		} catch (e) { loading.finish(); console.log(e); }
-	}
-
-	$scope.nextSensors = function(){
-		$scope.startIndex_sensor = $scope.startIndex_sensor + $scope.limit_sensor;
-		$rootScope.getTMSAllSensors($scope.sensorStatusFilter);
-		if($scope.startIndex_sensor >= 0){
-			$('#prevBtnId_sensor').attr('disabled', false).css('background-color','#2C98DE');
-			$('#prevBtnId_sensor').css('cursor', 'pointer');
-
-		}
-	}
-
-	$scope.prevSensors = function(){
-		$scope.startIndex_sensor = $scope.startIndex_sensor - $scope.limit_sensor;
-		if($scope.startIndex_sensor > 0){
-			$('#prevBtnId_sensor').attr('disabled', false).css('background-color','#2C98DE');
-			$('#prevBtnId_sensor').css('cursor', 'pointer');
-		}else{
-			$('#prevBtnId_sensor').attr('disabled', true).css('background-color','gray');
-			$('#prevBtnId_sensor').css('cursor', 'not-allowed');
-
-		}
-		$rootScope.getTMSAllSensors($scope.sensorStatusFilter);
-	}
-
-	$scope.getSensorDetailsFormForUpdate = function(sensorDetails)
-	{
-		$('#showTMSSensorModalId').modal('show');
-		$scope.sensorUID = sensorDetails.sensorUID;
-		$scope.updateSensor = sensorDetails;
-		$scope.updateSensorButtonStatus = true;
-		$scope.showSensorAddingForm = true;
-		$scope.addSensorButtonStatus = false;
-	}
-
-	$scope.getSensorDetailsFormForAdd = function()
-	{
-		$('#showTMSSensorModalId').modal('show');
-		$scope.showSensorAddingForm = !$scope.showSensorAddingForm;
-		$scope.updateSensorButtonStatus = false;
-		$scope.showSensorAddingForm = true;
-		$scope.addSensorButtonStatus = true;
-		$scope.sensorUID = '';
-		$scope.updateSensorButtonStatus = false;
-	}
-
-	$scope.updateSensorDetails = function()
-	{
-		try {
-			var UPDATE_URL =$rootScope.HOST_TMS + 'api/tms/Sensor/Update?sensorId='+$scope.updateSensor.sensorId
-			+'&sensorUID='+$scope.sensorUID;
-
-			APIServices.callGET_API(UPDATE_URL, true)
- 		 .then(
- 			 function(httpResponse){ // Success block
- 				 try{
- 					 loading.finish();
-					 if(httpResponse.data.status == true)
-					 {
-						 $rootScope.getTMSAllSensors();
-						 logger.logSuccess('Sensor UID updated successfully');
-						 $('#showTMSSensorModalId').modal('hide');
-					 } else {
-					 	logger.logError(httpResponse.data.displayMsg);
-					 }
- 				 }
- 				 catch(error)
- 				 {
- 					 loading.finish();
- 					 console.log("Error :"+error);
- 				 }
- 			 }, function(httpError) // Error block
- 			 {
- 				 loading.finish();
- 				 console.log("Error while processing request");
- 			 }, function(httpInProcess)// In process
- 			 {
- 				 console.log(httpInProcess);
- 			 }
- 		 );
-		} catch (e) { loading.finish(); console.log(e); }
-	}
-
-	// Assign vehicle code starts
-	// display users
-	$scope.getTMSAllUsers = function() {
-    try {
-			APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getAllUserDetails', true)
-	 		.then(
- 		    function(httpResponse){ // Success block
-		 			try {
-		 			    loading.finish();
-					    if (httpResponse.data.status) {
-								$scope.basicUserDetails = httpResponse.data.result;
-					    }  else {
-								logger.logWarning(httpResponse.data.displayMsg);
-					    }
-					}
-		 			catch(error) {
-		 			    loading.finish();
-		 			    console.log("Error :"+error);
-		 			}
- 		    }, function(httpError) { // Error block
-		 			loading.finish();
-		 			console.log("Error while processing request");
- 		    }, function(httpInProcess)  { // In process
-					console.log(httpInProcess);
- 		    }
-			);
-		} catch (e) { loading.finish(); console.log(e); }
-	}
-
-	// display Vehicles
-	$scope.getTMSAllVehicles = function() {
-    try {
-			APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getBasicVehDetails', true)
-	 		.then(
- 		    function(httpResponse){ // Success block
-		 			try {
-	 			    loading.finish();
-				    if (httpResponse.data.status) {
-							$scope.basicVehicleDetails = httpResponse.data.result;
-				    }  else {
-							logger.logWarning(httpResponse.data.displayMsg);
-				    }
-					} catch(error) {
-	 			    loading.finish();
-	 			    console.log("Error :"+error);
-		 			}
- 		    }, function(httpError) { // Error block
-		 			loading.finish();
-		 			console.log("Error while processing request");
- 		    }, function(httpInProcess)  { // In process
-					console.log(httpInProcess);
- 		    }
-	 		);
-    } catch (e) { loading.finish(); console.log(e); }
-	}
-
-	$scope.tmsAssignVehToUser = function() {
-    try {
-			if ($('#tms_assignUser_id :selected').length == 0) {
-			    alert("Select atleast one user");
-			} else if ($('#tms_assignVehicle_id :selected').length == 0) {
-			    alert("Select atleast one vehicle");
-			} else {
-			    var assignVeh_paramlog = JSON.stringify({userIds: $('#tms_assignUser_id').val(), vehIds: $('#tms_assignVehicle_id').val()});
-			    var assignVeh_request_data = {
-				RequestParam: assignVeh_paramlog,
-			    };
-
-			    APIServices.callAPI($rootScope.HOST_TMS + 'api/tms/assignVehToUsers', assignVeh_request_data, true)
-			    .then(function(httpResponse){ // Success block
-				try{
-						if (httpResponse.data.status) {
-							logger.logSuccess(httpResponse.data.displayMsg);
-						}else {
-							logger.logError(httpResponse.data.displayMsg)
-						}
-				    loading.finish();
-				    console.log(httpResponse);
-				} catch (e) { console.log(e); }
-			    });
-			}
-    } catch (e) { loading.finish(); console.log(e); }
-	}
-
-
 	if($state.current.url == "/tms-vehicles") {
-    $timeout(function() { $scope.pageChanged_vehicles(); }, 1000);
+    $timeout(function() {
+      $scope.pageChanged_vehicles();
+      console.log("load all the ");
+    }, 1000);
 	} else if($state.current.url == "/tms-tyre") {
-      $rootScope.tyreDetailsType = "";
+      //$rootScope.tyreDetailsType = "";
 	    $scope.pageChanged_tyres();
 	} else if($state.current.url == "/tmsTyreService") {
 	    $scope.pageChanged_services();
 	} else if($state.current.url == "/tmsTyreInspection") {
 	    // $scope.getTyreInspectionHistory(0);
 	    $scope.pageChanged_inspection();
-	} else if($state.current.url == "/tms-sensor") {
-	    $rootScope.getTMSAllSensors();
-	} else if($state.current.url == "/tms-bluetooth") {
-	    $rootScope.getTMSAllBController();
-	} else if($state.current.url == "/tms-rfid") {
-	    $rootScope.getTMSAllRFID();
-	} else if ($state.current.url == "/tms-assignVehicle") {
-	    $scope.getTMSAllUsers();
-	    $scope.getTMSAllVehicles();
 	}
-    }]);
+
+}]);

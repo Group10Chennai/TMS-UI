@@ -54,7 +54,7 @@
 		    <div class="col-5" ng-hide="selectedTyreSensorUID">
 			<select id="sensorId" ng-model="selectedTyreSensorId">
 			    <option value=''></option>
-			    <option ng-repeat="sensor in TMSAllSensors" value="{{sensor.sensorId}}">{{sensor.sensorUID}}</option>
+			    <option ng-repeat="sensor in TMSAllInstockSensors" value="{{sensor.sensorId}}">{{sensor.sensorUID}}</option>
 			</select>
 		    </div>
 		    <div class="col-5" ng-show="selectedTyreSensorUID">
@@ -75,7 +75,7 @@
 				</div>
 				<div class = "col-md-7 col-sm-7 col-12">
 				    <select id="deallocatedDeviceSelect_id" ng-model="deallocatedSensorStatus">
-					<option ng-repeat="deviceStatus in DeviceStatusList" value="{{deviceStatus}}">{{deviceStatus}}</option>
+			         <option ng-repeat="deviceStatus in DeviceStatusList" value="{{deviceStatus}}">{{deviceStatus}}</option>
 				    </select>
 				</div>
 			    </div>
@@ -92,11 +92,54 @@
 		</div>
 		<div class="form-group row">
 		    <div class="col-1"></div>
-		    <label class="col-3 control-label" for="tyre">NSD (mm) </label>
+		    <label class="col-3 control-label" for="tyre">NSD (mm) <em class="imp_asterisk">*</em></label>
 		    <div class="col-5">
-			<input class="form-control" id="tyrethreaddepthId" placeholder=" NSD (mm)" type="text" ng-model="tireThreadDepth">
+			<input class="form-control" id="tyrethreaddepthId" placeholder="NSD (mm)" type="text" ng-model="tireThreadDepth">
 		    </div>
 		</div> <!-- /form-group -->
+    <!-- Organization -->
+    <div class="form-group row" ng-show="isSysAdmin == true">
+          <div class="col-1"></div>
+          <label class="col-3 control-label" for="tmsorg">Organization <em class="imp_asterisk">*</em></label>
+          <div class="col-5">
+          <!-- <select id = "sensorId123" ng-model="TMSTyreOrgId">
+             <option ng-repeat="org in TMSOrgList" value="{{org.orgId}}">{{org.orgName}} -- {{org.orgId}}</option>
+          </select> -->
+
+          <select id="tyreOrganizationId" ng-model="TMSTyreOrgId">
+    			    <option value=''></option>
+    			    <option ng-repeat="org in TMSOrgList" value="{{org.orgId}}">{{org.orgName}}</option>
+    			</select>
+
+          </div>
+          <div class="col-2">
+            <button class="btn btn-info show-popup" style="padding:3px 5px; font-size:12px;">
+  New Organization
+            </button>
+          <div class="popup" style="display: none" id="org-popup">
+        <form class="form-horizontal">
+          <fieldset>
+              <legend>Add Organization</legend>
+              <div class="form-group row">
+              <label class="col-4 control-label" >Organization Name <em class="imp_asterisk">*</em></label>
+              <div class="col-6">
+              <input name="org" id="create_NewOrg" type="text" class="form-control input-md"
+                style="margin-left: 5px;" ng-model="TMSVehNewOrgName">
+              </div>
+              </div>
+              <div class="form-group row">
+              <label class="col-4 control-label" for="cancel"></label>
+              <div class="col-6">
+              <button type="button" id="createOrg_cancel" class="btn btn-default cancel">Cancel</button>
+              <button type="submit" id="createOrg_Ok" class="btn btn-success submit" ng-click="addNewOrg()">Save</button>
+              </div>
+              </div>
+          </fieldset>
+        </form>
+          </div>
+          </div>
+    </div>
+    <!-- Organization end-->
 		<div class="row" >
 		    <div class="col-5"></div>
 		    <div class="col-6">
@@ -305,9 +348,9 @@
     var p = $("#depot-popup").prompt21();
 
     $(".show-popup-depot").on("click", function () {
-        p.getData(function (err, data) {
-	    $(".result").text(JSON.stringify(data, null, 2));
-	});
+      p.getData(function (err, data) {
+        $(".result").text(JSON.stringify(data, null, 2));
+	    });
     });
 
     $(".version").text($.fn.prompt21.version);
@@ -317,5 +360,6 @@
       $('#tyremakeId').select2('val', '');
       $('#tyredepotId').select2('val', '');
       $('#tyrethreaddepthId').val('');
+      $('#tyreOrganizationId').select2('val', '');
     }
 </script>

@@ -122,6 +122,16 @@ app.controller('LoginController', ['$scope', '$http','$rootScope','APIServices',
 				if(httpResponse.data.status) {
 				    $cookieStore.put("LoginUser", httpResponse.data.strResponse);
 				    $rootScope.UserName = httpResponse.data.strResponse;
+            if(httpResponse.data.result == undefined || httpResponse.data.result == null){
+
+            } else {
+              $rootScope.SIDEMENU = httpResponse.data.result[0].sideMenu;
+
+              sessionStorage.setItem('SIDEMENU', $rootScope.SIDEMENU);
+              sessionStorage.setItem('UserLevelId', httpResponse.data.result[0].userLevelId);
+            }
+
+
 				    $location.url('/dashboard');
 				} else {
 				    logger.logError(httpResponse.data.displayMsg);
@@ -153,5 +163,3 @@ app.controller('LoginController', ['$scope', '$http','$rootScope','APIServices',
 	    }
 	} //End of the submitLoginForm
     }]); /* End of the Login controller */
-
-
