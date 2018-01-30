@@ -152,8 +152,8 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 	    });
 
 	    // Tyre status
-	    $scope.tyreStatusList = ["InStock", "Retread", "Scrap"];
-	    $scope.DeviceStatusList = ["InStock", "Scrap"];
+	    $scope.tyreStatusList = ["InStock", "Retread", "Scraped"];
+	    $scope.DeviceStatusList = ["InStock", "Scraped"];
 
       // Check whether user is SysAdmin or normal user
       if(sessionStorage.UserLevelId > 0 && sessionStorage.UserLevelId < 5){
@@ -294,7 +294,6 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 	    } catch (e) { loading.finish(); console.log(e); }
 	}
 
-
 	$scope.getTMSDepotList();
 	$scope.tyreMakeList();
 	$scope.getTMSOrganizationList();
@@ -371,7 +370,6 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 
   $scope.getTMSAllInstockSensors = function()
 	{
-    console.log('getTMSAllInstockSensors ');
 		try {
 			APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getSensors?status=Instock'
 			+'&limit=0&startIndex=0&searchWord=', true)
@@ -666,15 +664,8 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 	    try {
 		$('#showTMSVehicleModalId').modal('show');
 
-    console.log("vehicle adding");
-
-    // sri
 		$scope.getTMSAllInstockBController();
 		$scope.getTMSInstockAllRFID();
-
-    console.log("loaded Bluetooth & RFID details");
-
-    //$scope.getTMSAllTyres('InStock');
 
 		$scope.TMSVehName = '';
 		$scope.TMSVehOrgId = '';
@@ -729,7 +720,7 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 		$("#vehicleOrganizationId").val($scope.TMSVehOrgId).trigger('change');
 	    } catch (e) { }
 	    try {
-		$("#vehicledepotId").val($scope.TMSVehDepotId).trigger('change');
+		      $("#vehicledepotId").val($scope.TMSVehDepotId).trigger('change');
 	    } catch (e) { }
 	    try {
 		$("#vehiclerfidId").val($scope.TMSVehRFID).trigger('change');
@@ -1471,7 +1462,6 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 				reAssignedTyreMakeId = $scope.tyreMakeId;
 			}
 
-      console.log("isSysAdmin: "+$rootScope.isSysAdmin);
       if($rootScope.isSysAdmin == true){
 
         $scope.TMSTyreOrgId = $("#tyreOrganizationId").val();
@@ -1487,8 +1477,6 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
         +'&depotId='+$scope.tyreDepotId+'&threadDepth='+$scope.tireThreadDepth
   			+'&sensorId='+$scope.selectedTyreSensorId+'&tyreType='+$scope.TMSTyreType;
       }
-
-      console.log(params);
 
 			APIServices.callGET_API($rootScope.HOST_TMS + params, true)
 		 .then(
@@ -2098,7 +2086,6 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 	if($state.current.url == "/tms-vehicles") {
     $timeout(function() {
       $scope.pageChanged_vehicles();
-      console.log("load all the ");
     }, 1000);
 	} else if($state.current.url == "/tms-tyre") {
       //$rootScope.tyreDetailsType = "";

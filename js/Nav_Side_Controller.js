@@ -78,7 +78,17 @@ app.controller('NavController', ['$scope', '$rootScope', '$state', 'APIServices'
       				} catch (e) { console.log(e); }
       				try {
       				    // Assigned Temperature & Pressure values
-      				    $rootScope.minMaxTempPressureValues = httpResponse.data.result[0].minMaxTempPressureValues;
+                  if($rootScope.minMaxTempPressureValues == undefined){
+                      if(httpResponse.data.result[0].minMaxTempPressureValues == undefined)
+                      {
+                        // Getting Normal Conditional values
+                        $rootScope.getDashboardDetails(true, true, function(dashboardResponse) {
+                        });
+                      } else {
+                        $rootScope.minMaxTempPressureValues = httpResponse.data.result[0].minMaxTempPressureValues;
+                        DashboardDataSharingServices.setMinMaxTempPressureValues_Obj($rootScope.minMaxTempPressureValues);
+                      }
+                  }
       				} catch (e) { console.log(e); }
       				try {
       				    // Assigned Vehicles
@@ -137,7 +147,7 @@ app.controller('NavController', ['$scope', '$rootScope', '$state', 'APIServices'
       				$rootScope.troubledVehCount = httpResponse.data.badTPVehCount;
               $rootScope.NontroubledVehCount = httpResponse.data.goodTPVehCount;
               $rootScope.totalTPVehCount = $rootScope.troubledVehCount + $rootScope.NontroubledVehCount;
-      				var vehiclesList = DashboardDataSharingServices.getVehiclesList();
+      				// var vehiclesList = DashboardDataSharingServices.getVehiclesList();
               $scope.updatePieChart($rootScope.troubledVehCount, $rootScope.NontroubledVehCount);
   			    } else {
     				// logout the user
@@ -194,6 +204,7 @@ app.controller('NavController', ['$scope', '$rootScope', '$state', 'APIServices'
 		var allVehicles = new Array();
 		if(httpResponse.data.status) {
 		    angular.forEach(httpResponse.data.result, function(vehicle, key) {
+          // Tyre Detials
 			if (vehicle.tires != undefined && vehicle.tires.length < 6) {
 			    var FLStatus = false;
 			    var FRStatus = false;
@@ -259,6 +270,7 @@ app.controller('NavController', ['$scope', '$rootScope', '$state', 'APIServices'
 				vehicle.tires.push(tire);
 			    }
 			}
+      // Tyre Pressure and Temperature
 			if (vehicle.tyres != undefined && vehicle.tyres.length < 6) {
 			    var FLStatus = false;
 			    var FRStatus = false;
@@ -285,48 +297,48 @@ app.controller('NavController', ['$scope', '$rootScope', '$state', 'APIServices'
 				var tyre = new Object();
 				tyre.position = "FL";
 				tyre.tireId = 0;
-				tyre.pressure = '0';
-				tyre.temp = '0';
+				tyre.pressure = '-';
+				tyre.temp = '-';
 				vehicle.tyres.push(tyre);
 			    }
 			    if (FRStatus ==  false) {
 				var tyre = new Object();
 				tyre.position = "FR";
 				tyre.tyreId = 0;
-				tyre.pressure = '0';
-				tyre.temp = '0';
+				tyre.pressure = '-';
+				tyre.temp = '-';
 				vehicle.tyres.push(tyre);
 			    }
 			    if (RLOStatus ==  false) {
 				var tyre = new Object();
 				tyre.position = "RLO";
 				tyre.tyreId = 0;
-				tyre.pressure = '0';
-				tyre.temp = '0';
+				tyre.pressure = '-';
+				tyre.temp = '-';
 				vehicle.tyres.push(tyre);
 			    }
 			    if (RLIStatus ==  false) {
 				var tyre = new Object();
 				tyre.position = "RLI";
 				tyre.tyreId = 0;
-				tyre.pressure = '0';
-				tyre.temp = '0';
+				tyre.pressure = '-';
+				tyre.temp = '-';
 				vehicle.tyres.push(tyre);
 			    }
 			    if (RRIStatus ==  false) {
 				var tyre = new Object();
 				tyre.position = "RRI";
 				tyre.tyreId = 0;
-				tyre.pressure = '0';
-				tyre.temp = '0';
+				tyre.pressure = '-';
+				tyre.temp = '-';
 				vehicle.tyres.push(tyre);
 			    }
 			    if (RROStatus ==  false) {
     				var tyre = new Object();
     				tyre.position = "RRO";
     				tyre.tyreId = 0;
-    				tyre.pressure = '0';
-    				tyre.temp = '0';
+    				tyre.pressure = '-';
+    				tyre.temp = '-';
     				vehicle.tyres.push(tyre);
 			    }
   			}

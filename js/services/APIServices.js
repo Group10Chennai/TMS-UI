@@ -106,6 +106,8 @@ angular.module('app').service('APIServices', function($q) {
 
 	var totalVehiclesList = [];
 
+	var minMaxTempPressureValues_Obj = new Object();
+
 	var setVehiclesList = function(vehiclesList) {
 		this.vehiclesList = vehiclesList;
 	};
@@ -162,6 +164,16 @@ angular.module('app').service('APIServices', function($q) {
 		return this.totalVehiclesList;
 	}
 
+	var setMinMaxTempPressureValues_Obj = function(minMaxTempPressureValues_Obj)
+	{
+		this.minMaxTempPressureValues_Obj = minMaxTempPressureValues_Obj;
+	}
+
+	var getMinMaxTempPressureValues_Obj = function()
+	{
+		return this.minMaxTempPressureValues_Obj;
+	}
+
 	return {
     addDeportList: addDeportList,
     getDeportList: getDeportList,
@@ -174,7 +186,9 @@ angular.module('app').service('APIServices', function($q) {
 		setParamListHashMap: setParamListHashMap,
 		getParamListHashMap: getParamListHashMap,
 		setVehIdName_HashMap: setVehIdName_HashMap,
-		getVehIdName_HashMap: getVehIdName_HashMap
+		getVehIdName_HashMap: getVehIdName_HashMap,
+		setMinMaxTempPressureValues_Obj: setMinMaxTempPressureValues_Obj,
+		getMinMaxTempPressureValues_Obj: getMinMaxTempPressureValues_Obj
   };
 
 });

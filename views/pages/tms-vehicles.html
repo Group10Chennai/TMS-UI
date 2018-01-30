@@ -61,8 +61,8 @@
       	    <div class="col-1"></div>
       	    <label class="col-3 control-label" for="tmsdepot">Depot <em class="imp_asterisk">*</em></label>
       	    <div class="col-5">
-      	      <select id="vehicledepotId" ng-model="TMSVehDepot">
-        		    <option ng-repeat="depot in TMSDepotList  | orderBy : 'depotName'" value="{{depot}}">{{depot.depotName}}</option>
+      	      <select id="vehicledepotId" ng-model="TMSVehDepotId">
+        		    <option ng-repeat="depot in TMSDepotList  | orderBy : 'depotName'" value="{{depot.depotId}}">{{depot.depotName}}</option>
       	      </select>
       	    </div>
       	    <div class="col-2">
@@ -641,7 +641,8 @@
       <tr ng-repeat="vehicle in allVehicles | orderBy:sortType:tmsVeh_sortReverse | filter:tmsVeh_searchData">
         <td class="tablebody-td tableData-right">{{ nextIndex_vehicles + $index + 1 }}
         </td>
-        <td class="tablebody-td">{{ vehicle.vehName }}
+        <td class="tablebody-td" title="{{vehicle.veh_UpdatedDateTime | date : 'medium'}}">{{ vehicle.vehName }}
+          <!-- <span class="tooltiptext">{{vehicle.veh_UpdatedDateTime | date : 'medium'}}</span> -->
         </td>
         <td ng-repeat="tire in vehicle.tires" ng-if="tire.tirePosition == 'FL'">{{ tire.tireNumber}}</td>
         <td class="tablebody-td" ng-repeat="tire in vehicle.tires" ng-if="tire.tirePosition == 'FR'">{{ tire.tireNumber }}</td>

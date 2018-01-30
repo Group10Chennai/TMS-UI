@@ -10,11 +10,24 @@
 		<button type="button" class="close" data-dismiss="modal" style="cursor: pointer;">&times;</button>
 	    </div>
 	    <div class="modal-body">
-		<div class="form-group row">
-		    <div class="col-2"></div>
-		    <label class="col-3 control-label" for="tmsbluetooth">Bluetooth UID<em class="imp_asterisk">*</em></label>
-		    <div class="col-6">
-			<input class="form-control" id="tmsbluetooth_uid" placeholder="Bluetooth UID" type="text" ng-model="BControllerUID">
+		<div class="form-group">
+		    <div class="row">
+			<div class="col-2"></div>
+			<label class="col-3 control-label" for="tmsbluetooth">Bluetooth UID<em class="imp_asterisk">*</em></label>
+			<div class="col-6">
+			    <input class="form-control" id="tmsbluetooth_uid" placeholder="Bluetooth UID" type="text" ng-model="BControllerUID">
+			</div>
+		    </div>
+		    <br/>
+		    <div class="row" id="bluetoothOrgList">
+			<div class="col-2"></div>
+			<label class="col-3 control-label" for="tmsorg">Organization</label>
+			<div class="col-6">
+			    <select id="bluetoothOrganizationId" ng-model="TMSBluetoothOrgId">
+				<option value=''></option>
+				<option ng-repeat="org in TMSOrgList" value="{{org.orgId}}">{{org.orgName}}</option>
+			    </select>
+			</div>
 		    </div>
 		</div> <!-- /form-group -->
 		<br/>

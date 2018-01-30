@@ -59,5 +59,12 @@ app.controller('TMSDashboardController', ['$scope', '$rootScope', '$state', 'API
 		$timeout(function() { $location.url('/tmsTyreService'); }, 100);
 	    } catch (e) { loading.finish(); console.log(e); }
 	}
-  
+
+  // Calling dashboard API when this page is loading
+  $timeout(function(){
+    $rootScope.getDashboardDetails(false, false, function(dashboardResponse) {
+    });
+  },1000);
+
+
 }]);
