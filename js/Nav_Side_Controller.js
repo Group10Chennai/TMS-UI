@@ -10,8 +10,23 @@ app.controller('NavController', ['$scope', '$rootScope', '$state', 'APIServices'
 	$rootScope.innerIdForTroubledChart = "innerIdForTroubledChart";
 	$scope.troubledVehChartData = [];
 
-	$rootScope.allVehCount = 0;
-	$rootScope.allSemiConfigVehCount = 0;
+	$rootScope.allVehCount = "";
+  $rootScope.tyreCount_all = "";
+  $rootScope.tyreCount_installed = "";
+  $rootScope.tyreCount_scraped = "";
+  $rootScope.tyreCount_instock = "";
+  $rootScope.tireCount_withoutSensor = "";
+  $rootScope.tyreCount_services = "";
+  $rootScope.tyreCount_inspections = "";
+
+  // Vehicle tyre assignment chart
+  $rootScope.allSemiConfigVehCount = "";
+  $scope.allTyresAssignedVeh = "";
+  $rootScope.vehTyreAssignmentChartData = [];
+
+  // Tyre pressure & Temperature chart
+  $rootScope.troubledVehCount = ""; $rootScope.NontroubledVehCount = "";
+  $rootScope.troubledVehChartData = [];
 
 	function deleteAllCookies() {
 	    var cookies = document.cookie.split(";");
@@ -118,6 +133,7 @@ app.controller('NavController', ['$scope', '$rootScope', '$state', 'APIServices'
       				    $rootScope.tyreCount_services = httpResponse.data.result[0].tireCount_services;
       				    $rootScope.tyreCount_inspections = httpResponse.data.result[0].tireCount_inspections;
       				} catch (e) { console.log(e); }
+
       				callback(httpResponse.data);
   			    } else {
               $rootScope.logoutFun('Dashboard - Session Expired');

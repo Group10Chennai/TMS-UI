@@ -368,11 +368,11 @@
   	  </div>
 	  <br/>
 	  <div class="row">
-	    <div class = "col-md-1 col-sm-1 col-1"></div>
-	    <div class = "col-md-4 col-sm-4 col-4">
+	    <div class = "col-md-1 col-sm-12 col-12"></div>
+	    <div class = "col-md-4 col-sm-12 col-12">
 	      Deallocating Tyre Status
 	    </div>
-	    <div class = "col-md-5 col-sm-5 col-5">
+	    <div class = "col-md-5 col-sm-12 col-12">
 	      <select id="vehicleStatusId" ng-model="deallocatedTyreStatus" tabindex="1">
       		<option value=""> </option>
       		<option ng-repeat="tyreStatus in tyreStatusList" value="{{tyreStatus}}">{{tyreStatus}}</option>
@@ -383,14 +383,14 @@
     <!-- Tyre fitment details -->
     <div class="widget-content" style="background-color: rgb(243, 243, 243); margin-bottom: 5px;">
       <div class="row row-space">
-        <label class="col-2 control-label" for="Service">Fitment Date <em class="imp_asterisk">*</em> </label>
-    		<div class="col-3 input-group" style="width: 25% !important;">
+        <label class="col-md-2 col-5 control-label" for="Service">Fitment Date <em class="imp_asterisk">*</em> </label>
+    		<div class="col-md-3 col-6" >
     		    <input class="form-control" placeholder="Fitted Date"
               type="text" style="height: 34px;" ng-model = "lastServicefitmentDate | date : 'dd-MM-yyyy'" disabled>
     		</div>
-        <div class="col-1"></div>
-        <label class="col-2 control-label" for="Service">Fitted KMS <em class="imp_asterisk">*</em> </label>
-        <div class="col-3">
+        <div class="col-md-1 col-12"></div>
+        <label class="col-md-2 col-5 control-label" for="Service">Fitted KMS <em class="imp_asterisk">*</em> </label>
+        <div class="col-md-3 col-6">
           <input class="form-control" id="fitmentKM" placeholder="Action Taken" type="text"
               ng-model="fittedKms" disabled>
         </div>
@@ -410,22 +410,31 @@
       		</div>
 	      </div>
 	      <div class="col-1"></div>
-	      <label class="col-2 control-label" for="Service">Action Taken <em class="imp_asterisk">*</em> </label>
-      	      <div class="col-3">
-	        <input class="form-control" id="tyreActionTaken_id" placeholder="Action Taken" type="text"
-              ng-model="actionTaken" tabindex="5">
+        <label class="col-2 control-label" for="Service">Reason for Removal <em class="imp_asterisk">*</em> </label>
+	      <div class="col-3">
+          <input class="form-control" id="tyreRemoveReason_id" placeholder="Reason" type="text"
+            ng-model="reason" tabindex="4">
 	      </div>
 	    </div>
 	    <div class="row row-space">
-	      <label class="col-2 control-label" for="Service">Removal KM <em class="imp_asterisk">*</em></label>
-	      <div class="col-3">
-      		<input class="form-control" id="tyreRemovedKms_id" placeholder="Kms" type="text"
+        <label class="col-2 control-label" for="Service">Removal KM <em class="imp_asterisk">*</em></label>
+        <div class="col-3">
+          <input class="form-control" id="tyreRemovedKms_id" placeholder="Kms" type="text"
             ng-model="tyreRemovedKms" tabindex="3">
-	      </div>
+        </div>
 	      <div class="col-1"></div>
+        <label class="col-2 control-label" for="Service">Action Taken <em class="imp_asterisk">*</em> </label>
+        <div class="col-3">
+          <input class="form-control" id="tyreActionTaken_id" placeholder="Action Taken" type="text"
+              ng-model="actionTaken" tabindex="5">
+        </div>
+
+	    </div>
+
+      <div class="row row-space" ng-show = "deallocatedTyreStatus == 'Scraped'">
 	      <label class="col-2 control-label" for="Service">Tyre Condition <em class="imp_asterisk">*</em> </label>
 	      <div class="col-3">
-	        <select id="tyreScrapCondition" ng-model="tyreCondition" tabindex="6">
+          <select id="tyreScrapCondition" ng-model="tyreCondition" tabindex="6">
       		  <option></option>
       		  <option value="Beed Separation / Beed Creak">Beed Separation / Beed Creak</option>
       		  <option value="Tyre Burst">Tyre Burst</option>
@@ -442,14 +451,6 @@
       		  <option value="Spotty Wear">Spotty Wear</option>
       		  <option value="Crown Impact">Crown Impact</option>
       		</select>
-	      </div>
-	    </div>
-
-	    <div class="row row-space">
-	      <label class="col-2 control-label" for="Service">Reason for Removal <em class="imp_asterisk">*</em> </label>
-	      <div class="col-3">
-	        <input class="form-control" id="tyreRemoveReason_id" placeholder="Reason" type="text"
-            ng-model="reason" tabindex="4">
 	      </div>
 	      <div class="col-1"></div>
 	      <label class="col-2 control-label" for="Service">Scrapped to Party <em class="imp_asterisk">*</em> </label>

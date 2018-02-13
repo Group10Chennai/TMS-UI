@@ -821,7 +821,7 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
       				    $scope.pageChanged_vehicles();
       				    logger.logSuccess('Vehicle added successfully');
       				    $('#showTMSVehicleModalId').modal('hide');
-      				     $rootScope.getDashboardDetails(true, false);
+      				     $rootScope.getDashboardDetails(true, false,function(dashboardResponse) {});
       				} else {
       				    logger.logError(httpResponse.data.displayMsg);
       				}
@@ -1182,6 +1182,9 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 							$timeout(function () {
 							  $scope.getTyreDetailsForAssignVehicle($scope.assignTyreVehDetails1);
 							}, 1000);
+
+              // Update the dashboard count
+              $rootScope.getDashboardDetails(true, true, function(dashboardResponse) {});
 					 }
 					 else {
 						logger.logError(httpResponse.data.displayMsg);
@@ -1247,6 +1250,9 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 						 $timeout(function () {
 							 $scope.getTyreDetailsForAssignVehicle($scope.assignTyreVehDetails1);
 						 }, 500);
+
+             // Update the dashboard counts
+             $rootScope.getDashboardDetails(false, true, function(dashboardResponse) {});
 					 }
 					 else {
 						logger.logError(httpResponse.data.displayMsg);
@@ -1487,6 +1493,7 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 					 {
 						 logger.logSuccess('Tyre added successfully');
 						 $scope.pageChanged_tyres();
+             $rootScope.getDashboardDetails(false, true, function(dashboardResponse) {});
 						 $('#showTMSTyreModalId').modal('hide');
 					 } else {
 						logger.logError(httpResponse.data.displayMsg);
@@ -1531,6 +1538,7 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 						 $('#showTMSTyreModalId').modal('hide');
 						 logger.logSuccess('Tyre updated successfully');
 						 $scope.pageChanged_tyres();
+             $rootScope.getDashboardDetails(false, true, function(dashboardResponse) {});
 					 }
 					 else {
 						logger.logError(httpResponse.data.displayMsg);
@@ -1620,6 +1628,9 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 					 {
 						 $rootScope.TMSTireInspectionHistory = httpResponse.data.result;
 						 $scope.totalItems_inspection = httpResponse.data.count;
+             if($rootScope.TMSTireInspectionHistory.length == 0 ){
+               logger.logWarning("There are no inspections in our database.")
+             }
 					 }
  				 }
  				 catch(error)
