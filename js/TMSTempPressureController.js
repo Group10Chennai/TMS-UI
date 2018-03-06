@@ -73,7 +73,6 @@ app.controller('TMSTempPressureController', ['$scope', '$rootScope', '$state', '
 
         $scope.$on('$destroy', function() {
           // clean up stuff
-          console.log("On destroy");
           $scope.clearInterval_tmsTroubledVehData();
         })
 

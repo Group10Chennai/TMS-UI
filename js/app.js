@@ -24,6 +24,9 @@ angular
   cfpLoadingBarProvider.includeSpinner = false;
   cfpLoadingBarProvider.latencyThreshold = 1;
 }])
+.config(['$httpProvider', function($httpProvider) {
+  $httpProvider.defaults.withCredentials = true;
+}])
 .run(['$rootScope', '$state', '$stateParams',
   function($rootScope, $state, $stateParams) {
   $rootScope.$on('$stateChangeSuccess',function(){

@@ -22,10 +22,13 @@ app.controller('TMSDashboardController', ['$scope', '$rootScope', '$state', 'API
 
 	$scope.getSemiAssignedVehicles = function(id){
 	    try {
-		if(id == 'SemiConfigVehicles1'){
-		    $rootScope.showSemiConfigVehData = true;
-		    $timeout(function() { $location.url('/tms-vehicles'); }, 100);
-		}
+    		if(id == 'SemiConfigVehicles1'){
+    		    $rootScope.showSemiConfigVehData = true;
+    		    $timeout(function() { $location.url('/tms-vehicles'); }, 100);
+    		} else {
+          $rootScope.showSemiConfigVehData = false;
+          $timeout(function() { $location.url('/tms-vehicles'); }, 100);
+        }
 	    } catch (e) { loading.finish(); console.log(e); }
 	}
 

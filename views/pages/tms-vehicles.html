@@ -1,5 +1,3 @@
-
-
 <!-- modal for add / update vehicle -->
 <div class="modal" id="showTMSVehicleModalId" role="dialog">
   <div class="modal-dialog modal-md">
@@ -122,22 +120,22 @@
 		    </span>
       		</div>
   	    </div> <!-- /form-group -->
-  	  <div class="row" >
-      	    <div class="col-5"></div>
-      	    <div class="col-6">
-      	      <button type="submit" id="tms_vehicleId_save" class="btn btn-success submit" ng-show="addVehButtonStatus"
-      		ng-click="addNewVehicle()"> Save </button>
-      	      <button type="submit" id="tms_vehicleId_save" class="btn btn-success submit" ng-show="updateVehButtonStatus"
-      		ng-click="updateVehDetailsFun()"> Update </button>
-	    </div>
-  	  </div>
+    	  <div class="row" >
+    	    <div class="col-5"></div>
+    	    <div class="col-6">
+    	      <button type="submit" id="tms_vehicleId_save" class="btn btn-success submit" ng-show="addVehButtonStatus"
+            		ng-click="addNewVehicle()"> Save </button>
+    	      <button type="submit" id="tms_vehicleId_save" class="btn btn-success submit" ng-show="updateVehButtonStatus"
+            		ng-click="updateVehDetailsFun()"> Update </button>
+    	    </div>
+    	  </div>
     	</div>
     	<!--<div class="modal-footer">
     	    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
     	</div>-->
-      </div>
     </div>
   </div>
+</div>
 
 <!-- Tyre assignment modal  -->
 <div class="modal" id="showTyreAssignModalId" role="dialog">
@@ -491,18 +489,18 @@
 
       </div>
     </div>
-	  <br/>
-	  <div class="row">
-	    <div class = "col-md-5 col-sm-5 col-5"></div>
-	    <div class = "col-md-5 col-sm-5 col-5">
-	      <button type="button" class="btn btn-danger" ng-click = "updateDeallocatedTyreStatus();" tabindex="12">Yes</button>
-	      <button type="button" class="btn btn-default" data-dismiss="modal" tabindex="13">No</button>
-	    </div>
-	  </div>
-	</div> <!-- modal body -->
-      </div> <!-- modal content -->
-    </div> <!-- modal dialog -->
-  </div><!-- End of the modal -->
+    	  <br/>
+    	  <div class="row">
+    	    <div class = "col-md-5 col-sm-5 col-5"></div>
+    	    <div class = "col-md-5 col-sm-5 col-5">
+    	      <button type="button" class="btn btn-danger" ng-click = "updateDeallocatedTyreStatus();" tabindex="12">Yes</button>
+    	      <button type="button" class="btn btn-default" data-dismiss="modal" tabindex="13">No</button>
+    	    </div>
+    	  </div>
+    	</div> <!-- modal body -->
+    </div> <!-- modal content -->
+  </div> <!-- modal dialog -->
+</div><!-- End of the modal -->
 
 <!-- Deallocated tyre status modal -->
 <div class="modal" id="deallocatedBTRFIDModalId" role="dialog">
@@ -548,23 +546,22 @@
 <div class="row" style="margin-top: 5px;">
   <div class="col-md-4">
     <div class="info-box" ng-click="getTMSVehicles('all');" style="cursor:pointer;">
-        <span class="info-box-icon bg-greens">
-	  <span class="info-box-number ng-binding" >{{allVehCount}}</span>
-	</span>
-        <div class="info-box-content">
-            <span class="info-box-text ng-binding">Total fleet</span>
-
-        </div><!-- /.info-box-content -->
+      <span class="info-box-icon bg-greens">
+    	  <span class="info-box-number ng-binding" >{{allVehCount}}</span>
+      </span>
+      <div class="info-box-content">
+        <span class="info-box-text ng-binding">Total fleet</span>
+      </div><!-- /.info-box-content -->
     </div><!-- /.info-box -->
   </div>
   <div class="col-md-4">
     <div class="info-box" ng-click="getTMSVehicles('semi');" style="cursor:pointer;">
-        <span class="info-box-icon bg-danger">
-	  <span class="info-box-number ng-binding" >{{allSemiConfigVehCount}}</span>
-	</span>
-        <div class="info-box-content">
-            <span class="info-box-text ng-binding">Semi config fleet</span>
-        </div><!-- /.info-box-content -->
+      <span class="info-box-icon bg-danger">
+        <span class="info-box-number ng-binding" >{{allSemiConfigVehCount}}</span>
+      </span>
+      <div class="info-box-content">
+        <span class="info-box-text ng-binding">Semi config fleet</span>
+      </div><!-- /.info-box-content -->
     </div><!-- /.info-box -->
   </div>
 </div>
@@ -642,7 +639,7 @@
       <tr ng-repeat="vehicle in allVehicles | orderBy:sortType:tmsVeh_sortReverse | filter:tmsVeh_searchData">
         <td class="tablebody-td tableData-right">{{ nextIndex_vehicles + $index + 1 }}
         </td>
-        <td class="tablebody-td" title="{{vehicle.veh_UpdatedDateTime | date : 'medium'}}">{{ vehicle.vehName }}
+        <td class="tablebody-td" title="{{vehicle.vehName | date : 'medium'}}">{{ vehicle.vehName }}
           <!-- <span class="tooltiptext">{{vehicle.veh_UpdatedDateTime | date : 'medium'}}</span> -->
         </td>
         <td ng-repeat="tire in vehicle.tires" ng-if="tire.tirePosition == 'FL'">{{ tire.tireNumber}}</td>

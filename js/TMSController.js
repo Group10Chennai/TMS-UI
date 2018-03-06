@@ -542,17 +542,17 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 		.then(
 		    function(httpResponse){ // Success block
 			try{
-			    if (httpResponse.data.status) {
-			        if (httpResponse.data.result.length > 0) {
-				    $rootScope.processVehDetailsForView(httpResponse, function(response){
-					$rootScope.allVehicles = response;
-				    });
-				    $scope.totalItems_vehicles = httpResponse.data.count;
-				} else {
+		    if (httpResponse.data.status) {
+		        if (httpResponse.data.result.length > 0) {
+  				    $rootScope.processVehDetailsForView(httpResponse, function(response){
+                $rootScope.allVehicles = response;
+  				    });
+  				    $scope.totalItems_vehicles = httpResponse.data.count;
+  				} else {
 				    $rootScope.allVehicles = [];
 				    $scope.totalItems_vehicles = 0;
-				}
-			    }
+  				}
+		    }
 			}
 			catch(error) {
 			    loading.finish();

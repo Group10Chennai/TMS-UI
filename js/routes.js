@@ -199,6 +199,19 @@ angular
     params: { subtitle: 'Tyre Monitor System' },
   })
 
+  // Reports
+  .state('app.tpms-report', {
+    url: '/tpms-report',
+    templateUrl: 'views/pages/tpms-report.html',
+    controller: 'TPMSReportController',
+    //page title goes here
+    ncyBreadcrumb: {
+      label: 'TMS',
+    },
+    //page subtitle goes here
+    params: { subtitle: 'Tyre Monitor System' },
+  })
+
   // Org Admin Or Sys Admin
   .state('app.tms-sensor', {
     url: '/tms-sensor',

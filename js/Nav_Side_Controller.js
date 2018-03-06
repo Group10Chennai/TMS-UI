@@ -187,11 +187,11 @@ app.controller('NavController', ['$scope', '$rootScope', '$state', 'APIServices'
 
 	$scope.updatePieChart = function(troubledVehCount, nonTroubledVehCount){
 	    $rootScope.troubledVehChartData = [{
-    		name:'Bad Pressure & Temp ( '+ troubledVehCount +' )',
+    		name:'Off-Range ( '+ troubledVehCount +' )',
     		id: 'TroubledVehicles1',
     		y: troubledVehCount
     	    },{
-    		name:'Good Pressure & Temp ( '+ (nonTroubledVehCount) +' )',
+    		name:'In-Range ( '+ (nonTroubledVehCount) +' )',
     		id: 'TroubledVehicles0',
     		y: nonTroubledVehCount
 	    }];
@@ -215,151 +215,159 @@ app.controller('NavController', ['$scope', '$rootScope', '$state', 'APIServices'
 
 	// Parse the vehicle response for view
 	$rootScope.processVehDetailsForView = function(httpResponse, callback){
-	    try {
-		loading.finish();
-		var allVehicles = new Array();
-		if(httpResponse.data.status) {
+    try {
+  		var allVehicles = new Array();
+      var vehIdName_HashMap = DashboardDataSharingServices.getVehIdName_HashMap();
+  		if(httpResponse.data.status) {
 		    angular.forEach(httpResponse.data.result, function(vehicle, key) {
+          // Update vehName
+          if(vehicle.vehId == undefined){
+            vehicle.vehName = vehIdName_HashMap[vehicle.tmsUserVehiclesView_Keys.vehId];
+          } else {
+            vehicle.vehName = vehIdName_HashMap[vehicle.vehId];
+          }
+
           // Tyre Detials
-			if (vehicle.tires != undefined && vehicle.tires.length < 6) {
-			    var FLStatus = false;
-			    var FRStatus = false;
-			    var RLOStatus = false;
-			    var RLIStatus = false;
-			    var RRIStatus = false;
-			    var RROStatus = false;
-			    angular.forEach(vehicle.tires, function(tire, key1){
-				if (tire.tirePosition == 'FL') {
-				    FLStatus = true;
-				} else if (tire.tirePosition == 'FR') {
-				    FRStatus = true;
-				} else if (tire.tirePosition == 'RLO') {
-				    RLOStatus = true;
-				} else if (tire.tirePosition == 'RLI') {
-				    RLIStatus = true;
-				} else if (tire.tirePosition == 'RRI') {
-				    RRIStatus = true;
-				} else if (tire.tirePosition == 'RRO') {
-				    RROStatus = true;
-				}
-			    });
-			    if (FLStatus ==  false) {
-				var tire = new Object();
-				tire.tirePosition = "FL";
-				tire.tireId = 0;
-				tire.tireNumber = '';
-				vehicle.tires.push(tire);
-			    }
-			    if (FRStatus ==  false) {
-				var tire = new Object();
-				tire.tirePosition = "FR";
-				tire.tireId = 0;
-				tire.tireNumber = '';
-				vehicle.tires.push(tire);
-			    }
-			    if (RLOStatus ==  false) {
-				var tire = new Object();
-				tire.tirePosition = "RLO";
-				tire.tireId = 0;
-				tire.tireNumber = '';
-				vehicle.tires.push(tire);
-			    }
-			    if (RLIStatus ==  false) {
-				var tire = new Object();
-				tire.tirePosition = "RLI";
-				tire.tireId = 0;
-				tire.tireNumber = '';
-				vehicle.tires.push(tire);
-			    }
-			    if (RRIStatus ==  false) {
-				var tire = new Object();
-				tire.tirePosition = "RRI";
-				tire.tireId = 0;
-				tire.tireNumber = '';
-				vehicle.tires.push(tire);
-			    }
-			    if (RROStatus ==  false) {
-				var tire = new Object();
-				tire.tirePosition = "RRO";
-				tire.tireId = 0;
-				tire.tireNumber = '';
-				vehicle.tires.push(tire);
-			    }
-			}
-      // Tyre Pressure and Temperature
-			if (vehicle.tyres != undefined && vehicle.tyres.length < 6) {
-			    var FLStatus = false;
-			    var FRStatus = false;
-			    var RLOStatus = false;
-			    var RLIStatus = false;
-			    var RRIStatus = false;
-			    var RROStatus = false;
-			    angular.forEach(vehicle.tyres, function(tyre, key1){
-				if (tyre.position == 'FL') {
-				    FLStatus = true;
-				} else if (tyre.position == 'FR') {
-				    FRStatus = true;
-				} else if (tyre.position == 'RLO') {
-				    RLOStatus = true;
-				} else if (tyre.position == 'RLI') {
-				    RLIStatus = true;
-				} else if (tyre.position == 'RRI') {
-				    RRIStatus = true;
-				} else if (tyre.position == 'RRO') {
-				    RROStatus = true;
-				}
-			    });
-			    if (FLStatus ==  false) {
-				var tyre = new Object();
-				tyre.position = "FL";
-				tyre.tireId = 0;
-				tyre.pressure = '-';
-				tyre.temp = '-';
-				vehicle.tyres.push(tyre);
-			    }
-			    if (FRStatus ==  false) {
-				var tyre = new Object();
-				tyre.position = "FR";
-				tyre.tyreId = 0;
-				tyre.pressure = '-';
-				tyre.temp = '-';
-				vehicle.tyres.push(tyre);
-			    }
-			    if (RLOStatus ==  false) {
-				var tyre = new Object();
-				tyre.position = "RLO";
-				tyre.tyreId = 0;
-				tyre.pressure = '-';
-				tyre.temp = '-';
-				vehicle.tyres.push(tyre);
-			    }
-			    if (RLIStatus ==  false) {
-				var tyre = new Object();
-				tyre.position = "RLI";
-				tyre.tyreId = 0;
-				tyre.pressure = '-';
-				tyre.temp = '-';
-				vehicle.tyres.push(tyre);
-			    }
-			    if (RRIStatus ==  false) {
-				var tyre = new Object();
-				tyre.position = "RRI";
-				tyre.tyreId = 0;
-				tyre.pressure = '-';
-				tyre.temp = '-';
-				vehicle.tyres.push(tyre);
-			    }
-			    if (RROStatus ==  false) {
-    				var tyre = new Object();
-    				tyre.position = "RRO";
-    				tyre.tyreId = 0;
-    				tyre.pressure = '-';
-    				tyre.temp = '-';
-    				vehicle.tyres.push(tyre);
-			    }
-  			}
+    			if (vehicle.tires != undefined && vehicle.tires.length < 6) {
+  			    var FLStatus = false;
+  			    var FRStatus = false;
+  			    var RLOStatus = false;
+  			    var RLIStatus = false;
+  			    var RRIStatus = false;
+  			    var RROStatus = false;
+  			    angular.forEach(vehicle.tires, function(tire, key1){
+      				if (tire.tirePosition == 'FL') {
+      				    FLStatus = true;
+      				} else if (tire.tirePosition == 'FR') {
+      				    FRStatus = true;
+      				} else if (tire.tirePosition == 'RLO') {
+      				    RLOStatus = true;
+      				} else if (tire.tirePosition == 'RLI') {
+      				    RLIStatus = true;
+      				} else if (tire.tirePosition == 'RRI') {
+      				    RRIStatus = true;
+      				} else if (tire.tirePosition == 'RRO') {
+      				    RROStatus = true;
+      				}
+  			    });
+  			    if (FLStatus ==  false) {
+      				var tire = new Object();
+      				tire.tirePosition = "FL";
+      				tire.tireId = 0;
+      				tire.tireNumber = '';
+      				vehicle.tires.push(tire);
+  			    }
+  			    if (FRStatus ==  false) {
+      				var tire = new Object();
+      				tire.tirePosition = "FR";
+      				tire.tireId = 0;
+      				tire.tireNumber = '';
+      				vehicle.tires.push(tire);
+  			    }
+  			    if (RLOStatus ==  false) {
+      				var tire = new Object();
+      				tire.tirePosition = "RLO";
+      				tire.tireId = 0;
+      				tire.tireNumber = '';
+      				vehicle.tires.push(tire);
+  			    }
+  			    if (RLIStatus ==  false) {
+      				var tire = new Object();
+      				tire.tirePosition = "RLI";
+      				tire.tireId = 0;
+      				tire.tireNumber = '';
+      				vehicle.tires.push(tire);
+  			    }
+  			    if (RRIStatus ==  false) {
+      				var tire = new Object();
+      				tire.tirePosition = "RRI";
+      				tire.tireId = 0;
+      				tire.tireNumber = '';
+      				vehicle.tires.push(tire);
+  			    }
+  			    if (RROStatus ==  false) {
+      				var tire = new Object();
+      				tire.tirePosition = "RRO";
+      				tire.tireId = 0;
+      				tire.tireNumber = '';
+      				vehicle.tires.push(tire);
+  			    }
+    			}
+          // Tyre Pressure and Temperature
+    			if (vehicle.tyres != undefined && vehicle.tyres.length < 6) {
+  			    var FLStatus = false;
+  			    var FRStatus = false;
+  			    var RLOStatus = false;
+  			    var RLIStatus = false;
+  			    var RRIStatus = false;
+  			    var RROStatus = false;
+  			    angular.forEach(vehicle.tyres, function(tyre, key1){
+      				if (tyre.position == 'FL') {
+      				    FLStatus = true;
+      				} else if (tyre.position == 'FR') {
+      				    FRStatus = true;
+      				} else if (tyre.position == 'RLO') {
+      				    RLOStatus = true;
+      				} else if (tyre.position == 'RLI') {
+      				    RLIStatus = true;
+      				} else if (tyre.position == 'RRI') {
+      				    RRIStatus = true;
+      				} else if (tyre.position == 'RRO') {
+      				    RROStatus = true;
+      				}
+  			    });
+  			    if (FLStatus ==  false) {
+      				var tyre = new Object();
+      				tyre.position = "FL";
+      				tyre.tireId = 0;
+      				tyre.pressure = '-';
+      				tyre.temp = '-';
+      				vehicle.tyres.push(tyre);
+  			    }
+  			    if (FRStatus ==  false) {
+      				var tyre = new Object();
+      				tyre.position = "FR";
+      				tyre.tyreId = 0;
+      				tyre.pressure = '-';
+      				tyre.temp = '-';
+      				vehicle.tyres.push(tyre);
+  			    }
+  			    if (RLOStatus ==  false) {
+      				var tyre = new Object();
+      				tyre.position = "RLO";
+      				tyre.tyreId = 0;
+      				tyre.pressure = '-';
+      				tyre.temp = '-';
+      				vehicle.tyres.push(tyre);
+  			    }
+  			    if (RLIStatus ==  false) {
+      				var tyre = new Object();
+      				tyre.position = "RLI";
+      				tyre.tyreId = 0;
+      				tyre.pressure = '-';
+      				tyre.temp = '-';
+      				vehicle.tyres.push(tyre);
+  			    }
+  			    if (RRIStatus ==  false) {
+      				var tyre = new Object();
+      				tyre.position = "RRI";
+      				tyre.tyreId = 0;
+      				tyre.pressure = '-';
+      				tyre.temp = '-';
+      				vehicle.tyres.push(tyre);
+  			    }
+  			    if (RROStatus ==  false) {
+      				var tyre = new Object();
+      				tyre.position = "RRO";
+      				tyre.tyreId = 0;
+      				tyre.pressure = '-';
+      				tyre.temp = '-';
+      				vehicle.tyres.push(tyre);
+  			    }
+    			}
   			allVehicles.push(vehicle);
 	    });
+      loading.finish();
 	    callback(allVehicles);
 		} else if(httpResponse.data.displayMsg == "Session Expired. Please login again") {
 	    // Auto logout
@@ -371,10 +379,10 @@ app.controller('NavController', ['$scope', '$rootScope', '$state', 'APIServices'
 	    }
 			$rootScope.logoutFun("TMS Vehicle View - false");
 		} else {
-		    logger.logWarning(httpResponse.data.displayMsg);
+	    logger.logWarning(httpResponse.data.displayMsg);
 		}
-	    } catch (e) { console.log(e); }
-	}
+  } catch (e) { console.log(e); }
+}
 
 	// loading the service first time
   $scope.initDashboardData = function(){
