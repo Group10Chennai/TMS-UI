@@ -1,68 +1,88 @@
-<div class="animated">
-  <div class="widget-header" style="margin-top: 0.1em;">
-      <i class="fa fa-list"></i>
-      <h3> Temperature & Pressure Report </h3>
-  </div> <!-- /widget-header -->
-  <div class="report-div div-header report-panel">
-    <div class="row">
-      <!-- vehicle -->
-      <div class="col-md-6 col-12 report-select">
-        <select id="tpmsVehicleReport" multiple="multiple">
-  	     <option ng-repeat="(key, value) in vehDetails" value="{{key}}">{{value}}</option>
-	      </select>
-      </div>
+<div class="animated fadeIn">
 
-      <!-- from date -->
-      <div class="col-md-3 col-12 report-select report-date" style="position: relative; display: flex;">
-        <input class="form-control " type="text" id="tpms_ReportStartTime"  placeholder="Start DateTime">
-        <span class="tpmsdatepicker-icn" style="cursor: pointer;" onclick="$('#tpms_ReportStartTime').focus();">
-          <i class="fa fa-calendar" style="cursor: pointer"></i>
-        </span>
-      </div>
+    <div class="widget-header" style="margin-top: 0.1em;">
+        <i class="fa fa-list"></i>
+        <h3> Temperature & Pressure Report </h3>
+    </div> <!-- /widget-header -->
 
-      <!-- to date -->
-      <div class="col-md-3 col-12 report-select report-date " style="position: relative; display: flex;">
-        <input class="form-control date_text" id="tpms_ReportEndTime" type="text" placeholder="End DateTime">
-        <span class="tpmsdatepicker-icn" style="cursor: pointer;" onclick="$('#tpms_ReportEndTime').focus();">
-            <i class="fa fa-calendar" style="cursor: pointer"></i>
-        </span>
-      </div>
-      </div>
-      <div class="row">
-        <!-- buttons -->
-        <div class="col-md-5 report-select">
-          <button type="button" class="btn btn-info btn-sx tpmsbtn" data-dismiss="modal" ng-click="generateTPReport()">
-            <span class="fa fa-search" > Generate Report </span>
-          </button>
-          <!-- <button type="button" class="btn btn-default active btn-sx tpmsbtn" ng-click="clearReportHead()">
-            <span class="fa fa-times"> Clear</span>
-          </button> -->
+    <div class="report-div div-header report-panel">
+        <div class="row">
+            <div class="col-md-3 col-sm-6 col-xs-12 report-select" >
+                <select class="select2-style" id="selectVehChoice"  ng-model="vehicleChoice">
+                    <option></option>
+                    <option value="1"> Based on Vehicle </option>
+                    <option value="2"> Based on Depot</option>
+                </select>
+            </div>
+
+            <div class="col-md-9 col-sm-6 col-xs-12 report-select" ng-show="vehicleChoice == 1">
+                <select id="tpmsVehicleReport" class="select2-style" ng-model="selectedVehIds_report" multiple="multiple">
+                    <option ng-repeat="(key, value) in vehDetails" value="{{key}}">
+                        {{value}}
+                    </option>
+                </select>
+            </div>
+
+            <div class="col-md-9 col-sm-6 col-xs-12 report-select" ng-show="vehicleChoice == 2">
+                <select id="selectDepot" class="select2-style" ng-model="selectedReportDepotId">
+                    <option ng-repeat="depot in depotDetails | orderBy : 'depotName'" value="{{depot.depotId}}">
+                        {{depot.depotName}}
+                    </option>
+                </select>
+            </div>
         </div>
-      </div>
+
+        <div class="row">
+            <!-- from date -->
+            <div class="col-md-2 col-12 report-select report_dateField">
+		<input class="form-control " type="text" id="tpms_ReportStartTime"  placeholder="Start DateTime">
+		<span class="tpmsdatepicker-icn" style="cursor: pointer;" onclick="$('#tpms_ReportStartTime').focus();">
+		    <i class="fa fa-calendar" style="cursor: pointer"></i>
+		</span>
+            </div>
+
+            <!-- to date -->
+            <div class="col-md-2 col-12 report-select report_dateField" style="padding-left: 0px !important;">
+		<input class="form-control date_text" id="tpms_ReportEndTime" type="text" placeholder="End DateTime">
+		<span class="tpmsdatepicker-icn" style="cursor: pointer;" onclick="$('#tpms_ReportEndTime').focus();">
+		    <i class="fa fa-calendar" style="cursor: pointer"></i>
+		</span>
+            </div>
+
+	    <!-- buttons -->
+            <div class="col-md-5 report-select" style="padding-left: 0px !important;">
+                <button type="button" class="btn btn-info btn-sx tpmsbtn" data-dismiss="modal" ng-click="generateTPReport()">
+                    <span class="fa fa-search" > Generate Report </span>
+                </button>
+                <button type="button" class="btn btn-default active btn-sx tpmsbtn" ng-click="clearReportHead()">
+                    <span class="fa fa-times"> Clear</span>
+                </button>
+            </div>
+        </div>
     </div>
 
     <div class="widget-content report-widget table-responsive" ng-show = "TPMSReportDataResponse.length > 0">
       <form>
       	<div class="form-group row ">
-    	    <div class="col-md-10 col-sm-12 col-xs-12">
-        		<div class="input-group">
+      	    <div class="col-md-10 col-sm-12 col-xs-12">
+      		<div class="input-group">
       		    <div class="input-group-addon"><i class="fa fa-search"></i></div>
       		    <input type="text" placeholder= "Search" class="form-control" ng-model="tmsVeh_searchData" >
-        		</div>
-    	    </div>
-    	    <div class="col-md-2 col-sm-12 col-xs-12">
-        		<div class="download_icon" ng-click = "download_TPMSHistoryReport()">
-        		    <i class="fa fa-download" title="Download Excel"></i>
-        		</div>
-    	    </div>
+      		</div>
+      	    </div>
+	    <div class="col-md-2 col-sm-12 col-xs-12" >
+		<div class="download_icon" ng-click = "download_TPMSHistoryReport()">
+		    <i class="fa fa-download" title="Download Excel"></i>
+		</div>
+	    </div>
       	</div>
       </form>
 
-      <table class="table table-fixed table-bordered table-hover" >
+        <table class="table table-fixed table-bordered table-hover" >
       	<thead>
     	    <tr class="tablehead">
-            <th class="tableHead-center" >
-      		    <a href="#" > # </a>
+                    <th class="tableHead-center" >
+        		    <a href="#" > # </a>
         		</th>
         		<th class="tableHead-center" >
       		    <a href="#" ng-click="sortType = 'vehName'; tmsVeh_sortReverse = !tmsVeh_sortReverse">
@@ -78,63 +98,64 @@
         			<span ng-show="sortType == 'device_date_time' && tmsVeh_sortReverse" class="fa fa-caret-up"></span>
       		    </a>
             </th>
-            <th class="tableHead-center">
-                <a href="#" data-toggle="tooltip" title="Front Left">
-                    FL
-                </a>
-            </th>
-            <th class="tableHead-center">
-                <a href="#" data-toggle="tooltip" title="Front Right">
-                    FR
-                </a>
-            </th>
-            <th class="tableHead-center">
-                <a href="#" data-toggle="tooltip" title="Rear Left Outer">
-                    RLO
-                </a>
-            </th>
-            <th class="tableHead-center">
-                <a href="#" data-toggle="tooltip" title="Rear Left Inner">
-                    RLI
-                </a>
-            </th>
-            <th class="tableHead-center">
-              <a href="#" data-toggle="tooltip" title="Rear Right Inner">
-                    RRI
-              </a>
-            </th>
-            <th class="tableHead-center">
-                <a href="#" data-toggle="tooltip" title="Rear Right Outer">
-                    RRO
-                </a>
-            </th>
+                    <th class="tableHead-center">
+                        <a href="#" data-toggle="tooltip" title="Front Left">
+                            FL
+                        </a>
+                    </th>
+                    <th class="tableHead-center">
+                        <a href="#" data-toggle="tooltip" title="Front Right">
+                            FR
+                        </a>
+                    </th>
+                    <th class="tableHead-center">
+                        <a href="#" data-toggle="tooltip" title="Rear Left Outer">
+                            RLO
+                        </a>
+                    </th>
+                    <th class="tableHead-center">
+                        <a href="#" data-toggle="tooltip" title="Rear Left Inner">
+                            RLI
+                        </a>
+                    </th>
+                    <th class="tableHead-center">
+                      <a href="#" data-toggle="tooltip" title="Rear Right Inner">
+                            RRI
+                      </a>
+                    </th>
+                    <th class="tableHead-center">
+                        <a href="#" data-toggle="tooltip" title="Rear Right Outer">
+                            RRO
+                        </a>
+                    </th>
+                    <!--<td style="width: 0.5%"></td>-->
     	    </tr>
       	</thead>
       	<tbody>
           <tr ng-repeat="vehicle in TPMSReportDataResponse | orderBy:sortType:tmsVeh_sortReverse | filter:tmsVeh_searchData">
-      	    <td class="tableData-right tablebody-td">{{nextIndex_tyres + $index + 1 }}</td>
-      	    <td class="tablebody-td">{{ vehicle.vehName }}
-          		<button class="btn btn-danger btn-circle" type="button"
-          		ng-click="findHistoryData(vehicle.vehId)">
-          		    {{ vehicle.subRecCount }}
-          		</button>
-      	    </td>
-      	    <td class="tablebody-td" >{{ vehicle.device_date_time | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
-      	    <td class="tablebody-td" ng-repeat ="tyre in vehicle.tyres" ng-if = "tyre.position == 'FL'">
-      	      <span style="color:green" ng-if ="tyre.temp != '-' && (tyre.temp >= minMaxTempPressureValues.minTemp && tyre.temp <= minMaxTempPressureValues.maxTemp)"> {{tyre.temp}} ℃ </span>
-      	      <span style="color:rgba(254, 51, 51, 0.92)" ng-if ="tyre.temp != '-' && (tyre.temp < minMaxTempPressureValues.minTemp || tyre.temp > minMaxTempPressureValues.maxTemp)"> {{tyre.temp}} ℃ </span> - <span style="color:green" ng-if ="tyre.pressure != '-' && (tyre.pressure >= minMaxTempPressureValues.minPressure && tyre.pressure <= minMaxTempPressureValues.maxPressure)"> {{tyre.pressure | number:0}} Psi </span> <span style="color:rgba(254, 51, 51, 0.92)" ng-if ="tyre.pressure != '-' && (tyre.pressure < minMaxTempPressureValues.minPressure || tyre.pressure > minMaxTempPressureValues.maxPressure)"> {{tyre.pressure | number:0}} Psi </span> </td>
-      	    <td class="tablebody-td" ng-repeat ="tyre in vehicle.tyres" ng-if = "tyre.position == 'FR'"> <span style="color:green" ng-if ="tyre.temp != '-' && (tyre.temp >= minMaxTempPressureValues.minTemp && tyre.temp <= minMaxTempPressureValues.maxTemp)"> {{tyre.temp}} ℃ </span> <span style="color:rgba(254, 51, 51, 0.92)" ng-if ="tyre.temp != '-' && (tyre.temp < minMaxTempPressureValues.minTemp || tyre.temp > minMaxTempPressureValues.maxTemp)"> {{tyre.temp}} ℃ </span> - <span style="color:green" ng-if ="tyre.pressure != '-' && (tyre.pressure >= minMaxTempPressureValues.minPressure && tyre.pressure <= minMaxTempPressureValues.maxPressure)"> {{tyre.pressure  | number:0}} Psi </span> <span style="color:rgba(254, 51, 51, 0.92)" ng-if ="tyre.pressure != '-' && (tyre.pressure < minMaxTempPressureValues.minPressure || tyre.pressure > minMaxTempPressureValues.maxPressure)"> {{tyre.pressure  | number:0}} Psi </span> </td>
-      	    <td class="tablebody-td" ng-repeat ="tyre in vehicle.tyres" ng-if = "tyre.position == 'RLO'"> <span style="color:green" ng-if ="tyre.temp != '-' && (tyre.temp >= minMaxTempPressureValues.minTemp && tyre.temp <= minMaxTempPressureValues.maxTemp)"> {{tyre.temp}} ℃ </span> <span style="color:rgba(254, 51, 51, 0.92)" ng-if ="tyre.temp != '-' && (tyre.temp < minMaxTempPressureValues.minTemp || tyre.temp > minMaxTempPressureValues.maxTemp)"> {{tyre.temp}} ℃ </span> - <span style="color:green" ng-if ="tyre.pressure != '-' && (tyre.pressure >= minMaxTempPressureValues.minPressure && tyre.pressure <= minMaxTempPressureValues.maxPressure)"> {{tyre.pressure  | number:0}} Psi </span> <span style="color:rgba(254, 51, 51, 0.92)" ng-if ="tyre.pressure != '-' && (tyre.pressure < minMaxTempPressureValues.minPressure || tyre.pressure > minMaxTempPressureValues.maxPressure)"> {{tyre.pressure  | number:0}} Psi </span> </td>
-      	    <td class="tablebody-td" ng-repeat ="tyre in vehicle.tyres" ng-if = "tyre.position == 'RLI'"> <span style="color:green" ng-if ="tyre.temp >= minMaxTempPressureValues.minTemp && tyre.temp <= minMaxTempPressureValues.maxTemp"> {{tyre.temp}} ℃ </span> <span style="color:rgba(254, 51, 51, 0.92)" ng-if ="tyre.temp < minMaxTempPressureValues.minTemp || tyre.temp > minMaxTempPressureValues.maxTemp"> {{tyre.temp}} ℃ </span> - <span style="color:green" ng-if ="tyre.pressure != '-' && (tyre.pressure >= minMaxTempPressureValues.minPressure && tyre.pressure <= minMaxTempPressureValues.maxPressure)"> {{tyre.pressure  | number:0}} Psi </span> <span style="color:rgba(254, 51, 51, 0.92)" ng-if ="tyre.pressure != '-' && (tyre.pressure < minMaxTempPressureValues.minPressure || tyre.pressure > minMaxTempPressureValues.maxPressure)"> {{tyre.pressure  | number:0}} Psi </span> </td>
-      	    <td class="tablebody-td" ng-repeat ="tyre in vehicle.tyres" ng-if = "tyre.position == 'RRI'"> <span style="color:green" ng-if ="tyre.temp != '-' && (tyre.temp >= minMaxTempPressureValues.minTemp && tyre.temp <= minMaxTempPressureValues.maxTemp)"> {{tyre.temp}} ℃ </span> <span style="color:rgba(254, 51, 51, 0.92)" ng-if ="tyre.temp != '-' && (tyre.temp < minMaxTempPressureValues.minTemp || tyre.temp > minMaxTempPressureValues.maxTemp)"> {{tyre.temp}} ℃ </span> - <span style="color:green" ng-if ="tyre.pressure != '-' && (tyre.pressure >= minMaxTempPressureValues.minPressure && tyre.pressure <= minMaxTempPressureValues.maxPressure)"> {{tyre.pressure  | number:0}} Psi </span> <span style="color:rgba(254, 51, 51, 0.92)" ng-if ="tyre.pressure != '-' && (tyre.pressure < minMaxTempPressureValues.minPressure || tyre.pressure > minMaxTempPressureValues.maxPressure)"> {{tyre.pressure  | number:0}} Psi </span> </td>
-      	    <td class="tablebody-td" ng-repeat ="tyre in vehicle.tyres" ng-if = "tyre.position == 'RRO'"> <span style="color:green" ng-if ="tyre.temp != '-' && (tyre.temp >= minMaxTempPressureValues.minTemp && tyre.temp <= minMaxTempPressureValues.maxTemp)"> {{tyre.temp}} ℃ </span> <span style="color:rgba(254, 51, 51, 0.92)" ng-if ="tyre.temp != '-' && (tyre.temp < minMaxTempPressureValues.minTemp || tyre.temp > minMaxTempPressureValues.maxTemp)"> {{tyre.temp}} ℃ </span> - <span style="color:green" ng-if ="tyre.pressure != '-' && (tyre.pressure >= minMaxTempPressureValues.minPressure && tyre.pressure <= minMaxTempPressureValues.maxPressure)"> {{tyre.pressure  | number:0}} Psi </span> <span style="color:rgba(254, 51, 51, 0.92)" ng-if ="tyre.pressure != '-' && (tyre.pressure < minMaxTempPressureValues.minPressure || tyre.pressure > minMaxTempPressureValues.maxPressure)"> {{tyre.pressure  | number:0}} Psi </span> </td>
+	    <td class="tableData-right tablebody-td">{{nextIndex_tyres + $index + 1 }}</td>
+	    <td class="tablebody-td">{{ vehicle.vehName }}
+		<button class="btn btn-danger btn-circle" type="button"
+		ng-click="findHistoryData(vehicle.vehId)">
+		    {{ vehicle.subRecCount }}
+		</button>
+	    </td>
+	    <td class="tablebody-td" >{{ vehicle.device_date_time | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
+	    <td class="tablebody-td" ng-repeat ="tyre in vehicle.tyres" ng-if = "tyre.position == 'FL'">
+	      <span style="color:green" ng-if ="tyre.temp != '-' && (tyre.temp >= minMaxTempPressureValues.minTemp && tyre.temp <= minMaxTempPressureValues.maxTemp)"> {{tyre.temp}} ℃ </span>
+	      <span style="color:rgba(254, 51, 51, 0.92)" ng-if ="tyre.temp != '-' && (tyre.temp < minMaxTempPressureValues.minTemp || tyre.temp > minMaxTempPressureValues.maxTemp)"> {{tyre.temp}} ℃ </span> - <span style="color:green" ng-if ="tyre.pressure != '-' && (tyre.pressure >= minMaxTempPressureValues.minPressure && tyre.pressure <= minMaxTempPressureValues.maxPressure)"> {{tyre.pressure | number:0}} Psi </span> <span style="color:rgba(254, 51, 51, 0.92)" ng-if ="tyre.pressure != '-' && (tyre.pressure < minMaxTempPressureValues.minPressure || tyre.pressure > minMaxTempPressureValues.maxPressure)"> {{tyre.pressure | number:0}} Psi </span> </td>
+	    <td class="tablebody-td" ng-repeat ="tyre in vehicle.tyres" ng-if = "tyre.position == 'FR'"> <span style="color:green" ng-if ="tyre.temp != '-' && (tyre.temp >= minMaxTempPressureValues.minTemp && tyre.temp <= minMaxTempPressureValues.maxTemp)"> {{tyre.temp}} ℃ </span> <span style="color:rgba(254, 51, 51, 0.92)" ng-if ="tyre.temp != '-' && (tyre.temp < minMaxTempPressureValues.minTemp || tyre.temp > minMaxTempPressureValues.maxTemp)"> {{tyre.temp}} ℃ </span> - <span style="color:green" ng-if ="tyre.pressure != '-' && (tyre.pressure >= minMaxTempPressureValues.minPressure && tyre.pressure <= minMaxTempPressureValues.maxPressure)"> {{tyre.pressure  | number:0}} Psi </span> <span style="color:rgba(254, 51, 51, 0.92)" ng-if ="tyre.pressure != '-' && (tyre.pressure < minMaxTempPressureValues.minPressure || tyre.pressure > minMaxTempPressureValues.maxPressure)"> {{tyre.pressure  | number:0}} Psi </span> </td>
+	    <td class="tablebody-td" ng-repeat ="tyre in vehicle.tyres" ng-if = "tyre.position == 'RLO'"> <span style="color:green" ng-if ="tyre.temp != '-' && (tyre.temp >= minMaxTempPressureValues.minTemp && tyre.temp <= minMaxTempPressureValues.maxTemp)"> {{tyre.temp}} ℃ </span> <span style="color:rgba(254, 51, 51, 0.92)" ng-if ="tyre.temp != '-' && (tyre.temp < minMaxTempPressureValues.minTemp || tyre.temp > minMaxTempPressureValues.maxTemp)"> {{tyre.temp}} ℃ </span> - <span style="color:green" ng-if ="tyre.pressure != '-' && (tyre.pressure >= minMaxTempPressureValues.minPressure && tyre.pressure <= minMaxTempPressureValues.maxPressure)"> {{tyre.pressure  | number:0}} Psi </span> <span style="color:rgba(254, 51, 51, 0.92)" ng-if ="tyre.pressure != '-' && (tyre.pressure < minMaxTempPressureValues.minPressure || tyre.pressure > minMaxTempPressureValues.maxPressure)"> {{tyre.pressure  | number:0}} Psi </span> </td>
+	    <td class="tablebody-td" ng-repeat ="tyre in vehicle.tyres" ng-if = "tyre.position == 'RLI'"> <span style="color:green" ng-if ="tyre.temp >= minMaxTempPressureValues.minTemp && tyre.temp <= minMaxTempPressureValues.maxTemp"> {{tyre.temp}} ℃ </span> <span style="color:rgba(254, 51, 51, 0.92)" ng-if ="tyre.temp < minMaxTempPressureValues.minTemp || tyre.temp > minMaxTempPressureValues.maxTemp"> {{tyre.temp}} ℃ </span> - <span style="color:green" ng-if ="tyre.pressure != '-' && (tyre.pressure >= minMaxTempPressureValues.minPressure && tyre.pressure <= minMaxTempPressureValues.maxPressure)"> {{tyre.pressure  | number:0}} Psi </span> <span style="color:rgba(254, 51, 51, 0.92)" ng-if ="tyre.pressure != '-' && (tyre.pressure < minMaxTempPressureValues.minPressure || tyre.pressure > minMaxTempPressureValues.maxPressure)"> {{tyre.pressure  | number:0}} Psi </span> </td>
+	    <td class="tablebody-td" ng-repeat ="tyre in vehicle.tyres" ng-if = "tyre.position == 'RRI'"> <span style="color:green" ng-if ="tyre.temp != '-' && (tyre.temp >= minMaxTempPressureValues.minTemp && tyre.temp <= minMaxTempPressureValues.maxTemp)"> {{tyre.temp}} ℃ </span> <span style="color:rgba(254, 51, 51, 0.92)" ng-if ="tyre.temp != '-' && (tyre.temp < minMaxTempPressureValues.minTemp || tyre.temp > minMaxTempPressureValues.maxTemp)"> {{tyre.temp}} ℃ </span> - <span style="color:green" ng-if ="tyre.pressure != '-' && (tyre.pressure >= minMaxTempPressureValues.minPressure && tyre.pressure <= minMaxTempPressureValues.maxPressure)"> {{tyre.pressure  | number:0}} Psi </span> <span style="color:rgba(254, 51, 51, 0.92)" ng-if ="tyre.pressure != '-' && (tyre.pressure < minMaxTempPressureValues.minPressure || tyre.pressure > minMaxTempPressureValues.maxPressure)"> {{tyre.pressure  | number:0}} Psi </span> </td>
+	    <td class="tablebody-td" ng-repeat ="tyre in vehicle.tyres" ng-if = "tyre.position == 'RRO'"> <span style="color:green" ng-if ="tyre.temp != '-' && (tyre.temp >= minMaxTempPressureValues.minTemp && tyre.temp <= minMaxTempPressureValues.maxTemp)"> {{tyre.temp}} ℃ </span> <span style="color:rgba(254, 51, 51, 0.92)" ng-if ="tyre.temp != '-' && (tyre.temp < minMaxTempPressureValues.minTemp || tyre.temp > minMaxTempPressureValues.maxTemp)"> {{tyre.temp}} ℃ </span> - <span style="color:green" ng-if ="tyre.pressure != '-' && (tyre.pressure >= minMaxTempPressureValues.minPressure && tyre.pressure <= minMaxTempPressureValues.maxPressure)"> {{tyre.pressure  | number:0}} Psi </span> <span style="color:rgba(254, 51, 51, 0.92)" ng-if ="tyre.pressure != '-' && (tyre.pressure < minMaxTempPressureValues.minPressure || tyre.pressure > minMaxTempPressureValues.maxPressure)"> {{tyre.pressure  | number:0}} Psi </span> </td>
           </tr>
         </tbody>
-      </table>
+        </table>
     </div>
+
     <!-- table-content-div -->
-    <a id="back-to-top" class="btn btn-primary btn-lg back-to-top" role="button"
-      ng-click="Back2Top()">
+    <a id="back-to-top" class="btn btn-primary btn-lg back-to-top" role="button" ng-click="Back2Top()">
         <i class="fa fa-angle-double-up" aria-hidden="true" ></i>
     </a>
 </div>
@@ -201,6 +222,12 @@
                 $('#back-to-top').fadeOut();
             }
         });
+
+        setTimeout(function () {
+            $('body,html').animate({
+                scrollTop: 0
+            }, 300);
+        }, 10);
 
         //tpms report start and end datetime
         $('#tpms_ReportStartTime').datetimepicker({

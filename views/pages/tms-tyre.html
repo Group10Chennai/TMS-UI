@@ -23,7 +23,9 @@
 		    <label class="col-3 control-label" for="tyre">Make <em class="imp_asterisk">*</em> </label>
 		    <div class="col-5">
 			<select id="tyremakeId" ng-model="tyreMakeId">
-			    <option ng-repeat="tyreMake in TMSTyreMakeList | orderBy : 'tyreMake'" value="{{tyreMake.tyreMakeId}}">{{tyreMake.tyreMake}}</option>
+			    <option ng-repeat="tyreMake in TMSTyreMakeList | orderBy : 'tyreMake'" value="{{tyreMake.tyreMakeId}}">
+				{{tyreMake.tyreMake}}
+			    </option>
 			</select>
 		    </div>
 		</div> <!-- /form-group -->
@@ -34,7 +36,7 @@
 			<select id="tyreTypeId" ng-model="TMSTyreType">
 			    <option value=''></option>
 			    <option value='New'> New </option>
-			    <option value='Retreaded'> Retreaded </option>
+			    <option value='Retreaded'> Retread </option>
 			</select>
 		    </div>
 		</div> <!-- /form-group -->

@@ -774,7 +774,7 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 				    $scope.TMSVehDetailsUpdate.rfid = 0;
 				}
 				$('#showTMSVehicleModalId').modal('show');
-				scope.getVehDetailsFormForUpdate($scope.TMSVehDetailsUpdate);
+				$scope.getVehDetailsFormForUpdate($scope.TMSVehDetailsUpdate);
 			    } else {
 				logger.logError(httpResponse.data.displayMsg);
 			    }

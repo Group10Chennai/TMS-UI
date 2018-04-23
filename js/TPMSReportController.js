@@ -3,19 +3,35 @@ app = angular.module('app');
 
 // NavController
 app.controller('TPMSReportController', ['$scope', '$rootScope', '$state', 'APIServices', '$http',
-    'DashboardDataSharingServices', '$location','$cookieStore','$filter', 'logger','$timeout',
-    function($scope, $rootScope, $state, APIServices, $http, DashboardDataSharingServices, $location,
-    $cookieStore, $filter, logger, $timeout) {
-	$scope.controller = 'ReportsController!';
+  'DashboardDataSharingServices', '$location','$cookieStore','$filter', 'logger','$timeout',
+  function($scope, $rootScope, $state, APIServices, $http, DashboardDataSharingServices, $location,
+  $cookieStore, $filter, logger, $timeout) {
+
+  $scope.controller = 'ReportsController!';
+  $scope.vehicleChoice = 1;
+
+	$('#selectVehChoice').select2({
+	    placeholder: "Select Vehicle Choice",
+	    allowClear: true,
+	    width: 265
+	});
 
 	$('#tpmsVehicleReport').select2({
-    placeholder: "Select Vehicle",
-    allowClear: true,
-    width: '100%'
+	    placeholder: "Select Vehicle",
+	    allowClear: true,
+	    width: 790
+	});
+
+	$('#selectDepot').select2({
+	    placeholder: "Select Depot",
+	    allowClear: true,
+	    width: 790
 	});
 
 	// Get the vehicles list
-	$scope.vehDetails =   DashboardDataSharingServices.getVehIdName_HashMap();
+	$scope.vehDetails = DashboardDataSharingServices.getVehiclesList();
+  $scope.depotDetails = DashboardDataSharingServices.getDeportList();
+
 	// Get TPMS report data
 	$scope.getTPMSReportData = function(selected_vehIds_report, uniqueStatus,
     startDateTime, endDateTime, downloadStatus, callback)
@@ -51,34 +67,87 @@ app.controller('TPMSReportController', ['$scope', '$rootScope', '$state', 'APISe
 	// loading the service first time
 	var startDateTime = 0;
 	var endDateTime = 0;
-  var selected_vehIds_report = [];
-	$scope.generateTPReport = function(){
-    selected_vehIds_report = $('#tpmsVehicleReport').val();
+  $scope.selected_vehIds_report = [];
+  $scope.generateTPReport = function(){
+    $scope.selected_vehIds_report = [];
+    var selected_depot_id = 0;
+
+    console.log($scope.selectedReportDepotId);
+    if($scope.vehicleChoice == 1){
+      // Based on Vehicles
+      $scope.selected_vehIds_report = $('#tpmsVehicleReport').val();
+    } else{
+      // Based on Depot
+      if($scope.selectedReportDepotId > 0)
+      {
+        // Find the vehicles in that Depot
+        $scope.selected_vehIds_report = [];
+        angular.forEach($scope.vehDetails, function(vehicle, key){
+          console.log(vehicle);
+          if(vehicle.depotId == $scope.selectedReportDepotId){
+            $scope.selected_vehIds_report.push(vehicle.vehId);
+          }
+        })
+      }
+    }
+
     startDateTime = moment($("#tpms_ReportStartTime").val(), "D/M/YYYY HH:mm").valueOf();
     // Adding 59 sec at the end
     endDateTime = moment($("#tpms_ReportEndTime").val()+":59", "D/M/YYYY HH:mm:ss").valueOf();
 
-    // showing in main table
-    $scope.getTPMSReportData(selected_vehIds_report, true, startDateTime, endDateTime, false, function(TPMSReportDataResponse)
-    {
-  		$rootScope.processVehDetailsForView(TPMSReportDataResponse, function(processedData){
+    if($scope.selected_vehIds_report.length > 0){
+      // showing in main table
+      $scope.getTPMSReportData($scope.selected_vehIds_report, true, startDateTime, endDateTime, false, function(TPMSReportDataResponse)
+      {
+    		$rootScope.processVehDetailsForView(TPMSReportDataResponse, function(processedData){
   		    $scope.TPMSReportDataResponse = processedData;
-  		})
-    })
+    		})
+      })
+    } else {
+      logger.logWarning("Please select vehicles or Depot");
+    }
 	}
+
+  $scope.getTMSDepotList = function() {
+    try {
+  		$.ajax({
+		    url: $rootScope.HOST_TMS + 'api/tms/getTMSDepotList',
+		    type: "GET",
+		    xhrFields: {withCredentials: true},
+		    cache: false,
+		    success: function (result, textStatus, request) {
+    			loading.finish();
+    			if(result.status == true) {
+    		    $scope.depotDetails = result.result;
+    		    DashboardDataSharingServices.addDeportList($scope.depotDetails);
+    			}
+		    },
+		    error: function (e) {
+    			$scope.getCaptchaImg();
+    			$scope.captcha = '';
+    			loading.finish();
+    			console.log("Error while processing request");
+		    }
+  		});
+    } catch (e) { loading.finish(); console.log(e); }
+	} // End of getTMSDepotList()
 
 	//Load the values after 1 sec
 	$timeout(function() {
     if($scope.vehDetails == undefined){
   		// Call Dashboard service
   		$rootScope.getDashboardDetails(true, true, function(dashboardResponse) {
-  		    $scope.vehDetails =   DashboardDataSharingServices.getVehIdName_HashMap();
+  		    $scope.vehDetails = DashboardDataSharingServices.getVehiclesList();
   		});
+    }
+    if($scope.depotDetails == undefined){
+  		// Call Depot service
+  		$scope.getTMSDepotList();
     }
 	}, 1000);
 
   $scope.download_TPMSHistoryReport = function(){
-    $scope.getTPMSReportData(selected_vehIds_report, false, startDateTime, endDateTime, true, function(TPMSReportDataResponse)
+    $scope.getTPMSReportData($scope.selected_vehIds_report, false, startDateTime, endDateTime, true, function(TPMSReportDataResponse)
     {
       // Call API for download
       window.location = $rootScope.HOST_TMS + "api/tms/downloadExcelReport";
@@ -133,47 +202,49 @@ app.controller('TPMSReportController', ['$scope', '$rootScope', '$state', 'APISe
 
   		    angular.forEach(TPMSReportHistoryDataResponse.data.result, function(value, key)
           {
-      			XaxisDateTime.push($filter('date')(value.device_date_time,
-              "dd/MM/yyyy HH:mm:ss"));
-      			angular.forEach(value.tyres, function(tyre, id)
-            {
-    			    if (tyre.position == 'FL') {
-        				FL_temp.push(tyre.temp);
-    			    }
-    			    if (tyre.position == 'FR') {
-        				FR_temp.push(tyre.temp);
-    			    }
-    			    if (tyre.position == 'RLO') {
-        				RLO_temp.push(tyre.temp);
-    			    }
-    			    if (tyre.position == 'RLI') {
-        				RLI_temp.push(tyre.temp);
-    			    }
-    			    if (tyre.position == 'RRI') {
-        				RRI_temp.push(tyre.temp);
-    			    }
-    			    if (tyre.position == 'RRO') {
-        				RRO_temp.push(tyre.temp);
-    			    }
-    			    if (tyre.position == 'FL') {
-        				FL_pressure.push(tyre.pressure);
-    			    }
-    			    if (tyre.position == 'FR') {
-        				FR_pressure.push(tyre.pressure);
-    			    }
-    			    if (tyre.position == 'RLO') {
-        				RLO_pressure.push(tyre.pressure);
-    			    }
-    			    if (tyre.position == 'RLI') {
-        				RLI_pressure.push(tyre.pressure);
-    			    }
-    			    if (tyre.position == 'RRI') {
-        				RRI_pressure.push(tyre.pressure);
-    			    }
-    			    if (tyre.position == 'RRO') {
-        				RRO_pressure.push(tyre.pressure);
-    			    }
-      			})
+            if(value.tyres.length > 0){
+        			XaxisDateTime.push($filter('date')(value.device_date_time,
+                "dd/MM/yyyy HH:mm:ss"));
+        			angular.forEach(value.tyres, function(tyre, id)
+              {
+      			    if (tyre.position == 'FL') {
+          				FL_temp.push(tyre.temp);
+      			    }
+      			    if (tyre.position == 'FR') {
+          				FR_temp.push(tyre.temp);
+      			    }
+      			    if (tyre.position == 'RLO') {
+          				RLO_temp.push(tyre.temp);
+      			    }
+      			    if (tyre.position == 'RLI') {
+          				RLI_temp.push(tyre.temp);
+      			    }
+      			    if (tyre.position == 'RRI') {
+          				RRI_temp.push(tyre.temp);
+      			    }
+      			    if (tyre.position == 'RRO') {
+          				RRO_temp.push(tyre.temp);
+      			    }
+      			    if (tyre.position == 'FL') {
+          				FL_pressure.push(tyre.pressure);
+      			    }
+      			    if (tyre.position == 'FR') {
+          				FR_pressure.push(tyre.pressure);
+      			    }
+      			    if (tyre.position == 'RLO') {
+          				RLO_pressure.push(tyre.pressure);
+      			    }
+      			    if (tyre.position == 'RLI') {
+          				RLI_pressure.push(tyre.pressure);
+      			    }
+      			    if (tyre.position == 'RRI') {
+          				RRI_pressure.push(tyre.pressure);
+      			    }
+      			    if (tyre.position == 'RRO') {
+          				RRO_pressure.push(tyre.pressure);
+      			    }
+        			})
+            }
   		    });
 
   		    $('#reportModal').modal('show');
