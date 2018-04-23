@@ -29,7 +29,7 @@ app.controller('TPMSReportController', ['$scope', '$rootScope', '$state', 'APISe
 	});
 
 	// Get the vehicles list
-	$scope.vehDetails = DashboardDataSharingServices.getVehiclesList();
+	$scope.vehDetails = DashboardDataSharingServices.getVehIdName_HashMap();
   $scope.depotDetails = DashboardDataSharingServices.getDeportList();
 
 	// Get TPMS report data
@@ -82,7 +82,8 @@ app.controller('TPMSReportController', ['$scope', '$rootScope', '$state', 'APISe
       {
         // Find the vehicles in that Depot
         $scope.selected_vehIds_report = [];
-        angular.forEach($scope.vehDetails, function(vehicle, key){
+        $scope.vehDetailsList = DashboardDataSharingServices.getVehiclesList();
+        angular.forEach($scope.vehDetailsList, function(vehicle, key){
           console.log(vehicle);
           if(vehicle.depotId == $scope.selectedReportDepotId){
             $scope.selected_vehIds_report.push(vehicle.vehId);
@@ -137,7 +138,7 @@ app.controller('TPMSReportController', ['$scope', '$rootScope', '$state', 'APISe
     if($scope.vehDetails == undefined){
   		// Call Dashboard service
   		$rootScope.getDashboardDetails(true, true, function(dashboardResponse) {
-  		    $scope.vehDetails = DashboardDataSharingServices.getVehiclesList();
+  		    $scope.vehDetails = DashboardDataSharingServices.getVehIdName_HashMap();
   		});
     }
     if($scope.depotDetails == undefined){
