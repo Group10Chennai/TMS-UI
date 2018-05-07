@@ -1208,8 +1208,9 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 	}
 
 	$scope.showNewTyreServiceForm = function(selectedTyreId, position){
+    console.log(selectedTyreId+" - "+ position);
 		if(selectedTyreId != undefined && selectedTyreId != "" && selectedTyreId > 0){
-			tyre = $filter('filter')($rootScope.TMSAllTyres, {'tireId':selectedTyreId})
+			tyre = $filter('filter')($rootScope.TMSAllTyres, {'tireId': parseInt(selectedTyreId)}, true);
 			if(tyre[0] != undefined){
 				$scope.fittedTyrePosition = position;
 				$scope.assignTyreDetails = tyre[0]
