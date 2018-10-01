@@ -9,15 +9,18 @@ app.controller('TMSDashboardController', ['$scope', '$rootScope', '$state', 'API
 	$rootScope.allVehicles = [];
 	$rootScope.innerIdForTroubledChart = "innerIdForTroubledChart";
 	$rootScope.innerIdForvehTyreChart = "innerIdForvehTyreChart";
+        
+        $rootScope.innerIdForTemperatureChart = "innerIdForTemperatureChart";
+        $rootScope.innerIdForPressureChart = "innerIdForPressureChart";
 	$rootScope.showSemiConfigVehData = false;
 
 	$scope.getTroubledVehicles = function(id) {
 	    if(id == 'TroubledVehicles1') {
-          $rootScope.tempPressureType = "Bad";
+                $rootScope.tempPressureType = "Bad";
 	    } else {
-          $rootScope.tempPressureType = "Good";
-      }
-      $timeout(function() { $location.url('/tyreTempPressure'); }, 100);
+                $rootScope.tempPressureType = "Good";
+            }
+            $timeout(function() { $location.url('/tyreTempPressure'); }, 100);
 	}
 
 	$scope.getSemiAssignedVehicles = function(id){
@@ -26,9 +29,9 @@ app.controller('TMSDashboardController', ['$scope', '$rootScope', '$state', 'API
     		    $rootScope.showSemiConfigVehData = true;
     		    $timeout(function() { $location.url('/tms-vehicles'); }, 100);
     		} else {
-          $rootScope.showSemiConfigVehData = false;
-          $timeout(function() { $location.url('/tms-vehicles'); }, 100);
-        }
+                    $rootScope.showSemiConfigVehData = false;
+                    $timeout(function() { $location.url('/tms-vehicles'); }, 100);
+                }
 	    } catch (e) { loading.finish(); console.log(e); }
 	}
 
@@ -37,12 +40,12 @@ app.controller('TMSDashboardController', ['$scope', '$rootScope', '$state', 'API
 		$scope.getSemiAssignedVehicles('SemiConfigVehicles1');
 	    }
 	}
-
-  $scope.gotoVehView = function(){
-      try {
-        $timeout(function() { $location.url('/tms-vehicles'); }, 100);
-      } catch (e) { loading.finish(); console.log(e); }
-  }
+      
+        $scope.gotoVehView = function(){
+            try {
+                $timeout(function() { $location.url('/tms-vehicles'); }, 100);
+            } catch (e) { loading.finish(); console.log(e); }
+        }
 
 	$scope.getVehTyreDetails = function(id){
 	    try {
@@ -51,7 +54,7 @@ app.controller('TMSDashboardController', ['$scope', '$rootScope', '$state', 'API
 	    } catch (e) { loading.finish(); console.log(e); }
 	}
 
-  $scope.getVehTyreInspectionDetail = function(id){
+        $scope.getVehTyreInspectionDetail = function(id){
 	    try {
 		$timeout(function() { $location.url('/tmsTyreInspection'); }, 100);
 	    } catch (e) { loading.finish(); console.log(e); }

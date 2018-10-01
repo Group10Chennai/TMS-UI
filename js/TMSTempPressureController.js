@@ -5,12 +5,20 @@ app.controller('TMSTempPressureController', ['$scope', '$rootScope', '$state', '
     'DashboardDataSharingServices', '$location','$cookieStore', '$timeout', '$filter','logger',
     function($scope, $rootScope, $state, APIServices, DashboardDataSharingServices, $location, $cookieStore,
     $timeout, $filter, logger, $apply) {
+        
+        $('#selectTyreTempPress').select2({
+	    allowClear: true,
+	    width: 265
+	});
+        
+        $scope.pressTempType = "B";
+        
 	try {
 	    $rootScope.troubledVehiclesDetails = [];
-      $scope.loadTPMSLiveData = function(type){
-        $rootScope.tempPressureType = type;
-        $scope.callTroubledVehiclesAPI(true);
-      }
+            $scope.loadTPMSLiveData = function(type){
+            $rootScope.tempPressureType = type;
+            $scope.callTroubledVehiclesAPI(true);
+        }
 	    $scope.callTroubledVehiclesAPI = function(loadingImgStatus) {
 		      try {
             if(loadingImgStatus == undefined){
@@ -88,8 +96,10 @@ app.controller('TMSTempPressureController', ['$scope', '$rootScope', '$state', '
       	}
 
         $timeout(function() {
-          $rootScope.tempPressureType = "All";
-          $scope.callTroubledVehiclesAPI(true);
+//            if($rootScope.tempPressureType !== 'Bad' && $rootScope.tempPressureType !== 'Good'){
+                $rootScope.tempPressureType = "All";
+//            }
+            $scope.callTroubledVehiclesAPI(true);
         }, 1000);
 
     } catch(e){ console.log(e);	}

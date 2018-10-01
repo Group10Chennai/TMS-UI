@@ -864,6 +864,79 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
 		console.log(err);
 	    }
 	}
+        
+        //Error log
+        $scope.searchStringForErrlog = "";
+        $scope.pageChanged_errorlog = function(){
+	    $scope.nextIndex_bctrl = ($scope.currentPage_errlog - 1) * $scope.itemsPerPage_errlog;
+	    $rootScope.getTMSAllErrorLogs('', $scope.nextIndex_errlog, $scope.searchStringForErrlog);
+	}
+
+	var timer_errlog = false
+	$scope.searchErrLog = function() {
+            console.log($scope.searchStringForErrlog)
+	    if(timer_errlog) {
+		$timeout.cancel(timer_errlog)
+	    }
+	    timer_errlog = $timeout(function(){
+		$scope.pageChanged_errorlog();
+	    },1000);
+	};
+        
+        $scope.limit_errorLog = 10;
+	$scope.startIndex_errorLog = 0;
+
+	$scope.totalItems_errorLog = 0;
+	$scope.currentPage_errorLog = 1;
+	$scope.itemsPerPage_errorLog = 10;
+	$scope.maxSize_errorLog = 3;
+
+
+        $scope.pageChanged_errorlog = function(){
+	    $scope.nextIndex_errlog = ($scope.currentPage_errorLog - 1) * $scope.itemsPerPage_errorLog;
+	    $rootScope.getTMSAllErrorLogs( $scope.nextIndex_errlog, $scope.searchStringForErrlog);
+	}
+
+	
+        
+        // display all error log details
+        $scope.errorLog = 0;
+	$rootScope.getTMSAllErrorLogs = function(startIndex, searchWord) {
+	    try {
+                console.log("searchword", searchWord)
+		if(searchWord == undefined || searchWord == 'null') {
+		    searchWord ='';
+		}
+		if(startIndex == undefined || startIndex == 'null'){
+		    startIndex = 0;
+		}
+		$scope.errorLog = $scope.startIndex_errorLog;
+		APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getpierrorlog?'
+		+'limit='+$scope.itemsPerPage_errorLog+'&startId='+startIndex+'&searchWord='+searchWord, true)
+ 		.then(
+		    function(httpResponse){ // Success block
+ 			try{
+			    loading.finish();
+			    if(httpResponse.data.status == true){
+				$rootScope.TMSAllErrorLog = httpResponse.data.result;
+				$scope.totalItems_errorLog = httpResponse.data.count;
+			    }
+ 			}
+ 			catch(error){
+ 			    loading.finish();
+			    console.log("Error :"+error);
+ 			}
+ 		    }, function(httpError){ // Error block
+			loading.finish();
+ 			console.log("Error while processing request");
+ 		    }, function(httpInProcess){ // In process
+			console.log(httpInProcess);
+ 		    }
+ 		);
+	    } catch (e) { loading.finish(); console.log(e); }
+	}
+        
+        
 
 	if($state.current.url == "/tms-sensor") {
 	    $scope.pageChanged_sensor('sensor default');
@@ -876,5 +949,7 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
 	    $scope.getTMSAllVehicles();
 	}else if($state.current.url == "/tms-vehicleDetails") {
 	    $scope.pageChanged_vehUserDetails();
+	} else if($state.current.url == "/tms-errorlog") {
+	    $scope.pageChanged_errorlog();
 	}
     }]);

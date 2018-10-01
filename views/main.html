@@ -145,4 +145,37 @@
       </div>
     </div>
   </div>
+        
+        
+  <div style="margin-top: 1.3em;" >
+    <!-- START VISITORS BLOCK -->
+    <div class="row">
+      <div class="col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-collapse panel-heading" style="cursor: pointer;">
+            <div class="panel-title-box">
+              <h3> Tyre Temperature </h3>
+            </div>
+          </div>
+          <div class="panel-body padding-0" >
+            <div class="hc-pie dashboard-piechart" items="vehTyreTemperatureChartData" innerid="innerIdForTemperatureChart"
+                 callback-fn="getTroubledVehicles(id)"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-collapse panel-heading" style="cursor: pointer;">
+            <div class="panel-title-box">
+              <h3> Tyre Pressure </h3>
+            </div>
+          </div>
+          <div class="panel-body padding-0" >
+            <div class="hc-pie dashboard-piechart" items="vehTyrePressureChartData" innerid="innerIdForPressureChart"
+                 callback-fn="getTroubledVehicles(id)"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

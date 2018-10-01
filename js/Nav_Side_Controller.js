@@ -9,6 +9,9 @@ app.controller('NavController', ['$scope', '$rootScope', '$state', 'APIServices'
 	$scope.controller = 'NavController!';
 	$rootScope.innerIdForTroubledChart = "innerIdForTroubledChart";
 	$scope.troubledVehChartData = [];
+        
+        $rootScope.vehTyreTemperatureChartData = [];
+        $rootScope.vehTyrePressureChartData = [];
 
 	$rootScope.allVehCount = "";
   $rootScope.tyreCount_all = "";
@@ -153,18 +156,30 @@ app.controller('NavController', ['$scope', '$rootScope', '$state', 'APIServices'
 	}
 
 	$scope.getTroubledVehCount = function() {
-    try {
+        try {
   		APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getTPMSVehDataCount', false)
   		.then(
 		    function(httpResponse){ // Success block
     			try{
   			    loading.finish();
   			    if(httpResponse.data.status == true) {
+                                
+                                // Tyre Temp & Pressure data
       				$rootScope.troubledVehCount = httpResponse.data.badTPVehCount;
-              $rootScope.NontroubledVehCount = httpResponse.data.goodTPVehCount;
-              $rootScope.totalTPVehCount = $rootScope.troubledVehCount + $rootScope.NontroubledVehCount;
+                                $rootScope.NontroubledVehCount = httpResponse.data.goodTPVehCount;
+                                $rootScope.totalTPVehCount = $rootScope.troubledVehCount + $rootScope.NontroubledVehCount;
       				// var vehiclesList = DashboardDataSharingServices.getVehiclesList();
-              $scope.updatePieChart($rootScope.troubledVehCount, $rootScope.NontroubledVehCount);
+                                $scope.updatePieChart($rootScope.troubledVehCount, $rootScope.NontroubledVehCount);
+                                
+                                // Tyre temp data
+                                $rootScope.troubleTempCount = httpResponse.data.badTempVehCount;
+                                $rootScope.NontroubledTempCount = httpResponse.data.goodTempVehCount;
+                                $scope.updatePieChart_tyreTemperature($rootScope.troubleTempCount, $rootScope.NontroubledTempCount);
+                                
+                                // Tyre pressure data
+                                $rootScope.troubledPressureCount = httpResponse.data.badPressureVehCount;
+                                $rootScope.NontroubledPressureCount = httpResponse.data.goodPressureVehCount;
+                                $scope.updatePieChart_tyrePressure($rootScope.troubledPressureCount, $rootScope.NontroubledPressureCount);
   			    } else {
     				// logout the user
     				$rootScope.logoutFun("TMS getProblematicVehCount - true");
@@ -184,7 +199,8 @@ app.controller('NavController', ['$scope', '$rootScope', '$state', 'APIServices'
   		);
 	    } catch (e) { loading.finish(); console.log(e); }
 	}
-
+        
+        // Tyre Pressure & Temperature
 	$scope.updatePieChart = function(troubledVehCount, nonTroubledVehCount){
 	    $rootScope.troubledVehChartData = [{
     		name:'Off-Range ( '+ troubledVehCount +' )',
@@ -198,7 +214,8 @@ app.controller('NavController', ['$scope', '$rootScope', '$state', 'APIServices'
 	}
 
 	$rootScope.innerIdForvehTyreChart = "innerIdForvehTyreChart";
-
+        
+        // Vehicle Tyre Assignment
 	$scope.updatePieChart_vehTyreRelation = function(semiAssignedVehCount, remainingVehCount){
 	    $rootScope.vehTyreAssignmentChartData = [
 	    {
@@ -212,6 +229,38 @@ app.controller('NavController', ['$scope', '$rootScope', '$state', 'APIServices'
 	    }
 	    ];
 	}
+        
+        $rootScope.innerIdForTemperatureChart = "innerIdForTemperatureChart";
+        // Tyre Temperature
+        $scope.updatePieChart_tyreTemperature = function(inrangeTemp, offrangeTemp){
+	    $rootScope.vehTyreTemperatureChartData = [
+            {
+		name:' Off-Range ('+offrangeTemp+')',
+		id: 'tyreTemp0',
+		y: offrangeTemp
+	    },{
+		name:' In-Range ('+inrangeTemp+')',
+		id: 'tyreTemp1',
+		y: inrangeTemp
+	    }];
+	}
+        
+        $rootScope.innerIdForPressureChart = "innerIdForPressureChart";
+        // Tyre Pressure
+	$scope.updatePieChart_tyrePressure = function(inrangePressure, offrangePressure){
+	    $rootScope.vehTyrePressureChartData = [
+	    {
+		name:' Off-Range ('+offrangePressure+')',
+		id: 'tyrePressure0',
+		y: offrangePressure
+	    },{
+		name:' In-Range ('+inrangePressure+')',
+		id: 'tyrePressure1',
+		y: inrangePressure
+	    }
+	    ];
+	}
+
 
 	// Parse the vehicle response for view
 	$rootScope.processVehDetailsForView = function(httpResponse, callback){

@@ -1488,7 +1488,7 @@ pre {
     }
   /*.table-bordered thead th,
   .table-bordered thead td {
-    border-bottom-width: 2px;*/ }
+    border-bottom-width: 2px;}*/ 
 
 .table-striped tbody tr:nth-of-type(odd) {
   background-color: #eceff1; }

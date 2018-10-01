@@ -1,0 +1,98 @@
+<div class="widget-header" style="margin-top: 0.1em;">
+  <div class="row">
+    <div class="col-md-12 col-sm-12 col-12"><i class="fa fa-list" aria-hidden="true"></i>
+      <h3> Error Log </h3>
+    </div>
+  </div>
+</div> <!-- /widget-header -->
+
+<div class="widget-content table-responsive">
+  <form>
+    <div class="form-group row ">
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="input-group">
+          <div class="input-group-addon"><i class="fa fa-search"></i></div>
+          <input type="text" placeholder= "Search" class="form-control"
+            ng-model="searchStringForErrlog" ng-change = "searchErrLog()">
+        </div>
+      </div>
+    </div>
+  </form>
+  <table class="table table-fixed table-bordered table-hover">
+    <thead class="tablehead">
+      <tr class="tablehead">
+    	<th class="tableHead-center" >
+    	  <a href="#" > # </a>
+    	</th>
+    	<th class="tableHead-center" >
+    	  <a href="#" ng-click="sortType = 'errorVehName'; errorcode_sortReverse = !errorcode_sortReverse">
+	    Vehicle Name
+	    <span ng-show="sortType == 'sensorUID' && !errorcode_sortReverse" class="fa fa-caret-down"></span>
+	    <span ng-show="sortType == 'sensorUID' && errorcode_sortReverse" class="fa fa-caret-up"></span>
+	  </a>
+    	</th>
+	<th class="tableHead-center" >
+    	  <a href="#" ng-click="sortType = 'errorDeviceDate'; errorcode_sortReverse = !errorcode_sortReverse">
+	    Device Date
+	  <span ng-show="sortType == 'status' && !errorcode_sortReverse" class="fa fa-caret-down"></span>
+	  <span ng-show="sortType == 'status' && errorcode_sortReverse" class="fa fa-caret-up"></span>
+    	  </a>
+    	</th>
+        <th class="tableHead-center" >
+    	  <a href="#" ng-click="sortType = 'errorServerDate'; errorcode_sortReverse = !errorcode_sortReverse">
+	    Server Date
+	    <span ng-show="sortType == 'rimNo' && !errorcode_sortReverse" class="fa fa-caret-down"></span>
+	    <span ng-show="sortType == 'rimNo' && errorcode_sortReverse" class="fa fa-caret-up"></span>
+	  </a>
+    	</th>
+    	<th class="tableHead-center" >
+    	  <a href="#" ng-click="sortType = 'errorCode'; errorcode_sortReverse = !errorcode_sortReverse">
+	    Error Code
+	    <span ng-show="sortType == 'createdDateTime' && !errorcode_sortReverse" class="fa fa-caret-down"></span>
+	    <span ng-show="sortType == 'createdDateTime' && errorcode_sortReverse" class="fa fa-caret-up"></span>
+	  </a>
+    	</th>
+    	<th class="tableHead-center" >
+    	  <a href="#" ng-click="sortType = 'errorDescription'; errorcode_sortReverse = !errorcode_sortReverse">
+	    Description
+	    <span ng-show="sortType == 'createdDateTime' && !errorcode_sortReverse" class="fa fa-caret-down"></span>
+	    <span ng-show="sortType == 'createdDateTime' && errorcode_sortReverse" class="fa fa-caret-up"></span>
+	  </a>
+    	</th>
+        <th class="tableHead-center" >
+    	  <a href="#" ng-click="sortType = 'errorUid'; errorcode_sortReverse = !errorcode_sortReverse">
+	    ID
+	    <span ng-show="sortType == 'createdDateTime' && !errorcode_sortReverse" class="fa fa-caret-down"></span>
+	    <span ng-show="sortType == 'createdDateTime' && errorcode_sortReverse" class="fa fa-caret-up"></span>
+	  </a>
+    	</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="errlog in TMSAllErrorLog | orderBy:sortType:errorcode_sortReverse">
+        <td class="tableData-right tablebody-td">{{nextIndex_errlog + $index + 1}}</td>
+        <td class="tablebody-td">{{ errlog.vehName }}</td>
+        <td class="tablebody-td">{{ errlog.device_date_time | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
+        <td class="tablebody-td">{{ errlog.server_date_time | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
+        <td class="tablebody-td">{{ errlog.error_code }}</td>
+	<td class="tablebody-td">{{ errlog.error_desc }}</td>
+        <td class="tablebody-td">{{ errlog.uid }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Pagination -->
+
+  <uib-pagination total-items="totalItems_errorLog" ng-model="currentPage_errorLog"
+    items-per-page="itemsPerPage_errorLog" max-size="maxSize_errorLog" ng-change="pageChanged_errorlog()"
+    boundary-link-numbers="true" rotate="true" boundary-links="true"></uib-pagination>
+</div>
+
+<script>
+  function sensor_clear() {
+    $('#tmssensor_id').val('');
+  }
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip();
+  })
+</script>
