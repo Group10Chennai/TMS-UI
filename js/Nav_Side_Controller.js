@@ -232,7 +232,7 @@ app.controller('NavController', ['$scope', '$rootScope', '$state', 'APIServices'
         
         $rootScope.innerIdForTemperatureChart = "innerIdForTemperatureChart";
         // Tyre Temperature
-        $scope.updatePieChart_tyreTemperature = function(inrangeTemp, offrangeTemp){
+        $scope.updatePieChart_tyreTemperature = function(offrangeTemp, inrangeTemp){
 	    $rootScope.vehTyreTemperatureChartData = [
             {
 		name:' Off-Range ('+offrangeTemp+')',
@@ -247,7 +247,7 @@ app.controller('NavController', ['$scope', '$rootScope', '$state', 'APIServices'
         
         $rootScope.innerIdForPressureChart = "innerIdForPressureChart";
         // Tyre Pressure
-	$scope.updatePieChart_tyrePressure = function(inrangePressure, offrangePressure){
+	$scope.updatePieChart_tyrePressure = function(offrangePressure, inrangePressure){
 	    $rootScope.vehTyrePressureChartData = [
 	    {
 		name:' Off-Range ('+offrangePressure+')',
