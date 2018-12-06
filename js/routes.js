@@ -262,6 +262,19 @@ angular
     //page subtitle goes here
     params: { subtitle: 'Tyre Monitor System' },
   })
+  
+  .state('app.tms-errorlog', {
+    url: '/tms-errorlog',
+    templateUrl: 'views/pages/tms-errorlog.html',
+    controller: 'TMSSysAdminController',
+    //page title goes here
+    ncyBreadcrumb: {
+      label: 'TMS',
+    },
+    //page subtitle goes here
+    params: { subtitle: 'Tyre Monitor System' },
+  })
+
 
   .state('app.tms-vehDetails', {
     url: '/vehDetails',
