@@ -4,20 +4,29 @@
         <h3> Upload Tyre Details </h3>
     </div> <!-- /widget-header -->
     
-    <div class="widget-content table-responsive row">
-        <div class="col-md-8 col-sm-12 col-xs-12 input-file-container row">
-            <input class="input-file" id="my-file" type = "file" file-model = "myFile" accept=".xls,.xlsx"/>
-            <label tabindex="0" for="my-file" class="input-file-trigger">Select a file...</label>
-            <p class="file-return" style="margin-left: 2%"></p>
-            <button ng-click = "uploadFile()" class="btn-upload"> Upload </button>
+    <div class="widget-content table-responsive">
+        <div class="row">
+            <div class="col-md-8 col-sm-12 col-xs-12 input-file-container row">
+                <input class="input-file" id="my-file" type = "file" file-model = "myFile" accept=".xls,.xlsx"/>
+                <label tabindex="0" for="my-file" class="input-file-trigger">Select a file...</label>
+                <p class="file-return" style="margin-left: 2%"></p>
+                <button ng-click = "uploadFile()" class="btn-upload"> Upload </button>
+            </div>
+            <div class="col-md-4 col-sm-12 col-xs-12">
+                <select class="select2-style" id="selectTyreChoice"  ng-model="vehicleChoice">
+                    <option value="0"> Tyre Update Details </option>
+                    <option value="1"> Tyre Removal Details </option>
+                </select>
+            </div>
         </div>
-        <div class="col-md-4 col-sm-12 col-xs-12">
-            <select class="select2-style" id="selectTyreChoice"  ng-model="vehicleChoice">
-                <option value="0"> Tyre Update Details </option>
-                <option value="1"> Tyre Removal Details </option>
-            </select>
+        <div class="row">
+            <div class="col-md-10 col-sm-12 col-xs-12"></div>
+            <div class="col-md-2 col-sm-12 col-xs-12">
+                <a href="img/TPMS_Device_Update_Template.xls" download> Download Sample Excel</a>
+            </div>
         </div>
     </div>
+    
     <div class="widget-content table-responsive ">
         <form>
             <div class="form-group row ">
