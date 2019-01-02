@@ -160,7 +160,13 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
 	        allowClear: true,
 	        width: 278
 	    });
-
+            
+            $('#selectupdateChoice').select2 ({
+	        allowClear: true,
+	        width: 250
+	    });
+            
+            $scope.tyreUpdateChoice = "U";
 
 	    if(sessionStorage.UserLevelId > 0 && sessionStorage.UserLevelId < 5){
 		$('#sensorOrgList').show();
@@ -934,9 +940,84 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
  		    }
  		);
 	    } catch (e) { loading.finish(); console.log(e); }
-	}
+	};
         
         
+        $scope.logStartDate = "";
+        $scope.logEndDate = "";
+        
+        // get upload and removal master log details 
+        $rootScope.getUpdateRemoveMasterLog = function() {
+            $('#uploadDateTime').html("");
+            $('#uploadSystemIP').html("");
+            
+            var uploadDateTime = "";
+            var uploadSystemIp = "";
+              
+            $scope.logStartDate = moment($("#masterLogStartTime").val() + ":00", "D/M/YYYY").valueOf();
+            $scope.logEndDate = moment($("#masterLogEndTime").val() + "23:59:59", "D/M/YYYY H:mm:ss").valueOf();
+            
+            if($scope.tyreUpdateChoice == "U") {
+                $rootScope.masterUpdateLogData = [];
+                
+                APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getmasterassignmentlog?'
+                +'masterLogStart='+$scope.logStartDate+'&masterLogEnd='+$scope.logEndDate, true)
+                .then(
+                    function(httpResponse){ // Success block
+                        try{
+                            loading.finish();
+                            
+                            $.each(httpResponse.data.result, function (a, updateLog) {  
+                                uploadDateTime = moment.utc(updateLog.assignmentTimeDate).local().format("DD-MM-YYYY HH:mm:ss"); 
+                                $('#uploadDateTime').append(uploadDateTime);
+                                uploadSystemIp = updateLog.systemIP;
+                                $('#uploadSystemIP').append(uploadSystemIp);
+                                
+                                angular.forEach(updateLog.assignmentData, function(value, key){
+                                    $rootScope.masterUpdateLogData.push(value);
+                                });
+                            });
+                        }catch(e) {
+                            console.log(e);
+                        }
+                    }, function(httpError){  // Error block
+                        loading.finish();
+                        console.log("Error while processing request");
+                    }, function(httpInProcess){ // In process
+                        console.log(httpInProcess);
+                    }
+                );
+            }
+            else if($scope.tyreUpdateChoice == "R") {
+                $rootScope.masterRemoveLogData = [];
+                APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getmasterremovallog?'
+                    +'masterLogStart='+$scope.logStartDate+'&masterLogEnd='+$scope.logEndDate, true)
+                .then(
+                    function(httpResponse){ // Success block
+                        try{
+                            loading.finish();
+                            $.each(httpResponse.data.result, function (a, removeLog) { 
+                                uploadDateTime = moment.utc(removeLog.removalTimeDate).local().format("DD-MM-YYYY HH:mm:ss"); 
+                                $('#uploadDateTime').append(uploadDateTime);
+                                uploadSystemIp = removeLog.systemIP;
+                                $('#uploadSystemIP').append(uploadSystemIp);
+                                
+                                angular.forEach(removeLog.removalData, function(value, key){
+                                    $rootScope.masterRemoveLogData.push(value);
+                                });
+                            });
+                        }catch(e) {
+                            console.log(e);
+                        }
+                    }, function(httpError){  // Error block
+                        loading.finish();
+                        console.log("Error while processing request");
+                    }, function(httpInProcess){ // In process
+                        console.log(httpInProcess);
+                    }
+                );
+            }
+        };
 
 	if($state.current.url == "/tms-sensor") {
 	    $scope.pageChanged_sensor('sensor default');

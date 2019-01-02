@@ -1433,9 +1433,9 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 		$scope.showTyreAddingForm = true;
 		$scope.updateTyreButtonStatus = true;
 		$scope.addTyreButtonStatus = false;
-    $scope.TMSTyreOrgId = tyreDetails.orgId;
+                $scope.TMSTyreOrgId = tyreDetails.orgId;
 
-    try {
+                try {
 				$("#tyreOrganizationId").val($scope.TMSTyreOrgId).trigger('change');
 		} catch (e) { }
 		try {

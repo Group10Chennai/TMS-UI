@@ -275,7 +275,7 @@ angular
     params: { subtitle: 'Tyre Monitor System' },
   })
 
-
+ 
   .state('app.tms-vehDetails', {
     url: '/vehDetails',
     templateUrl: 'views/pages/tms-semiCongVeh.html',
@@ -306,6 +306,19 @@ angular
     url: '/register',
     templateUrl: 'views/pages/register.html'
   })
+  
+  .state('app.tms-updatelog', {
+    url: '/tms-updatelog',
+    templateUrl: 'views/pages/tms-updatelog.html',
+    controller: 'TMSSysAdminController',
+    //page title goes here
+    ncyBreadcrumb: {
+      label: 'TMS',
+    },
+    //page subtitle goes here
+    params: { subtitle: 'Tyre Monitor System' },
+  })
+
 
   .state('appSimple.404', {
     url: '/404',
