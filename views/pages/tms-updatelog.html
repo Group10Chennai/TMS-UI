@@ -18,14 +18,14 @@
       
             <!-- from date -->
             <div class="col-md-3 col-sm-6 col-xs-12 input-group report-select masterlog-date">
-                <input class="form-control" type="text" id="masterLogStartTime"   placeholder="Start DateTime">
+                <input class="form-control date_text" type="text" id="masterLogStartTime" placeholder="Start DateTime">
                 <div class="datepicker-masterLog" style="cursor: pointer;" onclick="$('#masterLogStartTime').focus();">
                     <i class="fa fa-calendar" style="cursor: pointer"></i>
                 </div>
             </div>
             <!-- to date -->
             <div class="col-md-3 col-sm-6 col-xs-12 input-group report-select masterlog-date">
-                <input class="form-control" id="masterLogEndTime" type="text" placeholder="End DateTime">
+                <input class="form-control date_text" id="masterLogEndTime" type="text" placeholder="End DateTime">
                 <div class="datepicker-masterLog" style="cursor: pointer;" onclick="$('#masterLogEndTime').focus();">
                     <i class="fa fa-calendar" style="cursor: pointer"></i>
                 </div>
@@ -301,10 +301,10 @@
         onShow: function (ct) {
             if ($('#masterLogStartTime').hasClass('error'))
             $('#masterLogStartTime').removeClass('error');
-            this.setOptions({
-                maxDate: $('#masterLogEndTime').val() ? $('#masterLogEndTime').val() : false,
-                formatDate: 'd-m-Y'
-            });
+//            this.setOptions({
+//                maxDate: $('#masterLogEndTime').val() ? $('#masterLogEndTime').val() : false,
+//                formatDate: 'd-m-Y'
+//            });
         },
         onChangeDateTime: function (ct) {
             $('#masterLogEndTime').datetimepicker({value: moment(ct).format("DD-MM-YYYY"), minDate: ct});//, maxDate: moment(ct).add(5, "days")});
@@ -314,7 +314,7 @@
         timepicker: true,
         value: moment().format("DD-MM-YYYY")
     });
-        
+    
     $('#masterLogEndTime').datetimepicker({
         format: 'd-m-Y',
         onShow: function (ct) {
