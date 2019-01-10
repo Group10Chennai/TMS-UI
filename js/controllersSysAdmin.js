@@ -269,12 +269,12 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
 	$scope.pageChanged_Bluetooth = function(){
 	    $scope.nextIndex_bctrl = ($scope.currentPage_bctrl - 1) * $scope.itemsPerPage_bctrl;
 	    $rootScope.getTMSAllBController('', $scope.nextIndex_bctrl, $scope.searchStringForBctrl);
-	}
+	};
 
-	var timer_bctrl = false
+	var timer_bctrl = false;
 	$scope.searchBCtrl = function() {
 	    if(timer_bctrl) {
-		$timeout.cancel(timer_bctrl)
+		$timeout.cancel(timer_bctrl);
 	    }
 	    timer_bctrl = $timeout(function(){
 		$scope.pageChanged_Bluetooth();
@@ -318,7 +318,7 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
  		    }
  		);
 	    } catch (e) { loading.finish(); console.log(e); }
-	}
+	};
 
 	$scope.getBControllerDetailsFormForAdd = function() {
 	    $('#showTMSBluetoothModalId').modal('show');
@@ -328,7 +328,7 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
 	    $scope.addBControllerButtonStatus = true;
 	    $scope.BControllerUID = '';
 	    $scope.updateBControllerButtonStatus = false;
-	}
+	};
 
 	$scope.getBControllerDetailsFormForUpdate = function(BControllerDetails) {
 	    $('#showTMSBluetoothModalId').modal('show');
@@ -337,7 +337,7 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
 	    $scope.updateBControllerButtonStatus = true;
 	    $scope.showBControllerAddingForm = true;
 	    $scope.addBControllerButtonStatus = false;
-	}
+	};
 
 	$scope.AddBController = function() {
 	    try {
@@ -366,7 +366,7 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
  		    }
  		);
 	    } catch (e) { loading.finish(); console.log(e); }
-	}
+	};
 
 	$scope.updateBControllerDetails = function(){
 	    try {
@@ -398,7 +398,7 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
  		    }
  		);
 	    } catch (e) { loading.finish(); console.log(e); }
-	}
+	};
 
 	// RFID Details code starts Here
 	$scope.totalItems_rfid = 0;
@@ -411,7 +411,7 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
 	$scope.pageChanged_RFID = function(){
 	    $scope.nextIndex_rfid = ($scope.currentPage_rfid - 1) * $scope.itemsPerPage_rfid;
 	    $rootScope.getTMSAllRFID('', $scope.nextIndex_rfid, $scope.searchStringForRfid);
-	}
+	};
 
 	var timer_rfid = false;
 	$scope.searchRFID = function() {
@@ -458,7 +458,7 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
  		    }
  		);
 	    } catch (e) { loading.finish(); console.log(e); }
-	}
+	};
 
 	$scope.getRFIDDetailsFormForAdd = function(){
 	    $('#showTMSRfidModalId').modal('show');
@@ -468,7 +468,7 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
 	    $scope.addRFIDButtonStatus = true;
 	    $scope.RFIDUID = '';
 	    $scope.updateRFIDButtonStatus = false;
-	}
+	};
 
 	$scope.getRFIDDetailsFormForUpdate = function(RFIDDetails) {
 	    $('#showTMSRfidModalId').modal('show');
@@ -588,24 +588,35 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
  		    }
  		);
 	    } catch (e) { loading.finish(); console.log(e); }
-	}
+	};
 
 	$scope.sensorStatusFilter = "All";
 	$scope.sensorStatusChanged = function(){
 	    $scope.limit_sensor = 10;
 	    $scope.startIndex_sensor = 0;
 	    $scope.pageChanged_sensor('sensor status changed');
-	}
+	};
 
-	var timer_sensors = false
+	var timer_sensors = false;
 	$scope.searchSensors = function() {
 	    if(timer_sensors){
-		$timeout.cancel(timer_sensors)
+		$timeout.cancel(timer_sensors);
 	    }
 	    timer_sensors= $timeout(function(){
 		$scope.pageChanged_sensor('sensor search');
 	    },1000);
 	};
+        
+        $rootScope.download_SensorStatus = function(){
+            try{
+                loading.start();
+                // Download excel
+                window.location = $rootScope.HOST_TMS + "api/tms/downloadSensorList";
+            } catch(e){
+                loading.finish();
+                console.log(e);
+            }
+        };
 
 	$scope.sensorSID = 0;
 	$rootScope.getTMSAllSensors = function(status, startIndex, searchWord) {
@@ -643,7 +654,7 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
  		    }
  		);
 	    } catch (e) { loading.finish(); console.log(e); }
-	}
+	};
 
 	$scope.getSensorDetailsFormForUpdate = function(sensorDetails) {
 	    $('#showTMSSensorModalId').modal('show');
@@ -653,7 +664,7 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
 	    $scope.updateSensorButtonStatus = true;
 	    $scope.showSensorAddingForm = true;
 	    $scope.addSensorButtonStatus = false;
-	}
+	};
 
 	$scope.getSensorDetailsFormForAdd = function() {
 	    $('#showTMSSensorModalId').modal('show');
@@ -664,7 +675,7 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
 	    $scope.sensorUID = '';
 	    $scope.rimNo = '';
 	    $scope.updateSensorButtonStatus = false;
-	}
+	};
 
 	$scope.updateSensorDetails = function(){
 	    try {
@@ -695,7 +706,7 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
  		    }
  		);
 	    } catch (e) { loading.finish(); console.log(e); }
-	}
+	};
 
 	try {
 	    $("#sensorOrganizationId").val("").trigger('change');
@@ -734,7 +745,7 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
 		    }
 		);
 	    } catch (e) { loading.finish(); console.log(e); }
-	}
+	};
 
 	// display Vehicles
 	$scope.getTMSAllVehicles = function() {
@@ -761,7 +772,7 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
 		    }
 		);
 	    } catch (e) { loading.finish(); console.log(e); }
-	}
+	};
 
 	$scope.tmsAssignVehToUser = function() {
 	    try {
@@ -788,7 +799,7 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
 		    });
 		}
 	    } catch (e) { loading.finish(); console.log(e); }
-	}
+	};
 
 	// User - Vehicle details
 	$scope.totalItems_vehUserDetails = 0;
@@ -801,7 +812,7 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
 	$scope.pageChanged_vehUserDetails = function(){
 	    $scope.nextIndex_vehUserDetails = ($scope.currentPage_vehUserDetails - 1) * $scope.itemsPerPage_vehUserDetails;
 	    $scope.getAllTMSVehiclesDetails($scope.nextIndex_vehUserDetails, $scope.searchStringForvehUserDetails);
-	}
+	};
 
 	var timer_vehUserDetails = false
 	$scope.searchVehUserDetails = function() {
@@ -820,7 +831,7 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
 		+vehName+'</span> to <span style="font-weight:bold">' +userName+'</span>?<div style="margin-top:10px;" ><button type="button" class="btn btn-success"'
 		+'onclick="updateDeviceStatus();" style="height: 35px;">Yes</button>&nbsp;<button type="button" class="btn btn-warning"'
 		+'data-dismiss="modal" style="height: 35px; padding-top: 6px;">No</button></div>');
-	}
+	};
 
 	$scope.disableVehicle = function(vehName, userName){
 	    $('#vehicle_status_disable_modal').modal('show');
@@ -829,7 +840,7 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
 	      +vehName+'</span> to <span style="font-weight:bold">' +userName+'</span>?<div style="margin-top:10px;" ><button type="button" class="btn btn-success"'
 	      +'onclick="updateDeviceStatus();" style="height: 35px;">Yes</button>&nbsp;<button type="button" class="btn btn-warning"'
 	      +'data-dismiss="modal" style="height: 35px; padding-top: 6px;">No</button></div>');
-	}
+	};
 
 	$scope.getAllTMSVehiclesDetails = function(nextIndex_vehicle, searchWord) {
 	    $scope.VehicleUserDetails = new Array();
@@ -869,14 +880,14 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
 		loading.finish();
 		console.log(err);
 	    }
-	}
+	};
         
         //Error log
         $scope.searchStringForErrlog = "";
         $scope.pageChanged_errorlog = function(){
 	    $scope.nextIndex_bctrl = ($scope.currentPage_errlog - 1) * $scope.itemsPerPage_errlog;
 	    $rootScope.getTMSAllErrorLogs('', $scope.nextIndex_errlog, $scope.searchStringForErrlog);
-	}
+	};
 
 	var timer_errlog = false
 	$scope.searchErrLog = function() {
@@ -901,7 +912,7 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
         $scope.pageChanged_errorlog = function(){
 	    $scope.nextIndex_errlog = ($scope.currentPage_errorLog - 1) * $scope.itemsPerPage_errorLog;
 	    $rootScope.getTMSAllErrorLogs( $scope.nextIndex_errlog, $scope.searchStringForErrlog);
-	}
+	};
 
 	
         

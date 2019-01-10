@@ -537,3 +537,14 @@ legend {
 	float: right;
 	color: #3BC9DB;
 }
+.download_sensorIcon {
+	font-size: 23px;
+	cursor: pointer;
+	text-align: center;
+	color: #3BC9DB;
+}
+.download_sensorText {
+	font-size: 16px;
+	cursor: pointer;
+	color: black;
+}

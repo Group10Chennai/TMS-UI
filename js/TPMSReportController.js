@@ -43,7 +43,7 @@ app.controller('TPMSReportController', ['$scope', '$rootScope', '$state', 'APISe
 		    endDateTime: endDateTime,
 		    vehIds: selected_vehIds_report,
 		    uniqueStatus: uniqueStatus,
-        fileStatus : downloadStatus
+                    fileStatus : downloadStatus
   		}
   		$http.post($rootScope.HOST_TMS + "api/tms/getTPReportData", request)
   		.then(function successCallback(httpResponse){
@@ -84,7 +84,6 @@ app.controller('TPMSReportController', ['$scope', '$rootScope', '$state', 'APISe
         $scope.selected_vehIds_report = [];
         $scope.vehDetailsList = DashboardDataSharingServices.getVehiclesList();
         angular.forEach($scope.vehDetailsList, function(vehicle, key){
-          console.log(vehicle);
           if(vehicle.depotId == $scope.selectedReportDepotId){
             $scope.selected_vehIds_report.push(vehicle.vehId);
           }

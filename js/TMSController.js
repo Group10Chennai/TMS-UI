@@ -1274,7 +1274,18 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 			 }
 		 );
 	 } catch (e) { console.log(e); }
-	}
+	};
+        
+        $rootScope.download_tireStatus = function(){
+            try{
+                loading.start();
+                // Download excel
+                window.location = $rootScope.HOST_TMS + "api/tms/downloadTireList";
+            } catch(e){
+                loading.finish();
+                console.log(e);
+            }
+        };
 
 	// Tire code starts Here
 	$scope.addTireButtonStatus = true;
