@@ -607,16 +607,16 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
 	    },1000);
 	};
         
-//        $rootScope.download_SensorStatus = function(){
-//            try{
-//                loading.start();
-//                // Download excel
-//                window.location = $rootScope.HOST_TMS + "api/tms/downloadSensorList";
-//            } catch(e){
-//                loading.finish();
-//                console.log(e);
-//            }
-//        };
+        $rootScope.download_SensorStatus = function(){
+            try{
+                loading.start();
+                // Download excel
+                window.location = $rootScope.HOST_TMS + "api/tms/downloadSensorList";
+            } catch(e){
+                loading.finish();
+                console.log(e);
+            }
+        };
 
 	$scope.sensorSID = 0;
 	$rootScope.getTMSAllSensors = function(status, startIndex, searchWord) {
