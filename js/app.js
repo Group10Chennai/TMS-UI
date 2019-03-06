@@ -38,7 +38,8 @@ angular
 
     $rootScope.HOST_TMS1 = "http://172.16.0.229:8080/TMS/";
     $rootScope.HOST_TMS = "https://tpms-api.placer.in/TMS/";
-
+    $rootScope.HOST_TMS1 = "https://intranet.group10.in/CANtrackerAPI/";   //testing server
+    
     $rootScope.rootSelectedDeportId = 0;
 
     $rootScope.$on('handleEmit', function(event, args) {

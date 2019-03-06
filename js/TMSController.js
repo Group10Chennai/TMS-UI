@@ -480,17 +480,28 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 	    } else {
 		$scope.getAllTMSVehiclesDetails($scope.nextIndex_vehicles, $scope.searchStringForVeh, "all");
 	    }
-	}
-
+	};
+        
+        $rootScope.download_FitmentVehStatus = function(){
+            try{
+                loading.start();
+                // Download excel
+                window.location = $rootScope.HOST_TMS + "api/tms/downloadUpdatedMasterSheet";
+            } catch(e){
+                loading.finish();
+                console.log(e);
+            }
+        };
+        
 	$scope.getTMSVehicles = function(id){
-    if(id == "semi"){
-  		$rootScope.showSemiConfigVehData = true;
-    } else {
-  		$rootScope.showSemiConfigVehData = false;
-    }
-    $scope.currentPage_vehicles = 1;
-    $scope.pageChanged_vehicles();
-	}
+            if(id == "semi"){
+                        $rootScope.showSemiConfigVehData = true;
+            } else {
+                        $rootScope.showSemiConfigVehData = false;
+            }
+            $scope.currentPage_vehicles = 1;
+            $scope.pageChanged_vehicles();
+	};
 
 	$scope.getSemiConfiguredVehicles = function(startIndex) {
 	    APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getSemiConfiguredVehicles?limit='+$scope.itemsPerPage_vehicles+'&startIndex='+startIndex, true)

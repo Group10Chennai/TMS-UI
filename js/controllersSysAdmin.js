@@ -957,8 +957,22 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
         $scope.logStartDate = "";
         $scope.logEndDate = "";
         
+        
+        $scope.limit_removeLog = 10;
+        $scope.startIndex_removeLog = 1;
+        $scope.totalItems_removeLog = 0;
+        $scope.currentPage_removeLog = 1;
+        $scope.itemsPerPage_removeLog = 10;
+        $scope.maxSize_removeLog = 3;
+
+        $scope.TMSSensor_searchWord = "";
+        $scope.pageChanged_removeLog = function(){
+            $scope.nextIndex_removeLog = ($scope.currentPage_removeLog - 1) * $scope.itemsPerPage_removeLog;
+            $rootScope.getUpdateRemoveMasterLog($scope.removeLogStatusFilter, $scope.nextIndex_removeLog);
+        }; 
+        
         // get upload and removal master log details 
-        $rootScope.getUpdateRemoveMasterLog = function() {
+        $rootScope.getUpdateRemoveMasterLog = function(status, startIndex) {
             $('#uploadDateTime').html("");
             $('#uploadSystemIP').html("");
             
@@ -968,11 +982,22 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
             $scope.logStartDate = moment($("#masterLogStartTime").val() + ":00", "D/M/YYYY").valueOf();
             $scope.logEndDate = moment($("#masterLogEndTime").val() + "23:59:59", "D/M/YYYY H:mm:ss").valueOf();
             
+            try {
+		if (status == undefined || status == "" || status.length == 0) {
+		    status = '';
+		}
+		if(startIndex == undefined || startIndex == 'null') {
+		    startIndex = 1;
+		}
+            }
+            catch(e){}
+            
             if($scope.tyreUpdateChoice == "U") {
-                $rootScope.masterUpdateLogData = [];
-                
-                APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getmasterassignmentlog?'
-                +'masterLogStart='+$scope.logStartDate+'&masterLogEnd='+$scope.logEndDate, true)
+                $rootScope.masterUpdateLogData = [];   
+        
+                APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getmasterassignmentlog?status=' + status
+		+'&limit='+$scope.itemsPerPage_removeLog+'&startIndex='+startIndex
+                +'&masterLogStart='+$scope.logStartDate+'&masterLogEnd='+$scope.logEndDate, true)
                 .then(
                     function(httpResponse){ // Success block
                         try{
@@ -1001,17 +1026,19 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
             }
             else if($scope.tyreUpdateChoice == "R") {
                 $rootScope.masterRemoveLogData = [];
-                APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getmasterremovallog?'
-                    +'masterLogStart='+$scope.logStartDate+'&masterLogEnd='+$scope.logEndDate, true)
+                
+                APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getmasterremovallog?status=' + status
+		+'&limit='+$scope.itemsPerPage_removeLog+'&startIndex='+startIndex
+                +'&masterLogStart='+$scope.logStartDate+'&masterLogEnd='+$scope.logEndDate, true)
                 .then(
                     function(httpResponse){ // Success block
                         try{
                             loading.finish();
                             $.each(httpResponse.data.result, function (a, removeLog) { 
-                                uploadDateTime = moment.utc(removeLog.removalTimeDate).local().format("DD-MM-YYYY HH:mm:ss"); 
-                                $('#uploadDateTime').append(uploadDateTime);
-                                uploadSystemIp = removeLog.systemIP;
-                                $('#uploadSystemIP').append(uploadSystemIp);
+                                removeDateTime = moment.utc(removeLog.removalTimeDate).local().format("DD-MM-YYYY HH:mm:ss"); 
+                                $('#removeDateTime').append(removeDateTime);
+                                removeSystemIp = removeLog.systemIP;
+                                $('#removeSystemIP').append(removeSystemIp);
                                 
                                 angular.forEach(removeLog.removalData, function(value, key){
                                     $rootScope.masterRemoveLogData.push(value);
@@ -1029,6 +1056,23 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
                 );
             }
         };
+        
+	$scope.removeLogStatusChanged = function(){
+	    $scope.limit_removeLog = 10;
+	    $scope.startIndex_removeLog = 1;
+	    $scope.pageChanged_removeLog('removeLog status changed');
+	};
+
+	var timer_removeLog = false;
+	$scope.removeLog = function() {
+	    if(timer_removeLog){
+		$timeout.cancel(timer_removeLog);
+	    }
+	    timer_removeLog= $timeout(function(){
+		$scope.pageChanged_removeLog('removeLog search');
+	    },1000);
+	};
+        
 
 	if($state.current.url == "/tms-sensor") {
 	    $scope.pageChanged_sensor('sensor default');
@@ -1043,5 +1087,7 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
 	    $scope.pageChanged_vehUserDetails();
 	} else if($state.current.url == "/tms-errorlog") {
 	    $scope.pageChanged_errorlog();
-	}
+	} else if($state.current.url == "/tms-updatelog") {
+            $scope.pageChanged_removeLog();
+        }
     }]);
