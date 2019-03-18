@@ -165,8 +165,6 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
 	        allowClear: true,
 	        width: 250
 	    });
-            
-            $scope.tyreUpdateChoice = "U";
 
 	    if(sessionStorage.UserLevelId > 0 && sessionStorage.UserLevelId < 5){
 		$('#sensorOrgList').show();
@@ -182,20 +180,6 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
 	    $scope.tyreStatusList = ["InStock", "Retread", "Scrap"];
 	    $scope.DeviceStatusList = ["InStock", "Scrap"];
 	} catch (e) { console.log(e); }
-
-	// $rootScope.$on("callGetBluetoothDetails", function(){
-	//   console.log("In SysAdmin ctrl -> callGetBluetoothDetails() called ")
-	//   $rootScope.getTMSAllBController('InStock');
-	// });
-	//
-	// $rootScope.$on("callGetRFIDDetails", function(){
-	//   $rootScope.getTMSAllRFID('InStock');
-	// });
-	//
-	// $rootScope.$on("callGetSensorDetails", function(){
-	//   $rootScope.getTMSAllSensors('InStock');
-	// });
-
 
 	$scope.getTMSOrganizationList = function() {
 	    try {
@@ -220,7 +204,7 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
 		    }
 		);
 	    } catch (e) { loading.finish(); console.log(e); }
-	}
+	};
 
 	$scope.addNewOrg = function() {
 	    try {
@@ -254,7 +238,7 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
 		    logger.logError("Please enter Organization Name");
 		}
 	    } catch (e) { loading.finish(); console.log(e); }
-	}
+	};
 
 	$scope.getTMSOrganizationList();
 
@@ -416,7 +400,7 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
 	var timer_rfid = false;
 	$scope.searchRFID = function() {
 	    if(timer_rfid){
-		$timeout.cancel(timer_rfid)
+		$timeout.cancel(timer_rfid);
 	    }
 	    timer_rfid = $timeout(function(){
 		$scope.pageChanged_RFID();
@@ -814,10 +798,10 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
 	    $scope.getAllTMSVehiclesDetails($scope.nextIndex_vehUserDetails, $scope.searchStringForvehUserDetails);
 	};
 
-	var timer_vehUserDetails = false
+	var timer_vehUserDetails = false;
 	$scope.searchVehUserDetails = function() {
 	    if(timer_vehUserDetails){
-		$timeout.cancel(timer_vehUserDetails)
+		$timeout.cancel(timer_vehUserDetails);
 	    }
 	    timer_vehUserDetails= $timeout(function(){
 		$scope.pageChanged_vehUserDetails();
@@ -884,16 +868,10 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
         
         //Error log
         $scope.searchStringForErrlog = "";
-        $scope.pageChanged_errorlog = function(){
-	    $scope.nextIndex_bctrl = ($scope.currentPage_errlog - 1) * $scope.itemsPerPage_errlog;
-	    $rootScope.getTMSAllErrorLogs('', $scope.nextIndex_errlog, $scope.searchStringForErrlog);
-	};
-
-	var timer_errlog = false
+	var timer_errlog = false;
 	$scope.searchErrLog = function() {
-            console.log($scope.searchStringForErrlog)
 	    if(timer_errlog) {
-		$timeout.cancel(timer_errlog)
+		$timeout.cancel(timer_errlog);
 	    }
 	    timer_errlog = $timeout(function(){
 		$scope.pageChanged_errorlog();
@@ -908,19 +886,15 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
 	$scope.itemsPerPage_errorLog = 10;
 	$scope.maxSize_errorLog = 3;
 
-
         $scope.pageChanged_errorlog = function(){
 	    $scope.nextIndex_errlog = ($scope.currentPage_errorLog - 1) * $scope.itemsPerPage_errorLog;
 	    $rootScope.getTMSAllErrorLogs( $scope.nextIndex_errlog, $scope.searchStringForErrlog);
 	};
-
-	
-        
+       
         // display all error log details
         $scope.errorLog = 0;
 	$rootScope.getTMSAllErrorLogs = function(startIndex, searchWord) {
 	    try {
-                console.log("searchword", searchWord)
 		if(searchWord == undefined || searchWord == 'null') {
 		    searchWord ='';
 		}
@@ -954,126 +928,107 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
 	};
         
         
+        // Update log and removal log
+        
+        $scope.tyreUpdateChoice = "U";
+        
+        $scope.searchStringForUpdateRemoveLog = "";
         $scope.logStartDate = "";
         $scope.logEndDate = "";
+	var timer_updateRemoveLog = false;
         
-        
-        $scope.limit_removeLog = 10;
-        $scope.startIndex_removeLog = 1;
-        $scope.totalItems_removeLog = 0;
-        $scope.currentPage_removeLog = 1;
-        $scope.itemsPerPage_removeLog = 10;
-        $scope.maxSize_removeLog = 3;
-
-        $scope.TMSSensor_searchWord = "";
-        $scope.pageChanged_removeLog = function(){
-            $scope.nextIndex_removeLog = ($scope.currentPage_removeLog - 1) * $scope.itemsPerPage_removeLog;
-            $rootScope.getUpdateRemoveMasterLog($scope.removeLogStatusFilter, $scope.nextIndex_removeLog);
-        }; 
-        
-        // get upload and removal master log details 
-        $rootScope.getUpdateRemoveMasterLog = function(status, startIndex) {
-            $('#uploadDateTime').html("");
-            $('#uploadSystemIP').html("");
-            
-            var uploadDateTime = "";
-            var uploadSystemIp = "";
-              
-            $scope.logStartDate = moment($("#masterLogStartTime").val() + ":00", "D/M/YYYY").valueOf();
-            $scope.logEndDate = moment($("#masterLogEndTime").val() + "23:59:59", "D/M/YYYY H:mm:ss").valueOf();
-            
-            try {
-		if (status == undefined || status == "" || status.length == 0) {
-		    status = '';
-		}
-		if(startIndex == undefined || startIndex == 'null') {
-		    startIndex = 1;
-		}
-            }
-            catch(e){}
-            
-            if($scope.tyreUpdateChoice == "U") {
-                $rootScope.masterUpdateLogData = [];   
-        
-                APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getmasterassignmentlog?status=' + status
-		+'&limit='+$scope.itemsPerPage_removeLog+'&startIndex='+startIndex
-                +'&masterLogStart='+$scope.logStartDate+'&masterLogEnd='+$scope.logEndDate, true)
-                .then(
-                    function(httpResponse){ // Success block
-                        try{
-                            loading.finish();
-                            
-                            $.each(httpResponse.data.result, function (a, updateLog) {  
-                                uploadDateTime = moment.utc(updateLog.assignmentTimeDate).local().format("DD-MM-YYYY HH:mm:ss"); 
-                                $('#uploadDateTime').append(uploadDateTime);
-                                uploadSystemIp = updateLog.systemIP;
-                                $('#uploadSystemIP').append(uploadSystemIp);
-                                
-                                angular.forEach(updateLog.assignmentData, function(value, key){
-                                    $rootScope.masterUpdateLogData.push(value);
-                                });
-                            });
-                        }catch(e) {
-                            console.log(e);
-                        }
-                    }, function(httpError){  // Error block
-                        loading.finish();
-                        console.log("Error while processing request");
-                    }, function(httpInProcess){ // In process
-                        console.log(httpInProcess);
-                    }
-                );
-            }
-            else if($scope.tyreUpdateChoice == "R") {
-                $rootScope.masterRemoveLogData = [];
-                
-                APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getmasterremovallog?status=' + status
-		+'&limit='+$scope.itemsPerPage_removeLog+'&startIndex='+startIndex
-                +'&masterLogStart='+$scope.logStartDate+'&masterLogEnd='+$scope.logEndDate, true)
-                .then(
-                    function(httpResponse){ // Success block
-                        try{
-                            loading.finish();
-                            $.each(httpResponse.data.result, function (a, removeLog) { 
-                                removeDateTime = moment.utc(removeLog.removalTimeDate).local().format("DD-MM-YYYY HH:mm:ss"); 
-                                $('#removeDateTime').append(removeDateTime);
-                                removeSystemIp = removeLog.systemIP;
-                                $('#removeSystemIP').append(removeSystemIp);
-                                
-                                angular.forEach(removeLog.removalData, function(value, key){
-                                    $rootScope.masterRemoveLogData.push(value);
-                                });
-                            });
-                        }catch(e) {
-                            console.log(e);
-                        }
-                    }, function(httpError){  // Error block
-                        loading.finish();
-                        console.log("Error while processing request");
-                    }, function(httpInProcess){ // In process
-                        console.log(httpInProcess);
-                    }
-                );
-            }
-        };
-        
-	$scope.removeLogStatusChanged = function(){
-	    $scope.limit_removeLog = 10;
-	    $scope.startIndex_removeLog = 1;
-	    $scope.pageChanged_removeLog('removeLog status changed');
-	};
-
-	var timer_removeLog = false;
-	$scope.removeLog = function() {
-	    if(timer_removeLog){
-		$timeout.cancel(timer_removeLog);
+	$scope.searchUpdateRemoveLog = function() {
+	    if(timer_updateRemoveLog) {
+		$timeout.cancel(timer_updateRemoveLog);
 	    }
-	    timer_removeLog= $timeout(function(){
-		$scope.pageChanged_removeLog('removeLog search');
+	    timer_updateRemoveLog = $timeout(function(){
+		$scope.pageChanged_updateRemoveLog();
 	    },1000);
 	};
         
+        $scope.limit_updateRemoveLog = 10;
+	$scope.startIndex_updateRemoveLog = 0;
 
+	$scope.totalItems_updateRemoveLog = 0;
+	$scope.currentPage_updateRemoveLog = 1;
+	$scope.itemsPerPage_updateRemoveLog = 10;
+	$scope.maxSize_updateRemoveLog = 3;
+
+        $scope.pageChanged_updateRemoveLog = function(){
+	    $scope.nextIndex_updateRemoveLog = ($scope.currentPage_updateRemoveLog - 1) * $scope.itemsPerPage_updateRemoveLog;
+	    $rootScope.getTMSAllUpdateRemoveLogs( $scope.nextIndex_updateRemoveLog, $scope.searchStringForUpdateRemoveLog);
+	};
+        
+        $scope.updateRemoveLog = 0;
+        $rootScope.TMSAllUpdateLogs = "";
+        $rootScope.TMSAllRemoveLogs = "";
+	$rootScope.getTMSAllUpdateRemoveLogs = function(startIndex, searchWord) {
+	    try {
+		if(searchWord == undefined || searchWord == 'null') {
+		    searchWord ='';
+		}
+		if(startIndex == undefined || startIndex == 'null'){
+		    startIndex = 0;
+		}
+                $scope.updateRemoveLog = $scope.startIndex_updateRemoveLog;
+                $scope.logStartDate = moment($("#masterLogStartTime").val() + ":00", "D/M/YYYY").valueOf();
+                $scope.logEndDate = moment($("#masterLogEndTime").val() + "23:59:59", "D/M/YYYY H:mm:ss").valueOf();
+        
+                if($scope.tyreUpdateChoice == "U") {  
+                    $rootScope.TMSAllUpdateLogs = "";
+                    APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getmasterassignmentlog?'
+                    +'&startId='+startIndex+'&limit='+$scope.itemsPerPage_updateRemoveLog
+                    +'&masterLogStart='+$scope.logStartDate+'&masterLogEnd='+$scope.logEndDate, true)
+                    .then(
+                        function(httpResponse){ // Success block
+                            try{
+                                loading.finish();
+                                if(httpResponse.data.status == true){
+                                    $rootScope.TMSAllUpdateLogs = httpResponse.data.result;
+                                    $scope.totalItems_updateRemoveLog = httpResponse.data.count;
+                                }
+                            }
+                            catch(error){
+                                loading.finish();
+                                console.log("Error :"+error);
+                            }
+                        }, function(httpError){ // Error block
+                            loading.finish();
+                            console.log("Error while processing request");
+                        }, function(httpInProcess){ // In process
+                            console.log(httpInProcess);
+                        }
+                    );
+                } else if($scope.tyreUpdateChoice == "R") {  
+                    $rootScope.TMSAllRemoveLogs = "";
+                    APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getmasterremovallog?'
+                    +'&startId='+startIndex+'&limit='+$scope.itemsPerPage_updateRemoveLog
+                    +'&masterLogStart='+$scope.logStartDate+'&masterLogEnd='+$scope.logEndDate, true)
+                    .then(
+                        function(httpResponse){ // Success block
+                            try{
+                                loading.finish();
+                                if(httpResponse.data.status == true){
+                                    $rootScope.TMSAllRemoveLogs = httpResponse.data.result;
+                                    $scope.totalItems_updateRemoveLog = httpResponse.data.count;
+                                }
+                            }
+                            catch(error){
+                                loading.finish();
+                                console.log("Error :"+error);
+                            }
+                        }, function(httpError){ // Error block
+                            loading.finish();
+                            console.log("Error while processing request");
+                        }, function(httpInProcess){ // In process
+                            console.log(httpInProcess);
+                        }
+                    );
+                }
+	    } catch (e) { loading.finish(); console.log(e); }
+	};
+        
+        
 	if($state.current.url == "/tms-sensor") {
 	    $scope.pageChanged_sensor('sensor default');
 	} else if($state.current.url == "/tms-bluetooth") {
@@ -1087,7 +1042,8 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
 	    $scope.pageChanged_vehUserDetails();
 	} else if($state.current.url == "/tms-errorlog") {
 	    $scope.pageChanged_errorlog();
-	} else if($state.current.url == "/tms-updatelog") {
-            $scope.pageChanged_removeLog();
+	} 
+        else if($state.current.url == "/tms-updatelog") {
+            $scope.pageChanged_updateRemoveLog();
         }
     }]);

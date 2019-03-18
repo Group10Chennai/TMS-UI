@@ -3,9 +3,12 @@
         <div class="row">
             <div class="col-md-12 col-sm-12 col-12"><i class="fa fa-list" aria-hidden="true"></i>
                 <h3> Master Log </h3>
+                <span style="float: right;"> {{nextIndex_updateRemoveLog + 1}} -
+                {{nextIndex_updateRemoveLog + itemsPerPage_updateRemoveLog}} of {{totalItems_updateRemoveLog}}</span>
             </div>
         </div>
     </div> <!-- /widget-header -->
+
 
     <div class="widget-content table-responsive">
         <div class="row">
@@ -33,7 +36,7 @@
       
             <!-- buttons -->
             <div class="col-md-3 col-sm-6 col-xs-12 report-select">
-                <button type="button" class="btn btn-info btn-sx" data-dismiss="modal" ng-click="getUpdateRemoveMasterLog();">
+                <button type="button" class="btn btn-info btn-sx" data-dismiss="modal" ng-click="getTMSAllUpdateRemoveLogs();">
                     <span class="fa fa-search" > Get Log </span>
                 </button>
             </div>
@@ -41,22 +44,6 @@
     </div>
 
     <div class="widget-content table-responsive">
-<!--        <form>
-            <div class="form-group row ">
-                 <div class="col-md-12 col-sm-12 col-xs-12">
-                    <div class="input-group">
-                        <div class="input-group-addon"><i class="fa fa-search"></i></div>
-                        <input type="text" placeholder= "Search" class="form-control" ng-model="searchStringForSensors" ng-change = "searchSensors()">
-                    </div>
-                </div>
-                <div class="col-md-6 col-sm-6 col-xs-12" >
-                    <label>Updated DateTime : </label>  <span id="uploadDateTime"></span>
-                </div>
-                <div class="col-md-6 col-sm-6 col-xs-12" >
-                    <label>System IP Address : </label>  <span id="uploadSystemIP"></span>
-                </div>
-            </div>
-        </form>-->
         
         <!-- Master Log Table for Tyre Update -->
         <div id="masterLog-UpdateId">
@@ -87,13 +74,6 @@
                                 <span ng-show="sortType == 'position' && tmsTyre_sortReverse" class="fa fa-caret-up"></span>
                             </a>
         		</th>
-<!--                        <th class="tableHead-center" >
-                            <a href="#" ng-click="sortType = 'rimNumber'; tmsTyre_sortReverse = !tmsTyre_sortReverse">
-                                RIM No
-                                <span ng-show="sortType == 'rimNumber' && !tmsTyre_sortReverse" class="fa fa-caret-down"></span>
-                                <span ng-show="sortType == 'rimNumber' && tmsTyre_sortReverse" class="fa fa-caret-up"></span>
-                            </a>
-        		</th>-->
                         <th class="tableHead-center" >
                             <a href="#" ng-click="sortType = 'sensor'; tmsTyre_sortReverse = !tmsTyre_sortReverse">
                                 Sensor UID
@@ -115,44 +95,22 @@
                                 <span ng-show="sortType == 'systemip' && tmsTyre_sortReverse" class="fa fa-caret-up"></span>
                             </a>
         		</th>
-                        <!--  <th class="tableHead-center" >
-                            <a href="#" ng-click="sortType = 'fitmentkm'; tmsTyre_sortReverse = !tmsTyre_sortReverse">
-                                Fitment KM
-                                <span ng-show="sortType == 'fitmentkm' && !tmsTyre_sortReverse" class="fa fa-caret-down"></span>
-                                <span ng-show="sortType == 'fitmentkm' && tmsTyre_sortReverse" class="fa fa-caret-up"></span>
-                            </a>
-        		</th>
-                        <th class="tableHead-center" >
-                            <a href="#">
-                                Remark
-                            </a>
-        		</th>
-                         <th class="tableHead-center" >
-                            <a href="#">
-                                Error
-                            </a>
-        		</th>-->
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="updateObj in masterUpdateLogData | orderBy:sortType:tmsTyre_sortReverse">
-                        <td class="tableData-right tablebody-td">{{$index + 1 }}</td>
+                    <tr ng-repeat="updateObj in TMSAllUpdateLogs | orderBy:sortType:tmsTyre_sortReverse">
+                        <td class="tableData-right tablebody-td">{{nextIndex_updateRemoveLog + $index + 1 }}</td>
                         <td class="tablebody-td">{{ updateObj.busNumber }} </td>
                         <td class="tablebody-td">{{ updateObj.tyreNumber }} </td>
                         <td class="tablebody-td">{{ updateObj.position }} </td>
                         <td class="tablebody-td">{{ updateObj.sensorUID }} </td>
-                        <td class="tablebody-td" id="uploadDateTime"> </td>
-                        <td class="tablebody-td" id="uploadSystemIP"> </td>
-                        <!--<td class="tablebody-td">{{ updateObj.rimNumber }} </td>
                         <td class="tablebody-td">{{ updateObj.dateOfFitment }} </td>
-                        <td class="tablebody-td">{{ updateObj.fitmentKM }} </td>
-                        <td class="tablebody-td">{{ updateObj.remark }} </td>
-                        <td class="tablebody-td">{{ updateObj.error }} </td>-->
+                        <td class="tablebody-td">{{ updateObj.systemIP }} </td>
                     </tr>
                 </tbody>
             </table>
-            <uib-pagination total-items="totalItems_removeLog" ng-model="currentPage_removeLog"
-                items-per-page="itemsPerPage_removeLog" max-size="maxSize_removeLog" ng-change="pageChanged_removeLog()"
+            <uib-pagination total-items="totalItems_updateRemoveLog" ng-model="currentPage_updateRemoveLog"
+                items-per-page="itemsPerPage_updateRemoveLog" max-size="maxSize_updateRemoveLog" ng-change="pageChanged_updateRemoveLog()"
                 boundary-link-numbers="true" rotate="true" boundary-links="true">
             </uib-pagination>
         </div>
@@ -200,117 +158,20 @@
                                 <span ng-show="sortType == 'systemip' && tmsTyre_sortReverse" class="fa fa-caret-up"></span>
                             </a>
                         </th>
-                        <!-- <th class="tableHead-center" >
-                            <a href="#" ng-click="sortType = 'status'; tmsTyre_sortReverse = !tmsTyre_sortReverse">
-                                Status
-                                <span ng-show="sortType == 'status' && !tmsTyre_sortReverse" class="fa fa-caret-down"></span>
-                                <span ng-show="sortType == 'status' && tmsTyre_sortReverse" class="fa fa-caret-up"></span>
-                            </a>
-                        </th>
-                        <th class="tableHead-center" >
-                            <a href="#" ng-click="sortType = 'removeDate'; tmsTyre_sortReverse = !tmsTyre_sortReverse">
-                                Removal Date
-                                <span ng-show="sortType == 'removeDate' && !tmsTyre_sortReverse" class="fa fa-caret-down"></span>
-                                <span ng-show="sortType == 'removeDate' && tmsTyre_sortReverse" class="fa fa-caret-up"></span>
-                            </a>
-                        </th>
-                        <th class="tableHead-center" >
-                            <a href="#" ng-click="sortType = 'removekm'; tmsTyre_sortReverse = !tmsTyre_sortReverse">
-                                Removal KM
-                                <span ng-show="sortType == 'removekm' && !tmsTyre_sortReverse" class="fa fa-caret-down"></span>
-                                <span ng-show="sortType == 'removekm' && tmsTyre_sortReverse" class="fa fa-caret-up"></span>
-                            </a>
-                        </th>
-                        <th class="tableHead-center" >
-                            <a href="#">
-                                Reason
-                            </a>
-                        </th>
-                        <th class="tableHead-center" >
-                            <a href="#">
-                                Action Taken
-                            </a>
-                        </th>
-                        <th class="tableHead-center" >
-                            <a href="#" ng-click="sortType = 'tyreCndn'; tmsTyre_sortReverse = !tmsTyre_sortReverse">
-                                Tyre Condition
-                                <span ng-show="sortType == 'tyreCndn' && !tmsTyre_sortReverse" class="fa fa-caret-down"></span>
-                                <span ng-show="sortType == 'tyreCndn' && tmsTyre_sortReverse" class="fa fa-caret-up"></span>
-                            </a>
-                        </th>
-                        <th class="tableHead-center" >
-                            <a href="#" ng-click="sortType = 'scrap'; tmsTyre_sortReverse = !tmsTyre_sortReverse">
-                                Scrapped to Party
-                                <span ng-show="sortType == 'scrap' && !tmsTyre_sortReverse" class="fa fa-caret-down"></span>
-                                <span ng-show="sortType == 'scrap' && tmsTyre_sortReverse" class="fa fa-caret-up"></span>
-                            </a>
-                        </th>
-                        <th class="tableHead-center" >
-                            <a href="#" ng-click="sortType = 'tdepth1'; tmsTyre_sortReverse = !tmsTyre_sortReverse">
-                                Tread Depth – Location 1
-                                <span ng-show="sortType == 'tdepth1' && !tmsTyre_sortReverse" class="fa fa-caret-down"></span>
-                                <span ng-show="sortType == 'tdepth1' && tmsTyre_sortReverse" class="fa fa-caret-up"></span>
-                            </a>
-                        </th>
-                        <th class="tableHead-center" >
-                            <a href="#" ng-click="sortType = 'tdepth2'; tmsTyre_sortReverse = !tmsTyre_sortReverse">
-                                Tread Depth – Location 2
-                                <span ng-show="sortType == 'tdepth2' && !tmsTyre_sortReverse" class="fa fa-caret-down"></span>
-                                <span ng-show="sortType == 'tdepth2' && tmsTyre_sortReverse" class="fa fa-caret-up"></span>
-                            </a>
-                        </th>
-                        <th class="tableHead-center" >
-                            <a href="#" ng-click="sortType = 'tdepth3'; tmsTyre_sortReverse = !tmsTyre_sortReverse">
-                                Tread Depth – Location 3
-                                <span ng-show="sortType == 'tdepth3' && !tmsTyre_sortReverse" class="fa fa-caret-down"></span>
-                                <span ng-show="sortType == 'tdepth3' && tmsTyre_sortReverse" class="fa fa-caret-up"></span>
-                            </a>
-                        </th>
-                        <th class="tableHead-center" >
-                            <a href="#" ng-click="sortType = 'pressure'; tmsTyre_sortReverse = !tmsTyre_sortReverse">
-                                Tyre Pressure(psi)
-                                <span ng-show="sortType == 'pressure' && !tmsTyre_sortReverse" class="fa fa-caret-down"></span>
-                                <span ng-show="sortType == 'pressure' && tmsTyre_sortReverse" class="fa fa-caret-up"></span>
-                            </a>
-                        </th>
-                        <th class="tableHead-center" >
-                            <a href="#">
-                                Remark
-                            </a>
-                        </th>
-                        <th class="tableHead-center" >
-                            <a href="#">
-                                Error
-                            </a>
-                        </th>
-                    </tr> -->
                 </thead>
                 <tbody>
-                    <tr ng-repeat="tms_removeLog in masterRemoveLogData">
-                        <td class="tableData-right tablebody-td">{{$index + 1 }}</td>
+                    <tr ng-repeat="tms_removeLog in TMSAllRemoveLogs">
+                        <td class="tableData-right tablebody-td">{{nextIndex_updateRemoveLog + $index + 1 }}</td>
                         <td class="tablebody-td">{{ tms_removeLog.busNumber }} </td>
                         <td class="tablebody-td">{{ tms_removeLog.tyreNumber }} </td>
                         <td class="tablebody-td">{{ tms_removeLog.position }} </td>
-<!--                        <td class="tablebody-td" id="removeDateTime"> </td>
-                        <td class="tablebody-td" id="removeSystemIP"> </td>-->
-                        <!-- <td class="tablebody-td">{{ tms_removeLog.status }} </td>
-                        <td class="tablebody-td">{{ tms_removeLog.removalDate }} </td>
-                        <td class="tablebody-td">{{ tms_removeLog.removalKM }} </td>
-                        <td class="tablebody-td">{{ tms_removeLog.reasonForRemoval }} </td>
-                        <td class="tablebody-td">{{ tms_removeLog.actionTaken }} </td>
-                        <td class="tablebody-td">{{ tms_removeLog.tyreCondition }} </td>
-                        <td class="tablebody-td">{{ tms_removeLog.scrappedToParty }} </td>
-                        <td class="tablebody-td">{{ tms_removeLog.threadDepthLocation1 }} </td>
-                        <td class="tablebody-td">{{ tms_removeLog.threadDepthLocation2 }} </td>
-                        <td class="tablebody-td">{{ tms_removeLog.threadDepthLocation3 }} </td>
-                        <td class="tablebody-td">{{ tms_removeLog.tyrePSI }} </td>
-                        <td class="tablebody-td">{{ tms_removeLog.remark }} </td>
-                        <td class="tablebody-td">{{ tms_removeLog.error }} </td> -->
+                        <td class="tablebody-td">{{ tms_removeLog.removalTimeDate  | date:'dd-MM-yyyy' }} </td>
+                        <td class="tablebody-td">{{ tms_removeLog.systemIP }} </td>
                     </tr>
                 </tbody>
             </table>
-            <uib-pagination total-items="totalItems_removeLog" ng-model="currentPage_removeLog"
-                items-per-page="itemsPerPage_removeLog" max-size="maxSize_removeLog" ng-change="pageChanged_removeLog()"
+            <uib-pagination total-items="totalItems_updateRemoveLog" ng-model="currentPage_updateRemoveLog"
+                items-per-page="itemsPerPage_updateRemoveLog" max-size="maxSize_updateRemoveLog" ng-change="pageChanged_updateRemoveLog()"
                 boundary-link-numbers="true" rotate="true" boundary-links="true">
             </uib-pagination>
         </div>
@@ -349,7 +210,7 @@
             if ($('#masterLogEndTime').hasClass('error'))
             $('#masterLogEndTime').removeClass('error');
             this.setOptions({
-                maxDate: $('#masterLogStartTime').val() ? (moment($('#masterLogStartTime').val(), 'DD-MM-YYYY').add(0, 'days')).format('DD-MM-YYYY') : false,
+                maxDate: $('#masterLogStartTime').val() ? (moment($('#masterLogStartTime').val(), 'DD-MM-YYYY').add(4, 'days')).format('DD-MM-YYYY') : false,
                 formatDate: 'd-m-Y'
             });
         },
@@ -364,7 +225,7 @@
         value: moment().format("DD-MM-YYYY")
     });
     
-    $('#selectupdateChoice').on("select2:select", function (e) {
+    $('#selectupdateChoice').on("select2:select", function (e) {        
         var selectVal = $('#selectupdateChoice').val();
         if(selectVal == 'U') {
             $('#masterLog-UpdateId').show();
