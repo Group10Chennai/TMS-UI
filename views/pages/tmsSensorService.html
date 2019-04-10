@@ -1,0 +1,74 @@
+
+<div class="widget-header" style="margin-top: 0.1em;">
+    <i class="fa fa-list" aria-hidden="true"></i>
+    <h3> Sensor Service </h3>
+    <span style="float: right; margin-right: 33px;"> {{nextIndex_sensorServices + 1}} -
+    {{nextIndex_sensorServices + itemsPerPage_sensorServices}} of {{totalItems_sensorServices}}</span>
+</div> <!-- /widget-header -->
+
+<div class="widget-content table-responsive">
+  <form>
+    <div class="form-group row ">
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="input-group">
+          <div class="input-group-addon"><i class="fa fa-search"></i></div>
+          <input type="text" placeholder= "Search" class="form-control" ng-model="TMSSensorService_searchWord"
+           ng-change = "searchSensorServices()">
+        </div>
+      </div>
+    </div>
+  </form>
+  <table class="table table-fixed table-bordered table-hover" ng-if="getSensorServiceHistory.length > 0">
+  	<thead class="tablehead">
+	    <tr class="tablehead">
+    		<th class="tableHead-center" >
+    		    <a href="#" > # </a>
+    		</th>
+    		<th class="tableHead-center">
+    		    <a href="#" ng-click="sortType = 'tireNumber'; service_sortReverse = !service_sortReverse">
+    			Sensor UID
+    			<span ng-show="sortType == 'tireNumber' && !service_sortReverse" class="fa fa-caret-down"></span>
+    			<span ng-show="sortType == 'tireNumber' && service_sortReverse" class="fa fa-caret-up"></span>
+    		    </a>
+    		</th>
+    		<th class="tableHead-center">
+    		    <a href="#" ng-click="sortType = 'vehName'; service_sortReverse = !service_sortReverse">
+    			Tyre Number
+    			<span ng-show="sortType == 'vehName' && !service_sortReverse" class="fa fa-caret-down"></span>
+    			<span ng-show="sortType == 'vehName' && service_sortReverse" class="fa fa-caret-up"></span>
+    		    </a>
+    		</th>
+    		<th class="tableHead-center">
+  		    <a href="#" ng-click="sortType = 'tyreKms'; service_sortReverse = !service_sortReverse">
+      			Status
+      			<span ng-show="sortType == 'tyreKms' && !service_sortReverse" class="fa fa-caret-down"></span>
+      			<span ng-show="sortType == 'tyreKms' && service_sortReverse" class="fa fa-caret-up"></span>
+  		    </a>
+    		</th>
+    		<th class="tableHead-center" >
+    		    <a href="#" ng-click="sortType = 'reason'; service_sortReverse = !service_sortReverse">
+    			Date Time 
+    			<span ng-show="sortType == 'reason' && !service_sortReverse" class="fa fa-caret-down"></span>
+    			<span ng-show="sortType == 'reason' && service_sortReverse" class="fa fa-caret-up"></span>
+    		    </a>
+    		</th>
+	    </tr>
+  	</thead>
+  	<tbody >
+	    <tr ng-repeat="sensorService in TMSSensorServiceHistory | orderBy:sortType:service_sortReverse">
+		<td class="tableData-right tablebody-td">{{nextIndex_sensorServices + $index + 1}}</td>
+		<td class="tablebody-td">{{ sensorService.sensorUID }} </td>
+		<td class="tablebody-td">{{ sensorService.tireNumber }} </td>
+		<td class="tablebody-td">{{ sensorService.sensorStatus }} </td>
+		<td class="tablebody-td">{{ sensorService.updatedDateTime | date:'dd-MM-yyyy hh:mm:ss' }}</td>
+	    </tr>
+  	</tbody>    
+    </table>
+    <uib-pagination total-items="totalItems_sensorServices" ng-model="currentPage_sensorServices"
+    items-per-page="itemsPerPage_sensorServices" max-size="maxSize_sensorServices" ng-change="pageChanged_sensorServices()"
+    boundary-link-numbers="true" rotate="true" boundary-links="true"></uib-pagination>
+</div>
+
+<script>
+   
+</script>

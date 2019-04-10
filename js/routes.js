@@ -162,7 +162,7 @@ angular
     //page subtitle goes here
     params: { subtitle: 'Tyre Monitor System' },
   })
-
+  
   .state('app.tmsTyreService', {
     url: '/tmsTyreService',
     templateUrl: 'views/pages/tmsTyreService.html',
@@ -211,7 +211,20 @@ angular
     //page subtitle goes here
     params: { subtitle: 'Tyre Monitor System' },
   })
-
+  
+  .state('app.tmsSensorService', {
+    url: '/tmsSensorService',
+    templateUrl: 'views/pages/tmsSensorService.html',
+    controller: 'TMSController',
+    //page title goes here
+    ncyBreadcrumb: {
+      label: 'TMS',
+    },
+    //page subtitle goes here
+    params: { subtitle: 'Tyre Monitor System' },
+  })
+  
+  
   // Org Admin Or Sys Admin
   .state('app.tms-sensor', {
     url: '/tms-sensor',

@@ -138,8 +138,8 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 	        allowClear: true,
 	        width: 278
 	    });
-      //sri
-      $('#tyreOrganizationId').select2 ({
+
+            $('#tyreOrganizationId').select2 ({
 	        placeholder: "Organization",
 	        allowClear: true,
 	        width: 227
@@ -155,18 +155,16 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 	    $scope.tyreStatusList = ["InStock", "Retread", "Scraped"];
 	    $scope.DeviceStatusList = ["InStock", "Scraped"];
 
-      // Check whether user is SysAdmin or normal user
-      if(sessionStorage.UserLevelId > 0 && sessionStorage.UserLevelId < 5){
-        $rootScope.isSysAdmin = true;
-      } else {
-        $rootScope.isSysAdmin = false;
-      }
-
+            // Check whether user is SysAdmin or normal user
+            if(sessionStorage.UserLevelId > 0 && sessionStorage.UserLevelId < 5){
+                $rootScope.isSysAdmin = true;
+            } else {
+                $rootScope.isSysAdmin = false;
+            }
 	} catch (e) { console.log(e); }
 
 
-
-	$scope.getTMSDepotList = function() {
+        $scope.getTMSDepotList = function() {
 	    try {
 		$.ajax({
 		    url: $rootScope.HOST_TMS + 'api/tms/getTMSDepotList',
@@ -187,7 +185,7 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 		    }
 		});
 	    } catch (e) { loading.finish(); console.log(e); }
-	}
+	};
 
 	$scope.DefaultTyreMakeId = 4; // JK Tyre
 	$scope.tyreMakeList = function() {
@@ -205,7 +203,7 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 				    }
 				});
 			    }
- 			}
+                        }
  			catch(error) {
  			    loading.finish();
 			    console.log("Error :"+error);
@@ -218,7 +216,7 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
  		    }
  		);
 	    } catch (e) { loading.finish(); console.log(e); }
-	}
+	};
 
 	$scope.getTMSOrganizationList = function() {
 	    try {
@@ -243,7 +241,7 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 		    }
 		);
 	    } catch (e) { loading.finish(); console.log(e); }
-	}
+	};
 
 	$scope.getTMSShortTireDetails = function() {
 	    try {
@@ -267,7 +265,7 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
  		    }
  		);
 	    } catch (e) { loading.finish(); console.log(e); }
-	}
+	};
 
 	$scope.tmsVehViewOrgId = 0
 	$scope.getTMSShortVehDetails = function() {
@@ -292,7 +290,7 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
  		    }
  		);
 	    } catch (e) { loading.finish(); console.log(e); }
-	}
+	};
 
 	$scope.getTMSDepotList();
 	$scope.tyreMakeList();
@@ -300,104 +298,87 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 	$scope.getTMSShortTireDetails();
 	$scope.getTMSShortVehDetails();
 
-  $scope.TMSAllInstockBController = new Array();
-  $scope.getTMSAllInstockBController = function()
-  {
-    try {
-      APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getBController?status=InStock'
-        +'&limit=0&startIndex=0&searchWord=', true)
-     .then(
-       function(httpResponse){ // Success block
-         try{
-           loading.finish();
-           if(httpResponse.data.status == true)
-           {
-             $scope.TMSAllInstockBController = httpResponse.data.result;
-           }
-         }
-         catch(error)
-         {
-           loading.finish();
-           console.log("Error :"+error);
-         }
-       }, function(httpError) // Error block
-       {
-         loading.finish();
-         console.log("Error while processing request");
-       }, function(httpInProcess)// In process
-       {
-         console.log(httpInProcess);
-       }
-     );
-    } catch (e) { loading.finish(); console.log(e); }
-  }
+        $scope.TMSAllInstockBController = new Array();
+        $scope.getTMSAllInstockBController = function() {
+            try {
+                APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getBController?status=InStock'
+                +'&limit=0&startIndex=0&searchWord=', true)
+                .then(
+                    function(httpResponse){ // Success block
+                        try{
+                            loading.finish();
+                            if(httpResponse.data.status == true) {
+                                $scope.TMSAllInstockBController = httpResponse.data.result;
+                            }
+                        }
+                        catch(error) {
+                            loading.finish();
+                            console.log("Error :"+error);
+                        }
+                    }, function(httpError){ // Error block
+                        loading.finish();
+                        console.log("Error while processing request");
+                    }, function(httpInProcess){ // In process
+                        console.log(httpInProcess);
+                    }
+                );
+            } catch (e) { loading.finish(); console.log(e); }
+        };
 
-  //sri
-  $scope.TMSAllInstockRFID = new Array();
-	$scope.getTMSInstockAllRFID = function()
-	{
-		try {
+        $scope.TMSAllInstockRFID = new Array();
+	$scope.getTMSInstockAllRFID = function() {
+            try {
+		APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getRFID?status=Instock'
+                +'&limit=0&startIndex=0&searchWord=', true)
+ 		.then(
+                    function(httpResponse){ // Success block
+                        try{
+                            loading.finish();
+                            if(httpResponse.data.status == true) {
+				$scope.TMSAllInstockRFID = httpResponse.data.result;
+                            } else {
+                                logger.logError(httpResponse.data.displayMsg);
+                            }
+ 			}
+ 			catch(error) {
+                            loading.finish();
+                            console.log("Error :"+error);
+ 			}
+                    }, function(httpError){ // Error block
+                        loading.finish();
+ 			console.log("Error while processing request");
+                    }, function(httpInProcess){ // In process
+                        console.log(httpInProcess);
+                    }
+ 		);
+            } catch (e) { loading.finish(); console.log(e); }
+	};
 
-			APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getRFID?status=Instock'
-        +'&limit=0&startIndex=0&searchWord=', true)
- 		 .then(
- 			 function(httpResponse){ // Success block
- 				 try{
- 					 loading.finish();
-					 if(httpResponse.data.status == true)
-					 {
-						 $scope.TMSAllInstockRFID = httpResponse.data.result;
-					 } else {
-						 logger.logError(httpResponse.data.displayMsg);
-					 }
- 				 }
- 				 catch(error)
- 				 {
- 					 loading.finish();
- 					 console.log("Error :"+error);
- 				 }
- 			 }, function(httpError) // Error block
- 			 {
- 				 loading.finish();
- 				 console.log("Error while processing request");
- 			 }, function(httpInProcess)// In process
- 			 {
- 				 console.log(httpInProcess);
- 			 }
- 		 );
-		} catch (e) { loading.finish(); console.log(e); }
-	}
-
-  $scope.getTMSAllInstockSensors = function()
-	{
-		try {
-			APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getSensors?status=Instock'
-			+'&limit=0&startIndex=0&searchWord=', true)
- 		 .then(
- 			 function(httpResponse){ // Success block
- 				 try{
- 					 loading.finish();
-					 if(httpResponse.data.status == true)
-					 {
-						$scope.TMSAllInstockSensors = httpResponse.data.result;
-					 }
- 				 }
- 				 catch(error)
- 				 {
- 					 loading.finish();
- 					 console.log("Error :"+error);
- 				 }
- 			 }, function(httpError) // Error block
- 			 {
- 				 loading.finish();
- 				 console.log("Error while processing request");
- 			 }, function(httpInProcess)// In process
- 			 {
- 				 console.log(httpInProcess);
- 			 }
- 		 );
-		} catch (e) { loading.finish(); console.log(e); }
-	}
+        $scope.getTMSAllInstockSensors = function(){
+            try {
+		APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getSensors?status=Instock'
+		+'&limit=0&startIndex=0&searchWord=', true)
+ 		.then(
+                    function(httpResponse){ // Success block
+                        try{
+                            loading.finish();
+                            if(httpResponse.data.status == true) {
+				$scope.TMSAllInstockSensors = httpResponse.data.result;
+                            }
+ 			}
+ 			catch(error) {
+                            loading.finish();
+                            console.log("Error :"+error);
+ 			}
+                    }, function(httpError){ // Error block
+                        loading.finish();
+ 			console.log("Error while processing request");
+                    }, function(httpInProcess){ // In process
+                        console.log(httpInProcess);
+                    }
+ 		);
+            } catch (e) { loading.finish(); console.log(e); }
+	};
 
 	$scope.addNewDepot = function() {
 	    try {
@@ -431,7 +412,7 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 		    logger.logError("Please enter Depot Name");
 		}
 	    } catch (e) { loading.finish(); console.log(e); }
-	}
+	};
 
 	$scope.addNewOrg = function() {
 	    try {
@@ -465,7 +446,7 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 		    logger.logError("Please enter Organization Name");
 		}
 	    } catch (e) { loading.finish(); console.log(e); }
-	}
+	};
 
 	// Vehicle Code Starts here
 	$scope.totalItems_vehicles = 0;
@@ -525,8 +506,8 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
     		}, function(httpInProcess){	// In process
     		    console.log(httpInProcess);
     		}
-    );
-	}
+            );
+	};
 
 	$scope.getAllTMSVehiclesDetails = function(nextIndex_vehicle, searchWord, configType) {
 	    $rootScope.allVehicles = new Array();
@@ -538,7 +519,7 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 		    limit : $scope.itemsPerPage_vehicles,
 		    startIndex: nextIndex_vehicle,
 		    configType: configType
-		}
+		};
 		if(searchWord != undefined && searchWord != null && searchWord.trim().length > 0){
 		    // Seach vehicles
 		    request = {
@@ -546,24 +527,24 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 			startIndex: nextIndex_vehicle,
 			searchWord: searchWord,
 			configType: configType
-		    }
+                    };
 		}
 
 		APIServices.callAPI($rootScope.HOST_TMS + 'api/tms/getVehicles', request, true)
 		.then(
 		    function(httpResponse){ // Success block
 			try{
-		    if (httpResponse.data.status) {
-		        if (httpResponse.data.result.length > 0) {
+                            if (httpResponse.data.status) {
+                                if (httpResponse.data.result.length > 0) {
   				    $rootScope.processVehDetailsForView(httpResponse, function(response){
-                $rootScope.allVehicles = response;
+                                        $rootScope.allVehicles = response;
   				    });
   				    $scope.totalItems_vehicles = httpResponse.data.count;
   				} else {
 				    $rootScope.allVehicles = [];
 				    $scope.totalItems_vehicles = 0;
   				}
-		    }
+                            }
 			}
 			catch(error) {
 			    loading.finish();
@@ -580,7 +561,7 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 		loading.finish();
 		console.log(err);
 	    }
-	}
+	};
 
 	$scope.addedEmptyTireFun = function(vehicleDetails){
 	    try {
@@ -654,12 +635,12 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 		}
 		return vehicleDetails;
 	    } catch (e) { console.log(e); }
-	}
+	};
 
-	var timer_vehicles = false
+	var timer_vehicles = false;
 	$scope.searchvehicles = function() {
 	    if(timer_vehicles){
-		$timeout.cancel(timer_vehicles)
+		$timeout.cancel(timer_vehicles);
 	    }
 	    timer_vehicles= $timeout(function(){
 		$scope.pageChanged_vehicles();
@@ -669,7 +650,7 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 	$scope.showVehicleAddingForm = false;
 	$scope.tmsVehicleAddingFormClose = function(){
 	    $scope.showVehicleAddingForm = false;
-	}
+	};
 
 	$scope.showVehicleAddingFormForAdd = function() {
 	    try {
@@ -703,15 +684,15 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 	    try {
 		$('#vehiclebluetoothId').select2('val', '');
 	    } catch (e) { }
-	}
+	};
 
 	$scope.getVehDetailsFormForUpdate = function(TMSVehDetails) {
 	    $('#showTMSVehicleModalId').modal('show');
 
-      $scope.getTMSAllInstockBController();
-      $scope.getTMSInstockAllRFID();
+            $scope.getTMSAllInstockBController();
+            $scope.getTMSInstockAllRFID();
 
-      //$scope.getTMSAllTyres('InStock');
+            //$scope.getTMSAllTyres('InStock');
 
 	    $scope.TMSVehDetailsUpdate = TMSVehDetails;
 	    $scope.TMSVehName = TMSVehDetails.vehName;
@@ -739,14 +720,14 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 	    try {
 		$("#vehiclebluetoothId").val($scope.TMSVehBControlerId).trigger('change');
 	    } catch (e) { }
-	}
+	};
 
 	$scope.deallocatedDeviceStatus = $scope.DeviceStatusList[0];
 	$scope.removeBTUID = function(TMSVehBControlerUID) {
 	    $scope.deallocatedDeviceNo = TMSVehBControlerUID;
 	    $scope.deallocatedVehNo = $scope.TMSVehName;
 	    $('#deallocatedBTRFIDModalId').modal('show');
-	}
+	};
 
 	$scope.deallocatedDevice = function() {
 	    try {
@@ -760,7 +741,7 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 		     $scope.TMSVehDetailsUpdate.rfid, 0, $scope.deallocatedDeviceStatus);
 		}
 	    } catch (e) { console.log(e); }
-	}
+	};
 
 	$scope.callDeallocatedDeviceAPI = function(vehId, vehName, RFID, ControllerId, status){
 	    try {
@@ -802,20 +783,20 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 		    }
 		);
 	    } catch (e) { console.log(e); }
-	}
+	};
 
 	$scope.addNewVehicle = function() {
-    try {
-  		$scope.TMSVehOrgId = 1;
-      if ($scope.TMSVehName == null || $scope.TMSVehName == undefined) {
-		    logger.logError("Enter Vehicle Name");
-    	} else if ($scope.TMSVehDepotId == null || $scope.TMSVehDepotId == undefined) {
-    	    logger.logError("Select Depot");
-    	} else if ($scope.TMSVehOrgId == null || $scope.TMSVehOrgId == undefined) {
-    	    logger.logError("Select Organization");
-    	} else {
-		    if( $scope.TMSVehRFID == undefined || $scope.TMSVehRFID == null) {
-		        $scope.TMSVehRFID = "";
+            try {
+                $scope.TMSVehOrgId = 1;
+                if ($scope.TMSVehName == null || $scope.TMSVehName == undefined) {
+                    logger.logError("Enter Vehicle Name");
+                } else if ($scope.TMSVehDepotId == null || $scope.TMSVehDepotId == undefined) {
+                    logger.logError("Select Depot");
+                } else if ($scope.TMSVehOrgId == null || $scope.TMSVehOrgId == undefined) {
+                    logger.logError("Select Organization");
+                } else {
+                    if($scope.TMSVehRFID == undefined || $scope.TMSVehRFID == null) {
+                        $scope.TMSVehRFID = "";
 		    }
 		    if($scope.TMSVehBControlerId == undefined || $scope.TMSVehBControlerId == null) {
 		        $scope.TMSVehBControlerId = "";
@@ -849,11 +830,11 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
     			}
 		    );
   		}
-    } catch(err){
+            } catch(err){
   		loading.finish();
   		console.log(err);
-    }
-	}
+            }
+	};
 
 	$scope.updateVehDetailsFun = function() {
 	    try {
@@ -894,397 +875,372 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 		    }
 		);
 	    } catch (e) { loading.finish(); console.log(e); }
-	}
+	};
 
 	$scope.AssignTyreVehName = "";
 
 	// Show popup for assign tyres to vehicle
 	$scope.getTyreDetailsForAssignVehicle = function(TMSVehDetails){
 	    $('#showTyreAssignModalId').modal('show');
-			$scope.assignTyreVehDetails = TMSVehDetails;
-			$scope.getTMSAllTyres('InStock');
-			$scope.AssignTyreVehName = $scope.assignTyreVehDetails.vehName;
-			$scope.FLTyreId = 0;
-			$scope.FRTyreId = 0;
-			$scope.RLOTyreId = 0;
-			$scope.RLITyreId = 0;
-			$scope.RRITyreId = 0;
-			$scope.RROTyreId = 0;
-			$scope.existing_tyreFL = undefined;
-			$scope.existing_tyreFR = undefined;
-			$scope.existing_tyreRLO = undefined;
-			$scope.existing_tyreRLI = undefined;
-			$scope.existing_tyreRRI = undefined;
-			$scope.existing_tyreRRO = undefined;
-			try {
-				angular.forEach($scope.assignTyreVehDetails.tires, function(tire, key){
-					if (tire.tirePosition == 'FL') {
-						$scope.existing_tyreFL = tire.tireNumber;
-					}
-					if (tire.tirePosition == 'FR') {
-						$scope.existing_tyreFR = tire.tireNumber;
-					}
-					if (tire.tirePosition == 'RLO') {
-						$scope.existing_tyreRLO = tire.tireNumber;
-					}
-					if (tire.tirePosition == 'RLI') {
-						$scope.existing_tyreRLI = tire.tireNumber;
-					}
-					if (tire.tirePosition == 'RRI') {
-						$scope.existing_tyreRRI = tire.tireNumber;
-					}
-					if (tire.tirePosition == 'RRO') {
-						$scope.existing_tyreRRO = tire.tireNumber;
-					}
-				});
+            $scope.assignTyreVehDetails = TMSVehDetails;
+            $scope.getTMSAllTyres('InStock');
+            $scope.AssignTyreVehName = $scope.assignTyreVehDetails.vehName;
+            $scope.FLTyreId = 0;
+            $scope.FRTyreId = 0;
+            $scope.RLOTyreId = 0;
+            $scope.RLITyreId = 0;
+            $scope.RRITyreId = 0;
+            $scope.RROTyreId = 0;
+            $scope.existing_tyreFL = undefined;
+            $scope.existing_tyreFR = undefined;
+            $scope.existing_tyreRLO = undefined;
+            $scope.existing_tyreRLI = undefined;
+            $scope.existing_tyreRRI = undefined;
+            $scope.existing_tyreRRO = undefined;
+            try {
+                angular.forEach($scope.assignTyreVehDetails.tires, function(tire, key){
+                    if (tire.tirePosition == 'FL') {
+                        $scope.existing_tyreFL = tire.tireNumber;
+                    }
+                    if (tire.tirePosition == 'FR') {
+                        $scope.existing_tyreFR = tire.tireNumber;
+                    }
+                    if (tire.tirePosition == 'RLO') {
+                        $scope.existing_tyreRLO = tire.tireNumber;
+                    }
+                    if (tire.tirePosition == 'RLI') {
+                        $scope.existing_tyreRLI = tire.tireNumber;
+                    }
+                    if (tire.tirePosition == 'RRI') {
+                        $scope.existing_tyreRRI = tire.tireNumber;
+                    }
+                    if (tire.tirePosition == 'RRO') {
+                        $scope.existing_tyreRRO = tire.tireNumber;
+                    }
+                });
 
-				try {
-				    $('#FrontLeft_Id').select2('val', 0);
-						// $("#FrontLeft_Id").val($scope.FLTyreId).trigger('change');
-				} catch (e) {  }
-				try {
-				    $('#FrontRight_Id').select2('val', 0);
-						// $("#FrontRight_Id").val($scope.FRTyreId).trigger('change');
-				} catch (e) {  }
-				try {
-				    $('#RearLeftOuter_Id').select2('val', 0);
-						// $("#RearLeftOuter_Id").val($scope.RLOTyreId).trigger('change');
-				} catch (e) {  }
-				try {
-				    $('#RearLeftInner_Id').select2('val', 0);
-						// $("#RearLeftInner_Id").val($scope.RLITyreId).trigger('change');
-				} catch (e) {  }
-				try {
-				    $('#RearRightInner_Id').select2('val', 0);
-						// $("#RearRightInner_Id").val($scope.RRITyreId).trigger('change');
-				} catch (e) {  }
-				try {
-				    $('#RearRightOuter_Id').select2('val', 0);
-						// $("#RearRightOuter_Id").val($scope.RROTyreId).trigger('change');
-				} catch (e) {  }
-			} catch (e) { console.log(e); }
-	}
+		try {
+		    $('#FrontLeft_Id').select2('val', 0);
+                    // $("#FrontLeft_Id").val($scope.FLTyreId).trigger('change');
+		} catch (e) {  }
+		try {
+		    $('#FrontRight_Id').select2('val', 0);
+                    // $("#FrontRight_Id").val($scope.FRTyreId).trigger('change');
+		} catch (e) {  }
+		try {
+		    $('#RearLeftOuter_Id').select2('val', 0);
+                    // $("#RearLeftOuter_Id").val($scope.RLOTyreId).trigger('change');
+		} catch (e) {  }
+		try {
+		    $('#RearLeftInner_Id').select2('val', 0);
+                    // $("#RearLeftInner_Id").val($scope.RLITyreId).trigger('change');
+		} catch (e) {  }
+		try {
+		    $('#RearRightInner_Id').select2('val', 0);
+                    // $("#RearRightInner_Id").val($scope.RRITyreId).trigger('change');
+		} catch (e) {  }
+		try {
+		    $('#RearRightOuter_Id').select2('val', 0);
+                    // $("#RearRightOuter_Id").val($scope.RROTyreId).trigger('change');
+		} catch (e) {  }
+            } catch (e) { console.log(e); }
+        };
 
 	// Assign Tyres to Vehicle
 	$scope.assignTyres = function(){
-		try {
-			var TyreAssing_URL =$rootScope.HOST_TMS + 'api/tms/assignTyres?';
-			var param = "vehId="+$scope.assignTyreVehDetails.vehId;
-
-			if($scope.FLTyreId != undefined && $scope.FLTyreId > 0)
-			{
-				param = param+"&tyreId1="+$scope.FLTyreId+"&tyrePosition1=FL";
+            try {
+		var TyreAssing_URL =$rootScope.HOST_TMS + 'api/tms/assignTyres?';
+		var param = "vehId="+$scope.assignTyreVehDetails.vehId;
+    
+                if($scope.FLTyreId != undefined && $scope.FLTyreId > 0){
+                    param = param+"&tyreId1="+$scope.FLTyreId+"&tyrePosition1=FL";
+		}
+		if($scope.FRTyreId != undefined || $scope.FRTyreId > 0){
+                    param = param+"&tyreId2="+$scope.FRTyreId+"&tyrePosition2=FR"
+		}
+		if($scope.RLOTyreId != undefined || $scope.RLOTyreId > 0){
+                    param = param+"&tyreId3="+$scope.RLOTyreId+"&tyrePosition3=RLO"
+		}
+            	if($scope.RLITyreId != undefined || $scope.RLITyreId > 0){
+                    param = param+"&tyreId4="+$scope.RLITyreId+"&tyrePosition4=RLI"
+		}
+		if($scope.RRITyreId != undefined || $scope.RRITyreId > 0){
+                    param = param+"&tyreId5="+$scope.RRITyreId+"&tyrePosition5=RRI"
+		}
+		if($scope.RROTyreId != undefined || $scope.RROTyreId > 0){
+                    param = param+"&tyreId6="+$scope.RROTyreId+"&tyrePosition6=RRO"
+		}
+		APIServices.callGET_API(TyreAssing_URL+param, true)
+                .then(
+                    function(httpResponse){ // Success block
+                        try{
+                            loading.finish();
+                            if(httpResponse.data.status == true){
+				logger.logSuccess('Tyres Assigned successfully');
+                                $scope.pageChanged_vehicles();
+				$scope.assignTyreVehDetails1 = $scope.addedEmptyTireFun(httpResponse.data.result[0]);
+				$timeout(function () {
+                                    $scope.getTyreDetailsForAssignVehicle($scope.assignTyreVehDetails1);
+				}, 1000);
+                            }
+                            else {
+				logger.logError(httpResponse.data.displayMsg);
+                            }
 			}
-			if($scope.FRTyreId != undefined || $scope.FRTyreId > 0)
-			{
-				param = param+"&tyreId2="+$scope.FRTyreId+"&tyrePosition2=FR"
+			catch(error){
+                            loading.finish();
+                            console.log("Error :"+error);
 			}
-			if($scope.RLOTyreId != undefined || $scope.RLOTyreId > 0)
-			{
-				param = param+"&tyreId3="+$scope.RLOTyreId+"&tyrePosition3=RLO"
-			}
-			if($scope.RLITyreId != undefined || $scope.RLITyreId > 0)
-			{
-				param = param+"&tyreId4="+$scope.RLITyreId+"&tyrePosition4=RLI"
-			}
-			if($scope.RRITyreId != undefined || $scope.RRITyreId > 0)
-			{
-				param = param+"&tyreId5="+$scope.RRITyreId+"&tyrePosition5=RRI"
-			}
-			if($scope.RROTyreId != undefined || $scope.RROTyreId > 0)
-			{
-				param = param+"&tyreId6="+$scope.RROTyreId+"&tyrePosition6=RRO"
-			}
-			APIServices.callGET_API(TyreAssing_URL+param, true)
-		 .then(
-			 function(httpResponse){ // Success block
-				 try{
-					 loading.finish();
-					 if(httpResponse.data.status == true)
-					 {
-						 logger.logSuccess('Tyres Assigned successfully');
-						 $scope.pageChanged_vehicles();
-						 $scope.assignTyreVehDetails1 = $scope.addedEmptyTireFun(httpResponse.data.result[0]);
-						 $timeout(function () {
-							 $scope.getTyreDetailsForAssignVehicle($scope.assignTyreVehDetails1);
-						 }, 1000);
-					 }
-					 else {
-						logger.logError(httpResponse.data.displayMsg);
-					 }
-				 }
-				 catch(error)
-				 {
-					 loading.finish();
-					 console.log("Error :"+error);
-				 }
-			 }, function(httpError) // Error block
-			 {
-				 loading.finish();
-				 console.log("Error while processing request");
-			 }, function(httpInProcess)// In process
-			 {
-				 console.log(httpInProcess);
-			 }
-		 );
-		} catch (e) { console.log(e); }
-	}
+                    }, function(httpError){ // Error block
+                        loading.finish();
+			console.log("Error while processing request");
+                    }, function(httpInProcess){ // In process
+			console.log(httpInProcess);
+                    }
+		);
+            } catch (e) { console.log(e); }
+	};
 
 	$scope.addNewTyreService = function(vehId, FLTyreId, FRTyreId, RLOTyreId, RLITyreId, RRITyreId, RROTyreId){
-
-		$scope.newTyreServiceTireList = new Array();
-		try {
-			if(vehId == undefined && vehId < 1){
-				alert("Please select vehicle");
-			} else{
-				if(FLTyreId != undefined && FLTyreId > 0){
-					var obj = { tyreId:FLTyreDetials.tireId, vehId : vehId,
-										fittedDate: '10/01/2016', kmsAtTireFitted: 25000, location:'FL'};
-					$scope.newTyreServiceTireList.push(obj);
+            $scope.newTyreServiceTireList = new Array();
+            try {
+		if(vehId == undefined && vehId < 1){
+                    alert("Please select vehicle");
+		} else{
+                    if(FLTyreId != undefined && FLTyreId > 0){
+			var obj = { tyreId:FLTyreDetials.tireId, vehId : vehId,
+				fittedDate: '10/01/2016', kmsAtTireFitted: 25000, location:'FL'};
+			$scope.newTyreServiceTireList.push(obj);
+                    }
+                    // Loop it and save the service details
+                    angular.forEach($scope.newTyreServiceTireList, function(serviceDetails, key){
+			var params = "tireId="+serviceDetails.tyreId+"&depot="+serviceDetails.tyreId+"&tireMake="+serviceDetails.tyreId
+				+"&vehId="+serviceDetails.tyreId+"&fittedDate="+fittedDate
+				+"&kmsAtTireFitted="+serviceDetails.tyreId+"&location="+$scope.tyreServiceTyreLocation;
+			APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/Tire/addServiceHistory?'+params, true)
+                        .then(
+                            function(httpResponse){ // Success block
+                                try{
+                                    loading.finish();
+                                    if(httpResponse.data.status == true){
+					logger.logSuccess(httpResponse.data.displayMsg);
+                                        $scope.pageChanged_services();
+					$('#showTMSTyreServiceModalId').modal('hide');
+                                    } else {
+					logger.logError(httpResponse.data.displayMsg);
+                                    }
+                                }
+				catch(error) {
+                                    loading.finish();
+                                    console.log("Error :"+error);
 				}
-				// Loop it and save the service details
-				angular.forEach($scope.newTyreServiceTireList, function(serviceDetails, key){
-
-					var params = "tireId="+serviceDetails.tyreId+"&depot="+serviceDetails.tyreId+"&tireMake="+serviceDetails.tyreId
-							+"&vehId="+serviceDetails.tyreId+"&fittedDate="+fittedDate
-							+"&kmsAtTireFitted="+serviceDetails.tyreId+"&location="+$scope.tyreServiceTyreLocation;
-					APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/Tire/addServiceHistory?'+params, true)
-				 .then(
-					 function(httpResponse){ // Success block
-						 try{
-							 loading.finish();
-							 if(httpResponse.data.status == true)
-							 {
-								 logger.logSuccess(httpResponse.data.displayMsg);
-								 $scope.pageChanged_services();
-								 $('#showTMSTyreServiceModalId').modal('hide');
-							 } else {
-								logger.logError(httpResponse.data.displayMsg);
-							 }
-						 }
-						 catch(error)
-						 {
-							 loading.finish();
-							 console.log("Error :"+error);
-						 }
-					 }, function(httpError) // Error block
-					 {
-						 loading.finish();
-						 console.log("Error while processing request");
-					 }, function(httpInProcess)// In process
-					 {
-						 console.log(httpInProcess);
-					 }
-				 );
-				});
-			}
-		} catch (e) { loading.finish(); console.log(e); }
-	}
+                            }, function(httpError){ // Error block
+				loading.finish();
+				console.log("Error while processing request");
+                            }, function(httpInProcess){ // In process
+                                console.log(httpInProcess);
+                            }
+			);
+                    });
+                }
+            } catch (e) { loading.finish(); console.log(e); }
+	};
 
 	$scope.getServiceDetails = function(serviceId, callback){
-		try {
-			APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/Tire/getServiceDetailsById?serviceId='+serviceId, true)
-		 .then(
-			 function(httpResponse){ // Success block
-				 try{
-					 loading.finish();
-					 if(httpResponse.data.status == true)
-					 {
-						 callback(httpResponse.data.result[0]);
-					 }
-				 } catch (e) { console.log(e)}
-			 }, function(httpError) // Error block
-			 {
-				 loading.finish();
-				 console.log("Error while processing request");
-			 }
-			 );
-		} catch (e) { console.log(e)}
-	}
+            try {
+		APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/Tire/getServiceDetailsById?serviceId='+serviceId, true)
+                .then(
+                    function(httpResponse){ // Success block
+                        try{
+                            loading.finish();
+                            if(httpResponse.data.status == true){
+				callback(httpResponse.data.result[0]);
+                            }
+			} catch (e) { console.log(e)}
+                    }, function(httpError){ // Error block
+                        loading.finish();
+			console.log("Error while processing request");
+                    }
+		);
+            } catch (e) { console.log(e)}
+	};
 
 	$scope.lastServicefitmentDate = 31516200000;
 	$scope.deallocateTyre = function(deallocateTyreNumber) {
-		// Set default value
-		$scope.deallocatedTyreStatus = $scope.tyreStatusList[0];
-		$scope.actionTaken = "";
-		$scope.tyreRemovedKms = "";
-		$scope.tyreCondition = "";
-		$scope.reason = "";
-		$scope.tyreScrappedParty = "";
-		$scope.depthLocation1 = 0;
-		$scope.depthLocation2 = 0;
-		$scope.depthLocation3 = 0;
-		$scope.TyrePressure = 0;
-		try{
-		    $("#tyreScrapCondition").val("").trigger('change');
-		} catch(e){ console.log(e); }
-		try{
-		    $("#vehicleStatusId").val($scope.deallocatedTyreStatus).trigger('change');
-		} catch(e){ console.log(e); }
+            // Set default value
+            $scope.deallocatedTyreStatus = $scope.tyreStatusList[0];
+            $scope.actionTaken = "";
+	
+            $scope.tyreRemovedKms = "";
+            $scope.tyreCondition = "";
+            $scope.reason = "";
+            $scope.tyreScrappedParty = "";
+            $scope.depthLocation1 = 0;
+            $scope.depthLocation2 = 0;
+            $scope.depthLocation3 = 0;
+            $scope.TyrePressure = 0;
+            try{
+                $("#tyreScrapCondition").val("").trigger('change');
+            } catch(e){ console.log(e); }
+            try{
+                $("#vehicleStatusId").val($scope.deallocatedTyreStatus).trigger('change');
+            } catch(e){ console.log(e); }
 
-		$scope.deallocatedTyreNo = deallocateTyreNumber;
-		$scope.deallocatedVehNo = $scope.assignTyreVehDetails.vehName;
-		angular.forEach($scope.assignTyreVehDetails.tires, function(tire, key){
-			if(tire.tireNumber == $scope.deallocatedTyreNo){
-				// Get service details
-				$scope.getServiceDetails(tire.lastServiceId, function(res) {
-					$scope.lastServiceDetails = res;
-					$scope.fittedKms = $scope.lastServiceDetails.kmsAtTyreFitted;
-					$scope.lastServicefitmentDate = $scope.lastServiceDetails.fittedDate;
-				});
-			}
-		});
-		$('#deallocatedTyreStatusModalId').modal('show');
-	}
+            $scope.deallocatedTyreNo = deallocateTyreNumber;
+            $scope.deallocatedVehNo = $scope.assignTyreVehDetails.vehName;
+            angular.forEach($scope.assignTyreVehDetails.tires, function(tire, key){
+		if(tire.tireNumber == $scope.deallocatedTyreNo){
+                    // Get service details
+                    $scope.getServiceDetails(tire.lastServiceId, function(res) {
+			$scope.lastServiceDetails = res;
+			$scope.fittedKms = $scope.lastServiceDetails.kmsAtTyreFitted;
+			$scope.lastServicefitmentDate = $scope.lastServiceDetails.fittedDate;
+                    });
+		}
+            });
+            $('#deallocatedTyreStatusModalId').modal('show');
+	};
 
 	$scope.updateDeallocatedTyreStatus = function(){
-		$scope.serviceAvgThreadDepth = 0;
-		var tyreRemovalDate = moment($("#tyreRemoveDate").val(), "D/M/YYYY").valueOf();
-		try {
-			angular.forEach($scope.assignTyreVehDetails.tires, function(tire, key){
-				if(tire.tireNumber == $scope.deallocatedTyreNo){
-					$scope.callDeallocateTyreAPI(tire.tireId, $scope.assignTyreVehDetails.vehId,
-						 $scope.deallocatedTyreStatus, tire, tyreRemovalDate, $scope.actionTaken,
-						 $scope.tyreRemovedKms, $scope.tyreCondition, $scope.reason, $scope.tyreScrappedParty,
-					 	 $scope.depthLocation1, $scope.depthLocation2, $scope.depthLocation3, $scope.TyrePressure);
-				}
-			});
-		} catch (e) { console.log(e); }
-	}
+            $scope.serviceAvgThreadDepth = 0;
+            var tyreRemovalDate = moment($("#tyreRemoveDate").val(), "D/M/YYYY").valueOf();
+            try {
+		angular.forEach($scope.assignTyreVehDetails.tires, function(tire, key){
+                    if(tire.tireNumber == $scope.deallocatedTyreNo){
+                        $scope.callDeallocateTyreAPI(tire.tireId, $scope.assignTyreVehDetails.vehId,
+                        $scope.deallocatedTyreStatus, tire, tyreRemovalDate, $scope.actionTaken,
+                        $scope.tyreRemovedKms, $scope.tyreCondition, $scope.reason, $scope.tyreScrappedParty,
+                        $scope.depthLocation1, $scope.depthLocation2, $scope.depthLocation3, $scope.TyrePressure);
+                    }
+                });
+            } catch (e) { console.log(e); }
+	};
 
 	$scope.serviceAvgThreadDepth = 0;
 	$("#threadDepth1_id").blur(function() {
-		$scope.serviceAvgThreadDepth = $scope.avgFinder($scope.depthLocation1,
-			$scope.depthLocation2, $scope.depthLocation3);
-		$scope.$apply();
+            $scope.serviceAvgThreadDepth = $scope.avgFinder($scope.depthLocation1,
+                $scope.depthLocation2, $scope.depthLocation3);
+            $scope.$apply();
 	});
 	$("#threadDepth2_id").blur(function() {
-		$scope.serviceAvgThreadDepth = $scope.avgFinder($scope.depthLocation1,
-			$scope.depthLocation2, $scope.depthLocation3);
-		$scope.$apply();
+            $scope.serviceAvgThreadDepth = $scope.avgFinder($scope.depthLocation1,
+		$scope.depthLocation2, $scope.depthLocation3);
+            $scope.$apply();
 	});
 	$("#threadDepth3_id").blur(function() {
-		$scope.serviceAvgThreadDepth = $scope.avgFinder($scope.depthLocation1,
-			$scope.depthLocation2, $scope.depthLocation3);
-		$scope.$apply();
+            $scope.serviceAvgThreadDepth = $scope.avgFinder($scope.depthLocation1,
+		$scope.depthLocation2, $scope.depthLocation3);
+            $scope.$apply();
 	});
 
 	$scope.callDeallocateTyreAPI = function(tyreId, vehId, status, tire, tyreRemovalDate,
-		actionTaken, tyreRemovedKms, tyreCondition, reason, tyreScrappedParty,depthLocation1, depthLocation2,
-		depthLocation3, tyrePressure){
-		try{
-			var params = "tyreId="+tyreId+"&vehId="+vehId+"&status="+status
-					+ "&removalDate="+tyreRemovalDate+"&removalKM="+tyreRemovedKms+"&reason="+reason
-					+ "&action="+actionTaken+"&tyreCondition="+tyreCondition+"&scrappedParty="+tyreScrappedParty
-					+ "&depthLocation1="+depthLocation1+"&depthLocation2="+depthLocation2
-					+ "&depthLocation3="+depthLocation3+"&tirePressure="+tyrePressure;
+	actionTaken, tyreRemovedKms, tyreCondition, reason, tyreScrappedParty,depthLocation1, depthLocation2,
+	depthLocation3, tyrePressure){
+            try{
+                var params = "tyreId="+tyreId+"&vehId="+vehId+"&status="+status
+                    + "&removalDate="+tyreRemovalDate+"&removalKM="+tyreRemovedKms+"&reason="+reason
+                    + "&action="+actionTaken+"&tyreCondition="+tyreCondition+"&scrappedParty="+tyreScrappedParty
+                    + "&depthLocation1="+depthLocation1+"&depthLocation2="+depthLocation2
+                    + "&depthLocation3="+depthLocation3+"&tirePressure="+tyrePressure;
 
-			APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/deallocateTyre?'+params, true)
-		 .then(
-			 function(httpResponse){ // Success block
-				 try{
-					 loading.finish();
-					 if(httpResponse.data.status == true)
-					 {
-						  logger.logSuccess('Deallocated the tyre successfully');
-						  $scope.pageChanged_vehicles();
-							$scope.assignTyreVehDetails1 = $scope.addedEmptyTireFun(httpResponse.data.result[0]);
-							$('#deallocatedTyreStatusModalId').modal('hide');
-							$timeout(function () {
-							  $scope.getTyreDetailsForAssignVehicle($scope.assignTyreVehDetails1);
-							}, 1000);
+		APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/deallocateTyre?'+params, true)
+		.then(
+                    function(httpResponse){ // Success block
+                        try{
+                            loading.finish();
+                            if(httpResponse.data.status == true) {
+                                logger.logSuccess('Deallocated the tyre successfully');
+				$scope.pageChanged_vehicles();
+				$scope.assignTyreVehDetails1 = $scope.addedEmptyTireFun(httpResponse.data.result[0]);
+				$('#deallocatedTyreStatusModalId').modal('hide');
+				$timeout(function () {
+                                    $scope.getTyreDetailsForAssignVehicle($scope.assignTyreVehDetails1);
+				}, 1000);
 
-              // Update the dashboard count
-              $rootScope.getDashboardDetails(true, true, function(dashboardResponse) {});
-					 }
-					 else {
-						logger.logError(httpResponse.data.displayMsg);
-					 }
-				 }
-				 catch(error)
-				 {
-					 loading.finish();
-					 console.log("Error :"+error);
-				 }
-			 }, function(httpError) // Error block
-			 {
-				 loading.finish();
-				 console.log("Error while processing request");
-			 }, function(httpInProcess)// In process
-			 {
-				 console.log(httpInProcess);
-			 }
-		 );
-		} catch (e) { console.log(e); }
-	}
+                                // Update the dashboard count
+                                $rootScope.getDashboardDetails(true, true, function(dashboardResponse) {});
+                            }
+                            else {
+				logger.logError(httpResponse.data.displayMsg);
+                            }
+			}
+			catch(error) {
+                            loading.finish();
+                            console.log("Error :"+error);
+			}
+                    }, function(httpError){ // Error block
+                        loading.finish();
+			console.log("Error while processing request");
+                    }, function(httpInProcess){// In process
+                        console.log(httpInProcess);
+                    }
+		);
+            } catch (e) { console.log(e); }
+	};
 
 	$scope.showNewTyreServiceForm = function(selectedTyreId, position){
-    console.log(selectedTyreId+" - "+ position);
-		if(selectedTyreId != undefined && selectedTyreId != "" && selectedTyreId > 0){
-			tyre = $filter('filter')($rootScope.TMSAllTyres, {'tireId': parseInt(selectedTyreId)}, true);
-			if(tyre[0] != undefined){
-				$scope.fittedTyrePosition = position;
-				$scope.assignTyreDetails = tyre[0]
-				$scope.allocatedTyreNo = $scope.assignTyreDetails.tireNumber;
-				$scope.allocatedVehNo = $scope.assignTyreVehDetails.vehName;
-				$('#allocatedTyreModalId').modal('show');
-			}
+            console.log(selectedTyreId+" - "+ position);
+            if(selectedTyreId != undefined && selectedTyreId != "" && selectedTyreId > 0){
+		tyre = $filter('filter')($rootScope.TMSAllTyres, {'tireId': parseInt(selectedTyreId)}, true);
+		if(tyre[0] != undefined){
+                    $scope.fittedTyrePosition = position;
+                    $scope.assignTyreDetails = tyre[0]
+                    $scope.allocatedTyreNo = $scope.assignTyreDetails.tireNumber;
+                    $scope.allocatedVehNo = $scope.assignTyreVehDetails.vehName;
+                    $('#allocatedTyreModalId').modal('show');
 		}
-	}
+            }
+	};
 
 	var fittedDate = moment(new Date()).format("DD-MM-YYYY");
 	$('#tyreFitmentDate').val(fittedDate);
 
 	$scope.assignTyreToVehicle = function(){
-		try {
-			var fittedDate = moment($("#tyreFitmentDate").val(), "D/M/YYYY").valueOf();
-			var TyreAssing_URL =$rootScope.HOST_TMS + 'api/tms/assignTyreToVeh?';
-			var param = "vehId="+$scope.assignTyreVehDetails.vehId+"&tyreId="+$scope.assignTyreDetails.tireId
-									+"&tyrePosition="+$scope.fittedTyrePosition+"&fitmentDate="+fittedDate
-									+"&fitmentKM="+$scope.tyreFitmentKM;
-			APIServices.callGET_API(TyreAssing_URL+param, true)
-		 .then(
-			 function(httpResponse){ // Success block
-				 try{
-					 loading.finish();
-					 if(httpResponse.data.status == true)
-					 {
-						 logger.logSuccess('Tyres Assigned successfully');
-						 $scope.pageChanged_vehicles();
-						 $scope.assignTyreVehDetails1 = $scope.addedEmptyTireFun(httpResponse.data.result[0]);
-						 $('#allocatedTyreModalId').modal('hide');
+            try {
+		var fittedDate = moment($("#tyreFitmentDate").val(), "D/M/YYYY").valueOf();
+		var TyreAssing_URL =$rootScope.HOST_TMS + 'api/tms/assignTyreToVeh?';
+		var param = "vehId="+$scope.assignTyreVehDetails.vehId+"&tyreId="+$scope.assignTyreDetails.tireId
+                            +"&tyrePosition="+$scope.fittedTyrePosition+"&fitmentDate="+fittedDate
+                            +"&fitmentKM="+$scope.tyreFitmentKM;
+		APIServices.callGET_API(TyreAssing_URL+param, true)
+                .then(
+                    function(httpResponse){ // Success block
+                        try{
+                            loading.finish();
+                            if(httpResponse.data.status == true){
+				logger.logSuccess('Tyres Assigned successfully');
+                                $scope.pageChanged_vehicles();
+				$scope.assignTyreVehDetails1 = $scope.addedEmptyTireFun(httpResponse.data.result[0]);
+				$('#allocatedTyreModalId').modal('hide');
 
-						 // Reset to default
-						 $scope.tyreFitmentKM = '';
-						 var fittedDate = moment(new Date()).format("DD-MM-YYYY");
-						 $('#tyreFitmentDate').val(fittedDate);
+                                // Reset to default
+				$scope.tyreFitmentKM = '';
+                                var fittedDate = moment(new Date()).format("DD-MM-YYYY");
+				$('#tyreFitmentDate').val(fittedDate);
 
-						 $timeout(function () {
-							 $scope.getTyreDetailsForAssignVehicle($scope.assignTyreVehDetails1);
-						 }, 500);
+				$timeout(function () {
+                                    $scope.getTyreDetailsForAssignVehicle($scope.assignTyreVehDetails1);
+				}, 500);
 
-             // Update the dashboard counts
-             $rootScope.getDashboardDetails(false, true, function(dashboardResponse) {});
-					 }
-					 else {
-						logger.logError(httpResponse.data.displayMsg);
-					 }
-				 }
-				 catch(error)
-				 {
-					 loading.finish();
-					 console.log("Error :"+error);
-				 }
-			 }, function(httpError) // Error block
-			 {
-				 loading.finish();
-				 console.log("Error while processing request");
-			 }, function(httpInProcess)// In process
-			 {
-				 console.log(httpInProcess);
-			 }
-		 );
-	 } catch (e) { console.log(e); }
+                                // Update the dashboard counts
+                                $rootScope.getDashboardDetails(false, true, function(dashboardResponse) {});
+                            }
+                            else {
+				logger.logError(httpResponse.data.displayMsg);
+                            }
+			}
+			catch(error){
+                            loading.finish();
+                            console.log("Error :"+error);
+			}
+                    }, function(httpError){ // Error block
+                        loading.finish();
+			console.log("Error while processing request");
+                    }, function(httpInProcess){// In process
+			console.log(httpInProcess);
+                    }
+		);
+            } catch (e) { console.log(e); }
 	};
         
         $rootScope.download_tireStatus = function(){
@@ -1311,523 +1267,480 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 	$scope.setTyreDetailsType = function(id){
 	    $rootScope.tyreDetailsType = id;
 	    $scope.pageChanged_tyres();
-	}
+	};
 
 	$scope.pageChanged_tyres = function(){
-		$scope.nextIndex_tyres = ($scope.currentPage_tyres - 1) * $scope.itemsPerPage_tyres;
-		$scope.getTMSAllTyres($rootScope.tyreDetailsType, $scope.nextIndex_tyres, true, $scope.searchStringForTyre);
-	}
+            $scope.nextIndex_tyres = ($scope.currentPage_tyres - 1) * $scope.itemsPerPage_tyres;
+            $scope.getTMSAllTyres($rootScope.tyreDetailsType, $scope.nextIndex_tyres, true, $scope.searchStringForTyre);
+	};
 
-	$scope.getTMSAllTyres = function(status, nextIndex_tyres, fullDetailsStatus, searchString_tyres)
-	{
+	$scope.getTMSAllTyres = function(status, nextIndex_tyres, fullDetailsStatus, searchString_tyres){
+            try {
+		var param = "";
+                if(fullDetailsStatus == true){
+                    param = "fullDetails="+true;
+		} else{
+                    param = "fullDetails="+false;
+		}
+		if (status != undefined && status != null) {
+		    param = param+"&status="+status;
+		}
+		if(nextIndex_tyres != undefined && nextIndex_tyres != null) {
+                    param = param +"&limit="+$scope.itemsPerPage_tyres+"&startIndex="+nextIndex_tyres;
+		}
+		if(searchString_tyres != undefined && searchString_tyres != null && searchString_tyres != ""
+                    && searchString_tyres.trim().length > 0){
+                    param = param + "&searchString="+searchString_tyres
+		}
 
-		try {
-			var param = "";
-			if(fullDetailsStatus == true){
-				param = "fullDetails="+true;
-			} else{
-				param = "fullDetails="+false;
-			}
-			if (status != undefined && status != null) {
-					    param = param+"&status="+status;
-			}
-			if(nextIndex_tyres != undefined && nextIndex_tyres != null)
-			{
-				param = param +"&limit="+$scope.itemsPerPage_tyres+"&startIndex="+nextIndex_tyres;
-			}
-			if(searchString_tyres != undefined && searchString_tyres != null && searchString_tyres != ""
-					&& searchString_tyres.trim().length > 0){
-						param = param + "&searchString="+searchString_tyres
-			}
+		if($rootScope.TMSDepotList == undefined || $rootScope.TMSDepotList.length == 0) {
+                    $scope.getTMSDepotList();
+		}
+            } catch (e) { console.log(e); }
 
-			if($rootScope.TMSDepotList == undefined || $rootScope.TMSDepotList.length == 0) {
-				$scope.getTMSDepotList();
-			}
-		} catch (e) { console.log(e); }
+            try {
+		if($rootScope.TMSTyreMakeList == undefined || $rootScope.TMSTyreMakeList.length == 0) {
+                    $scope.tyreMakeList();
+		}
+            } catch (e) { console.log(e); }
 
-		try {
-			if($rootScope.TMSTyreMakeList == undefined || $rootScope.TMSTyreMakeList.length == 0) {
-				$scope.tyreMakeList();
-			}
-		} catch (e) { console.log(e); }
+            try {
+		APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getTyreDetails?'+param, true)
+                .then(
+                    function(httpResponse){ // Success block
+                        try{
+                            loading.finish();
+                            if(httpResponse.data.status == true){
+				$rootScope.TMSAllTyres = httpResponse.data.result;
+                                $scope.totalItems_tyres = httpResponse.data.count;
+                            }
+ 			}
+ 			catch(error){
+                            loading.finish();
+                            console.log("Error :"+error);
+ 			}
+                    }, function(httpError){ // Error block
+                        loading.finish();
+ 			console.log("Error while processing request");
+                    }, function(httpInProcess){// In process
+                        console.log(httpInProcess);
+                    }
+ 		);
+            } catch (e) { loading.finish(); console.log(e); }
+	};
 
-		try {
-			APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getTyreDetails?'+param, true)
- 		 .then(
- 			 function(httpResponse){ // Success block
- 				 try{
- 					 loading.finish();
-					 if(httpResponse.data.status == true)
-					 {
-						 $rootScope.TMSAllTyres = httpResponse.data.result;
-						 $scope.totalItems_tyres = httpResponse.data.count;
-					 }
- 				 }
- 				 catch(error)
- 				 {
- 					 loading.finish();
- 					 console.log("Error :"+error);
- 				 }
- 			 }, function(httpError) // Error block
- 			 {
- 				 loading.finish();
- 				 console.log("Error while processing request");
- 			 }, function(httpInProcess)// In process
- 			 {
- 				 console.log(httpInProcess);
- 			 }
- 		 );
-		} catch (e) { loading.finish(); console.log(e); }
-	}
-
-	var timer = false
+	var timer = false;
 	$scope.searchTyres = function() {
-		if(timer){
-      $timeout.cancel(timer)
-  	}
-	  timer= $timeout(function(){
-			$scope.pageChanged_tyres();
-		},1000);
+            if(timer){
+                $timeout.cancel(timer);
+            }
+            timer= $timeout(function(){
+		$scope.pageChanged_tyres();
+            },1000);
 	};
 
 	$scope.showTyreAddingForm = false;
 	$scope.showSensorChangeDiv = false;
 	$scope.getTyreDetailsFormForAdd = function(){
-		$('#showTMSTyreModalId').modal('show');
+            $('#showTMSTyreModalId').modal('show');
 
-    $scope.getTMSAllInstockSensors();
+            $scope.getTMSAllInstockSensors();
 
-		$scope.tyreMakeList();
-		$scope.showSensorChangeDiv = false;
-		$scope.tyreNumber = "";
-		$scope.tyreMake = "";
-		$scope.tireDepot = "";
-		$scope.tireThreadDepth = "";
-		$scope.selectedTyreSensorId = 0;
-    $scope.TMSTyreType = "";
-    $scope.tyreDepotId = 0;
-		$scope.tyreMakeId = $scope.DefaultTyreMakeId;
-		if($scope.tyreMakeId == null){
-			$scope.tyreMakeId == 4
+            $scope.tyreMakeList();
+            $scope.showSensorChangeDiv = false;
+            $scope.tyreNumber = "";
+            $scope.tyreMake = "";
+            $scope.tireDepot = "";
+            $scope.tireThreadDepth = "";
+            $scope.selectedTyreSensorId = 0;
+            $scope.TMSTyreType = "";
+            $scope.tyreDepotId = 0;
+            $scope.tyreMakeId = $scope.DefaultTyreMakeId;
+            if($scope.tyreMakeId == null){
+		$scope.tyreMakeId == 4;
+            }
+            $scope.showTyreAddingForm = !$scope.showTyreAddingForm;
+            $scope.updateTyreButtonStatus = false;
+            $scope.addTyreButtonStatus = true;
+            $scope.selectedTyreSensorUID = "";
+
+            try {
+                $("#tyredepotId").val('').trigger('change');
+            } catch (e) { }
+            try {
+                $("#sensorId").val(0).trigger('change');
+            } catch (e) { }
+            try {
+                $("#tyremakeId").val($scope.tyreMakeId).trigger('change');
+            } catch (e) { }
+
+            try {
+		$("#tyreTypeId").val("").trigger('change');
+            } catch (e) { }
+
+            try {
+		$("#tyreOrganizationId").val("").trigger('change');
+            } catch (e) { }
+	};
+
+	$scope.getTyreDetailsFormForUpdate = function(tyreDetails) {
+            $('#showTMSTyreModalId').modal('show');
+            //Get InStock Sensor Detials
+            $scope.getTMSAllInstockSensors();
+            $scope.tyreMakeList();
+
+            $scope.showSensorChangeDiv = false;
+            $scope.tyreNumber = tyreDetails.tireNumber;
+            $scope.tyreMakeId = tyreDetails.tireMakeId;
+            $scope.tyreDepotId = tyreDetails.depotId;
+            $scope.tireThreadDepth = tyreDetails.threadDepth;
+            $scope.selectedTyreSensorId = tyreDetails.sensorId;
+            $scope.selectedTyreSensorUID = tyreDetails.sensorUID;
+            $scope.TMSTyreType = tyreDetails.tireType;
+            $scope.updateTyreDetails = tyreDetails;
+            $scope.showTyreAddingForm = true;
+            $scope.updateTyreButtonStatus = true;
+            $scope.addTyreButtonStatus = false;
+            $scope.TMSTyreOrgId = tyreDetails.orgId;
+
+            try {
+		$("#tyreOrganizationId").val($scope.TMSTyreOrgId).trigger('change');
+            } catch (e) { }
+            try {
+		$("#tyremakeId").val(tyreDetails.tireMakeId).trigger('change');
+            } catch (e) { }
+            try {
+		$("#tyredepotId").val($scope.tyreDepotId).trigger('change');
+            } catch (e) { }
+            try {
+		$("#sensorId").val(0).trigger('change');
+            } catch (e) { }
+            try {
+		$("#tyreTypeId").val($scope.TMSTyreType).trigger('change');
+            } catch (e) { }
+            try {
+		$("#deallocatedDeviceSelect_id").val($scope.DeviceStatusList[0]).trigger('change');
+            } catch (e) { }
+	};
+
+	$scope.AddTyre = function() {
+            try {
+		var reAssignedTyreMakeId = 4;
+                if($scope.tyreMakeId == null || $scope.tyreMakeId == "null" || $scope.tyreMakeId == undefined || $scope.tyreMakeId == 0){
+                    reAssignedTyreMakeId = 4; // JK tyre
+		} else if($("#tyremakeId").val() == ""){
+                    reAssignedTyreMakeId = 4; // JK tyre
+		} else {
+                    reAssignedTyreMakeId = $scope.tyreMakeId;
 		}
-		$scope.showTyreAddingForm = !$scope.showTyreAddingForm;
-		$scope.updateTyreButtonStatus = false;
-		$scope.addTyreButtonStatus = true;
-		$scope.selectedTyreSensorUID = "";
 
-		try {
-		    $("#tyredepotId").val('').trigger('change');
-		} catch (e) { }
-		try {
-		    $("#sensorId").val(0).trigger('change');
-		} catch (e) { }
-		try {
-		    $("#tyremakeId").val($scope.tyreMakeId).trigger('change');
-		} catch (e) { }
+                if($rootScope.isSysAdmin == true){
+                    $scope.TMSTyreOrgId = $("#tyreOrganizationId").val();
+                    if($scope.TMSTyreOrgId == undefined || $scope.TMSTyreOrgId == ""){
+                        $scope.TMSTyreOrgId = 0;
+                    }
+                    var params = 'api/tms/Tyre/Add?tyreNumber='+$scope.tyreNumber +'&tyreMakeId='+reAssignedTyreMakeId
+                                +'&depotId='+$scope.tyreDepotId+'&threadDepth='+$scope.tireThreadDepth
+                                +'&sensorId='+$scope.selectedTyreSensorId+'&tyreType='+$scope.TMSTyreType
+                                +'&orgId='+$scope.TMSTyreOrgId;
+                } else {
+                    var params = 'api/tms/Tyre/Add?tyreNumber='+$scope.tyreNumber +'&tyreMakeId='+reAssignedTyreMakeId
+                                +'&depotId='+$scope.tyreDepotId+'&threadDepth='+$scope.tireThreadDepth
+                                +'&sensorId='+$scope.selectedTyreSensorId+'&tyreType='+$scope.TMSTyreType;
+                }
 
-		try {
-				$("#tyreTypeId").val("").trigger('change');
-		} catch (e) { }
-
-    try {
-				$("#tyreOrganizationId").val("").trigger('change');
-		} catch (e) { }
-	}
-
-	$scope.getTyreDetailsFormForUpdate = function(tyreDetails)
-	{
-		$('#showTMSTyreModalId').modal('show');
-		//Get InStock Sensor Detials
-
-    $scope.getTMSAllInstockSensors();
-
-		$scope.tyreMakeList();
-
-		$scope.showSensorChangeDiv = false;
-		$scope.tyreNumber = tyreDetails.tireNumber;
-		$scope.tyreMakeId = tyreDetails.tireMakeId;
-		$scope.tyreDepotId = tyreDetails.depotId;
-		$scope.tireThreadDepth = tyreDetails.threadDepth;
-		$scope.selectedTyreSensorId = tyreDetails.sensorId;
-		$scope.selectedTyreSensorUID = tyreDetails.sensorUID;
-		$scope.TMSTyreType = tyreDetails.tireType;
-		$scope.updateTyreDetails = tyreDetails;
-		$scope.showTyreAddingForm = true;
-		$scope.updateTyreButtonStatus = true;
-		$scope.addTyreButtonStatus = false;
-                $scope.TMSTyreOrgId = tyreDetails.orgId;
-
-                try {
-				$("#tyreOrganizationId").val($scope.TMSTyreOrgId).trigger('change');
-		} catch (e) { }
-		try {
-				$("#tyremakeId").val(tyreDetails.tireMakeId).trigger('change');
-		} catch (e) { }
-		try {
-				$("#tyredepotId").val($scope.tyreDepotId).trigger('change');
-		} catch (e) { }
-		try {
-				$("#sensorId").val(0).trigger('change');
-		} catch (e) { }
-
-		try {
-				$("#tyreTypeId").val($scope.TMSTyreType).trigger('change');
-		} catch (e) { }
-
-		try {
-			$("#deallocatedDeviceSelect_id").val($scope.DeviceStatusList[0]).trigger('change');
-		} catch (e) { }
-	}
-
-	$scope.AddTyre = function()
-	{
-		try {
-			var reAssignedTyreMakeId = 4;
-			if($scope.tyreMakeId == null || $scope.tyreMakeId == "null" || $scope.tyreMakeId == undefined || $scope.tyreMakeId == 0){
-				reAssignedTyreMakeId = 4; // JK tyre
-			} else if($("#tyremakeId").val() == ""){
-				reAssignedTyreMakeId = 4; // JK tyre
-			} else {
-				reAssignedTyreMakeId = $scope.tyreMakeId;
+                APIServices.callGET_API($rootScope.HOST_TMS + params, true)
+		.then(
+                    function(httpResponse){ // Success block
+                        try{
+                            loading.finish();
+                            if(httpResponse.data.status == true) {
+				logger.logSuccess('Tyre added successfully');
+				$scope.pageChanged_tyres();
+                                $rootScope.getDashboardDetails(false, true, function(dashboardResponse) {});
+				$('#showTMSTyreModalId').modal('hide');
+                            } else {
+				logger.logError(httpResponse.data.displayMsg);
+                            }
 			}
-
-      if($rootScope.isSysAdmin == true){
-
-        $scope.TMSTyreOrgId = $("#tyreOrganizationId").val();
-        if($scope.TMSTyreOrgId == undefined || $scope.TMSTyreOrgId == ""){
-          $scope.TMSTyreOrgId = 0;
-        }
-        var params = 'api/tms/Tyre/Add?tyreNumber='+$scope.tyreNumber +'&tyreMakeId='+reAssignedTyreMakeId
-        +'&depotId='+$scope.tyreDepotId+'&threadDepth='+$scope.tireThreadDepth
-  			+'&sensorId='+$scope.selectedTyreSensorId+'&tyreType='+$scope.TMSTyreType
-        +'&orgId='+$scope.TMSTyreOrgId;
-      } else {
-        var params = 'api/tms/Tyre/Add?tyreNumber='+$scope.tyreNumber +'&tyreMakeId='+reAssignedTyreMakeId
-        +'&depotId='+$scope.tyreDepotId+'&threadDepth='+$scope.tireThreadDepth
-  			+'&sensorId='+$scope.selectedTyreSensorId+'&tyreType='+$scope.TMSTyreType;
-      }
-
-			APIServices.callGET_API($rootScope.HOST_TMS + params, true)
-		 .then(
-			 function(httpResponse){ // Success block
-				 try{
-					 loading.finish();
-					 if(httpResponse.data.status == true)
-					 {
-						 logger.logSuccess('Tyre added successfully');
-						 $scope.pageChanged_tyres();
-             $rootScope.getDashboardDetails(false, true, function(dashboardResponse) {});
-						 $('#showTMSTyreModalId').modal('hide');
-					 } else {
-						logger.logError(httpResponse.data.displayMsg);
-					 }
-				 }
-				 catch(error)
-				 {
-					 loading.finish();
-					 console.log("Error :"+error);
-				 }
-			 }, function(httpError) // Error block
-			 {
-				 loading.finish();
-				 console.log("Error while processing request");
-			 }, function(httpInProcess)// In process
-			 {
-				 console.log(httpInProcess);
-			 }
-		 );
-		} catch (e) { loading.finish(); console.log(e); }
-	}
-
-	$scope.updateTyreDetailsFun = function()
-	{
-		try {
-			if($scope.tyreMakeId == undefined || $scope.tyreMakeId ==  null || $scope.tyreMakeId == "")
-			{
-				$scope.tyreMakeId = 0;
+			catch(error){
+                            loading.finish();
+                            console.log("Error :"+error);
 			}
-			var UPDATE_URL =$rootScope.HOST_TMS + 'api/tms/Tyre/Update?tyreId='+$scope.updateTyreDetails.tireId
-						+'&tyreType='+$scope.TMSTyreType+'&tyreNumber='+$scope.tyreNumber
-						+'&sensorId='+$scope.selectedTyreSensorId+'&tyreMakeId='+$scope.tyreMakeId
-						+'&depotId='+$scope.tyreDepotId+'&threadDepth='+$scope.tireThreadDepth;
+                    }, function(httpError){ // Error block
+                        loading.finish();
+			console.log("Error while processing request");
+                    }, function(httpInProcess){ // In process
+                        console.log(httpInProcess);
+                    }
+		);
+            } catch (e) { loading.finish(); console.log(e); }
+	};
 
-			APIServices.callGET_API(UPDATE_URL, true)
-		 .then(
-			 function(httpResponse){ // Success block
-				 try{
-					 loading.finish();
-					 if(httpResponse.data.status == true)
-					 {
-						 $('#showTMSTyreModalId').modal('hide');
-						 logger.logSuccess('Tyre updated successfully');
-						 $scope.pageChanged_tyres();
-             $rootScope.getDashboardDetails(false, true, function(dashboardResponse) {});
-					 }
-					 else {
-						logger.logError(httpResponse.data.displayMsg);
-					 }
-				 }
-				 catch(error)
-				 {
-					 loading.finish();
-					 console.log("Error :"+error);
-				 }
-			 }, function(httpError) // Error block
-			 {
-				 loading.finish();
-				 console.log("Error while processing request");
-			 }, function(httpInProcess)// In process
-			 {
-				 console.log(httpInProcess);
-			 }
-		 );
-		} catch (e) { loading.finish(); console.log(e); }
-	}
+	$scope.updateTyreDetailsFun = function(){
+            try {
+		if($scope.tyreMakeId == undefined || $scope.tyreMakeId ==  null || $scope.tyreMakeId == "") {
+                    $scope.tyreMakeId = 0;
+		}
+		var UPDATE_URL =$rootScope.HOST_TMS + 'api/tms/Tyre/Update?tyreId='+$scope.updateTyreDetails.tireId
+                        +'&tyreType='+$scope.TMSTyreType+'&tyreNumber='+$scope.tyreNumber
+			+'&sensorId='+$scope.selectedTyreSensorId+'&tyreMakeId='+$scope.tyreMakeId
+			+'&depotId='+$scope.tyreDepotId+'&threadDepth='+$scope.tireThreadDepth;
+
+		APIServices.callGET_API(UPDATE_URL, true)
+		.then(
+                    function(httpResponse){ // Success block
+                        try{
+                            loading.finish();
+                            if(httpResponse.data.status == true){
+                                $('#showTMSTyreModalId').modal('hide');
+                                logger.logSuccess('Tyre updated successfully');
+				$scope.pageChanged_tyres();
+                                $rootScope.getDashboardDetails(false, true, function(dashboardResponse) {});
+                            }
+                            else {
+                                logger.logError(httpResponse.data.displayMsg);
+                            }
+			}
+			catch(error){
+                            loading.finish();
+                            console.log("Error :"+error);
+			}
+                    }, function(httpError){ // Error block
+                        loading.finish();
+			console.log("Error while processing request");
+                    }, function(httpInProcess){// In process
+                        console.log(httpInProcess);
+                    }
+		);
+            } catch (e) { loading.finish(); console.log(e); }
+	};
 
 	$scope.deallocateSensorFromTyre = function(){
-		try {
-			var status = $("#deallocatedDeviceSelect_id").val();
-			if(status == undefined || status == null || status.trim().length == 0){
-				logger.logWarning("Please select the status");
-			} else{
-				var DEALLOCATE_SENSOR_URL =$rootScope.HOST_TMS + 'api/tms/deallocateSensor?tyreNumber='
-						+$scope.updateTyreDetails.tireNumber+"&tireId="+$scope.updateTyreDetails.tireId
-						+"&sensorId="+$scope.updateTyreDetails.sensorId+"&status="+status;
-				APIServices.callGET_API(DEALLOCATE_SENSOR_URL, true)
-			 .then(
-				 function(httpResponse){ // Success block
-					 try{
-						 loading.finish();
-						 if(httpResponse.data.status == true)
-						 {
-							 $scope.showSensorChangeDiv = false;
-							 logger.logSuccess('Sensor is deallocated from this tire');
-							 $scope.updateTyreDetails = httpResponse.data.result[0];
-							 $scope.getTyreDetailsFormForUpdate($scope.updateTyreDetails);
-						 }
-						 else {
-							logger.logError(httpResponse.data.displayMsg);
-						 }
-					 }
-					 catch(error)
-					 {
-						 loading.finish();
-						 console.log("Error :"+error);
-					 }
-				 }, function(httpError) // Error block
-				 {
-					 loading.finish();
-					 console.log("Error while processing request");
-				 }, function(httpInProcess)// In process
-				 {
-					 console.log(httpInProcess);
-				 }
-			 );
+            try {
+		var status = $("#deallocatedDeviceSelect_id").val();
+		if(status == undefined || status == null || status.trim().length == 0){
+                    logger.logWarning("Please select the status");
+		} else{
+                    var DEALLOCATE_SENSOR_URL =$rootScope.HOST_TMS + 'api/tms/deallocateSensor?tyreNumber='
+			+$scope.updateTyreDetails.tireNumber+"&tireId="+$scope.updateTyreDetails.tireId
+			+"&sensorId="+$scope.updateTyreDetails.sensorId+"&status="+status;
+                    APIServices.callGET_API(DEALLOCATE_SENSOR_URL, true)
+                    .then(
+                        function(httpResponse){ // Success block
+                            try{
+                                loading.finish();
+				if(httpResponse.data.status == true){
+                                    $scope.showSensorChangeDiv = false;
+                                    logger.logSuccess('Sensor is deallocated from this tire');
+                                    $scope.updateTyreDetails = httpResponse.data.result[0];
+                                    $scope.getTyreDetailsFormForUpdate($scope.updateTyreDetails);
+				}
+				else {
+                                    logger.logError(httpResponse.data.displayMsg);
+				}
+                            }
+                            catch(error){
+				loading.finish();
+				console.log("Error :"+error);
+                            }
+			}, function(httpError){ // Error block
+                            loading.finish();
+                            console.log("Error while processing request");
+			}, function(httpInProcess){// In process
+                            console.log(httpInProcess);
 			}
-		} catch (e) {
-			console.log(e);
+                    );
 		}
-	}
+            } catch (e) {
+		console.log(e);
+            }
+	};
 
 	// Tire Inspection Code Starts Here
 	$scope.totalItems_inspection = 0;
-  $scope.currentPage_inspection = 1;
-  $scope.itemsPerPage_inspection = 10;
+        $scope.currentPage_inspection = 1;
+        $scope.itemsPerPage_inspection = 10;
 	$scope.maxSize_inspection = 3;
 
 	$scope.getTyreInspectionHistory = function(startIndex, searchWord){
-		try {
-			var Inspection_Param = 'limit='+$scope.itemsPerPage_inspection+'&startIndex='+startIndex;
-			if(searchWord != undefined && searchWord != null && searchWord.trim().length > 0)
-			{
-				Inspection_Param = Inspection_Param + "&searchWord=" + searchWord;
-			}
-			APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/Tire/getInspections?'+Inspection_Param, true)
- 		 .then(
- 			 function(httpResponse){ // Success block
- 				 try{
- 					 loading.finish();
-					 if(httpResponse.data.status == true)
-					 {
-						 $rootScope.TMSTireInspectionHistory = httpResponse.data.result;
-						 $scope.totalItems_inspection = httpResponse.data.count;
-             if($rootScope.TMSTireInspectionHistory.length == 0 ){
-               logger.logWarning("There are no inspections in our database.")
-             }
-					 }
- 				 }
- 				 catch(error)
- 				 {
- 					 loading.finish();
- 					 console.log("Error :"+error);
- 				 }
- 			 }, function(httpError) // Error block
- 			 {
- 				 loading.finish();
- 				 console.log("Error while processing request");
- 			 }, function(httpInProcess)// In process
- 			 {
- 				 console.log(httpInProcess);
- 			 }
- 		 );
-		} catch (e) { loading.finish(); console.log(e); }
-	}
+            try {
+		var Inspection_Param = 'limit='+$scope.itemsPerPage_inspection+'&startIndex='+startIndex;
+		if(searchWord != undefined && searchWord != null && searchWord.trim().length > 0){
+                    Inspection_Param = Inspection_Param + "&searchWord=" + searchWord;
+		}
+		APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/Tire/getInspections?'+Inspection_Param, true)
+                .then(
+                    function(httpResponse){ // Success block
+                        try{
+                            loading.finish();
+                            if(httpResponse.data.status == true){
+				$rootScope.TMSTireInspectionHistory = httpResponse.data.result;
+				$scope.totalItems_inspection = httpResponse.data.count;
+                                if($rootScope.TMSTireInspectionHistory.length == 0 ){
+                                    logger.logWarning("There are no inspections in our database.");
+                                }
+                            }
+ 			}
+ 			catch(error){
+                            loading.finish();
+                            console.log("Error :"+error);
+ 			}
+                    }, function(httpError){ // Error block
+                        loading.finish();
+ 			console.log("Error while processing request");
+                    }, function(httpInProcess){// In process
+                        console.log(httpInProcess);
+                    }
+                );
+            } catch (e) { loading.finish(); console.log(e); }
+	};
 
 	$scope.pageChanged_inspection = function(){
-		$scope.nextIndex = ($scope.currentPage_inspection - 1) * $scope.itemsPerPage_inspection;
-		$scope.getTyreInspectionHistory($scope.nextIndex, $scope.TMSInspection_searchWord);
-	}
+            $scope.nextIndex = ($scope.currentPage_inspection - 1) * $scope.itemsPerPage_inspection;
+            $scope.getTyreInspectionHistory($scope.nextIndex, $scope.TMSInspection_searchWord);
+	};
 
 	// Search functionality
-	var timer_inspection = false
+	var timer_inspection = false;
 	$scope.searchTyreInspections = function() {
-		if(timer_inspection){
-      $timeout.cancel(timer_inspection)
-  	}
-	  timer_inspection= $timeout(function(){
-			$scope.pageChanged_inspection();
-		}, 1000);
+            if(timer_inspection){
+                $timeout.cancel(timer_inspection);
+            }
+            timer_inspection= $timeout(function(){
+		$scope.pageChanged_inspection();
+            }, 1000);
 	};
 
 	$scope.findAvgDepth = function(){
-		try {
-			$scope.AvgTreadDepth = $scope.avgFinder($scope.depthLocation1, $scope.depthLocation2,
-				$scope.depthLocation3);
-		} catch (e) { console.log(e); }
-	}
+            try {
+		$scope.AvgTreadDepth = $scope.avgFinder($scope.depthLocation1, $scope.depthLocation2,
+		$scope.depthLocation3);
+            } catch (e) { console.log(e); }
+	};
 
 	$scope.avgFinder = function(val1, val2, val3){
-		var avg = (parseFloat(val1)+parseFloat(val2)+parseFloat(val3))/3;
-		return Math.round(avg * 100) / 100;
-	}
+            var avg = (parseFloat(val1)+parseFloat(val2)+parseFloat(val3))/3;
+            return Math.round(avg * 100) / 100;
+	};
 
 	$scope.getTyreInspectionFormForAdd = function() {
-		$scope.showAddTyreInspectionForm = true;
-		$scope.showUpdateTyreInspectionForm = false;
-		$('#showTMSTyreInspectionModalId').modal('show');
+            $scope.showAddTyreInspectionForm = true;
+            $scope.showUpdateTyreInspectionForm = false;
+            $('#showTMSTyreInspectionModalId').modal('show');
 
-		// Clear the existing data
-		$scope.tireId = 0;
-		$scope.location = '';
-		$scope.kmsReading = '';
-		$scope.depthLocation1 = '';
-		$scope.depthLocation2 = '';
-		$scope.depthLocation3 = '';
-		$scope.serviceAvgThreadDepth = 0;
-		$scope.TyrePressure = '';
-		$('#tyreNumberId').prop('disabled', false);
-		try {
-			$("#tyreNumberId").val(0).trigger('change');
-		} catch (e) { }
-
-		try {
-			$("#location_id").val("").trigger('change');
-		} catch (e) { }
-
-	}
+            // Clear the existing data
+            $scope.tireId = 0;
+            $scope.location = '';
+            $scope.kmsReading = '';
+            $scope.depthLocation1 = '';
+            $scope.depthLocation2 = '';
+            $scope.depthLocation3 = '';
+            $scope.serviceAvgThreadDepth = 0;
+            $scope.TyrePressure = '';
+            $('#tyreNumberId').prop('disabled', false);
+            try {
+		$("#tyreNumberId").val(0).trigger('change');
+            } catch (e) { }
+            try {
+		$("#location_id").val("").trigger('change');
+            } catch (e) { }
+	};
 
 	$scope.getTyreInspectionFormForUpdate = function(tyreInspection) {
-		$scope.showAddTyreInspectionForm = false;
-		$scope.showUpdateTyreInspectionForm = true;
-		$('#showTMSTyreInspectionModalId').modal('show');
-		$scope.updateTyreInspectionDetails = tyreInspection;
+            $scope.showAddTyreInspectionForm = false;
+            $scope.showUpdateTyreInspectionForm = true;
+            $('#showTMSTyreInspectionModalId').modal('show');
+            $scope.updateTyreInspectionDetails = tyreInspection;
 
-		$scope.tireId = tyreInspection.tireId;
-		$scope.location = tyreInspection.location;
-		$scope.kmsReading = tyreInspection.kmsreading;
-		$scope.depthLocation1 = tyreInspection.depthLocation1;
-		$scope.depthLocation2 = tyreInspection.depthLocation2;
-		$scope.depthLocation3 = tyreInspection.depthLocation3;
-		$scope.serviceAvgThreadDepth = tyreInspection.avgThreadDepth;
-		$scope.TyrePressure = tyreInspection.tirePressure;
+            $scope.tireId = tyreInspection.tireId;
+            $scope.location = tyreInspection.location;
+            $scope.kmsReading = tyreInspection.kmsreading;
+            $scope.depthLocation1 = tyreInspection.depthLocation1;
+            $scope.depthLocation2 = tyreInspection.depthLocation2;
+            $scope.depthLocation3 = tyreInspection.depthLocation3;
+            $scope.serviceAvgThreadDepth = tyreInspection.avgThreadDepth;
+            $scope.TyrePressure = tyreInspection.tirePressure;
 
-		$('#tyreNumberId').prop('disabled', true);
-		try {
-			$("#tyreNumberId").val($scope.tireId).trigger('change');
-		} catch (e) {}
+            $('#tyreNumberId').prop('disabled', true);
+            try {
+		$("#tyreNumberId").val($scope.tireId).trigger('change');
+            } catch (e) {}
 
-		try {
-			$("#location_id").val($scope.location).trigger('change');
-		} catch (e) { }
-	}
+            try {
+		$("#location_id").val($scope.location).trigger('change');
+            } catch (e) { }
+	};
 
 	$scope.addTyreInspection = function(){
-		try {
-			$scope.AvgTreadDepth = $scope.avgFinder($scope.depthLocation1, $scope.depthLocation2,
-																$scope.depthLocation3);
-			var params = "tireId="+$scope.tireId+"&Location="+$scope.location+"&KMSReading="+$scope.kmsReading
-					+"&depthLocation1="+$scope.depthLocation1+"&depthLocation2="+$scope.depthLocation2
-					+"&depthLocation3="+$scope.depthLocation3+"&tirePressure="+$scope.TyrePressure;
-			APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/Tire/addInspection?'+params, true)
-		 .then(
-			 function(httpResponse){ // Success block
-				 try{
-					 loading.finish();
-					 if(httpResponse.data.status == true)
-					 {
-						 logger.logSuccess(httpResponse.data.displayMsg);
-						 //$scope.getTyreInspectionHistory();
-						 $scope.pageChanged_inspection();
-						 $('#showTMSTyreInspectionModalId').modal('hide');
-					 } else {
-					 	logger.logError(httpResponse.data.displayMsg);
-					 }
-				 }
-				 catch(error)
-				 {
-					 loading.finish();
-					 console.log("Error :"+error);
-				 }
-			 }, function(httpError) // Error block
-			 {
-				 loading.finish();
-				 console.log("Error while processing request");
-			 }, function(httpInProcess)// In process
-			 {
-				 console.log(httpInProcess);
-			 }
-		 );
-		} catch (e) { loading.finish(); console.log(e); }
-	}
+            try {
+		$scope.AvgTreadDepth = $scope.avgFinder($scope.depthLocation1, $scope.depthLocation2,
+					$scope.depthLocation3);
+		var params = "tireId="+$scope.tireId+"&Location="+$scope.location+"&KMSReading="+$scope.kmsReading
+			+"&depthLocation1="+$scope.depthLocation1+"&depthLocation2="+$scope.depthLocation2
+			+"&depthLocation3="+$scope.depthLocation3+"&tirePressure="+$scope.TyrePressure;
+		APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/Tire/addInspection?'+params, true)
+                .then(
+                    function(httpResponse){ // Success block
+                        try{
+                            loading.finish();
+                            if(httpResponse.data.status == true){
+                                logger.logSuccess(httpResponse.data.displayMsg);
+                                //$scope.getTyreInspectionHistory();
+				$scope.pageChanged_inspection();
+				$('#showTMSTyreInspectionModalId').modal('hide');
+                            } else {
+			 	logger.logError(httpResponse.data.displayMsg);
+                            }
+			}
+			catch(error){
+                            loading.finish();
+                            console.log("Error :"+error);
+			}
+                    }, function(httpError){ // Error block
+                        loading.finish();
+			console.log("Error while processing request");
+                    }, function(httpInProcess){// In process
+                        console.log(httpInProcess);
+                    }
+		);
+            } catch (e) { loading.finish(); console.log(e); }
+	};
 
 	$scope.updateTyreInspection = function(){
-		try {
-			$scope.AvgTreadDepth = $scope.avgFinder($scope.depthLocation1, $scope.depthLocation2,
-																$scope.depthLocation3);
-			var params = "inspectionId="+$scope.updateTyreInspectionDetails.tireInspectionId+"&Location="+$scope.location+"&KMSReading="+$scope.kmsReading
-					+"&depthLocation1="+$scope.depthLocation1+"&depthLocation2="+$scope.depthLocation2
-					+"&depthLocation3="+$scope.depthLocation3+"&tirePressure="+$scope.TyrePressure;
-			APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/Tire/updateInspection?'+params, true)
-		 .then(
-			 function(httpResponse){ // Success block
-				 try{
-					 loading.finish();
-					 if(httpResponse.data.status == true)
-					 {
-						 logger.logSuccess(httpResponse.data.displayMsg);
-						//  $scope.getTyreInspectionHistory();
-						 $scope.pageChanged_inspection();
-						 $('#showTMSTyreInspectionModalId').modal('hide');
-					 } else {
-					 	logger.logError(httpResponse.data.displayMsg);
-					 }
-				 }
-				 catch(error)
-				 {
-					 loading.finish();
-					 console.log("Error :"+error);
-				 }
-			 }, function(httpError) // Error block
-			 {
-				 loading.finish();
-				 console.log("Error while processing request");
-			 }, function(httpInProcess)// In process
-			 {
-				 console.log(httpInProcess);
-			 }
-		 );
-		} catch (e) { loading.finish(); console.log(e); }
-	}
+            try {
+		$scope.AvgTreadDepth = $scope.avgFinder($scope.depthLocation1, $scope.depthLocation2,
+                    	$scope.depthLocation3);
+		var params = "inspectionId="+$scope.updateTyreInspectionDetails.tireInspectionId+"&Location="+$scope.location+"&KMSReading="+$scope.kmsReading
+			+"&depthLocation1="+$scope.depthLocation1+"&depthLocation2="+$scope.depthLocation2
+			+"&depthLocation3="+$scope.depthLocation3+"&tirePressure="+$scope.TyrePressure;
+		APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/Tire/updateInspection?'+params, true)
+		.then(
+                    function(httpResponse){ // Success block
+                        try{
+                            loading.finish();
+                            if(httpResponse.data.status == true) {
+				logger.logSuccess(httpResponse.data.displayMsg);
+				//  $scope.getTyreInspectionHistory();
+				$scope.pageChanged_inspection();
+				$('#showTMSTyreInspectionModalId').modal('hide');
+                            } else {
+			 	logger.logError(httpResponse.data.displayMsg);
+                            }
+			}
+			catch(error){
+                            loading.finish();
+                            console.log("Error :"+error);
+			}
+                    }, function(httpError) { // Error block
+                        loading.finish();
+			console.log("Error while processing request");
+                    }, function(httpInProcess){// In process
+                        console.log(httpInProcess);
+                    }
+                );
+            } catch (e) { loading.finish(); console.log(e); }
+	};
 
 
 	// Tire Service Code Starts Here
@@ -1839,168 +1752,159 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 	$scope.TMSService_searchWord = "";
 
 	$scope.pageChanged_services = function(){
-		$scope.nextIndex_services = ($scope.currentPage_services - 1) * $scope.itemsPerPage_services;
-		$scope.getTyreServiceHistory($scope.nextIndex_services, $scope.TMSService_searchWord);
-	}
+            $scope.nextIndex_services = ($scope.currentPage_services - 1) * $scope.itemsPerPage_services;
+            $scope.getTyreServiceHistory($scope.nextIndex_services, $scope.TMSService_searchWord);
+	};
 
 	$scope.getTyreServiceHistory = function(serviceStartIndex, searchWord){
-		try {
-			var serviceHistoryParams = 'api/tms/Tire/getServices?limit='+$scope.itemsPerPage_services
-							+ '&startIndex=' + serviceStartIndex;
-			if(searchWord != undefined && searchWord != null && searchWord != "" && searchWord.trim().length > 0){
-				serviceHistoryParams = serviceHistoryParams + "&searchWord="+searchWord;
-			}
-
-			APIServices.callGET_API($rootScope.HOST_TMS + serviceHistoryParams, true)
- 		 .then(
- 			 function(httpResponse){ // Success block
- 				 try{
- 					 loading.finish();
-					 if(httpResponse.data.status == true)
-					 {
-						 $rootScope.TMSTireServiceHistory = httpResponse.data.result;
-						 $scope.totalItems_services = httpResponse.data.count;
-					 }
- 				 }
- 				 catch(error)
- 				 {
- 					 loading.finish();
- 					 console.log("Error :"+error);
- 				 }
- 			 }, function(httpError) // Error block
- 			 {
- 				 loading.finish();
- 				 console.log("Error while processing request");
- 			 }, function(httpInProcess)// In process
- 			 {
- 				 console.log(httpInProcess);
- 			 }
- 		 );
-		} catch (e) { loading.finish(); console.log(e); }
-	}
+            try {
+		var serviceHistoryParams = 'api/tms/Tire/getServices?limit='+$scope.itemsPerPage_services
+			+ '&startIndex=' + serviceStartIndex;
+		if(searchWord != undefined && searchWord != null && searchWord != "" && searchWord.trim().length > 0){
+                    serviceHistoryParams = serviceHistoryParams + "&searchWord="+searchWord;
+		}
+		APIServices.callGET_API($rootScope.HOST_TMS + serviceHistoryParams, true)
+                .then(
+                    function(httpResponse){ // Success block
+                        try{
+                            loading.finish();
+                            if(httpResponse.data.status == true){
+				$rootScope.TMSTireServiceHistory = httpResponse.data.result;
+				$scope.totalItems_services = httpResponse.data.count;
+                            }
+ 			}
+ 			catch(error){
+                            loading.finish();
+                            console.log("Error :"+error);
+ 			}
+                    }, function(httpError){ // Error block
+			loading.finish();
+ 			console.log("Error while processing request");
+                    }, function(httpInProcess){// In process
+                        console.log(httpInProcess);
+                    }
+ 		);
+            } catch (e) { loading.finish(); console.log(e); }
+	};
 
 	// Search functionality
 	var timer_service = false
 	$scope.searchTyreServices = function() {
-		if(timer_service){
-      $timeout.cancel(timer_service)
-  	}
-	  timer_service= $timeout(function(){
-			$scope.pageChanged_services();
-		}, 1000);
+            if(timer_service){
+                $timeout.cancel(timer_service)
+            }
+            timer_service= $timeout(function(){
+		$scope.pageChanged_services();
+            }, 1000);
 	};
 
 	$scope.getTyreServiceFormForAdd = function() {
-		$scope.addTyreServiceStatus = true;
-		$scope.updateTyreServiceStatus = false;
-		$('#showTMSTyreServiceModalId').modal('show');
-		$scope.selectedTyreId = 0;
-		$scope.selectedTMSServiceVehId = 0;
-		$scope.totalKms = 0;
-		$scope.depot = '';
-		$scope.tireMake = '';
-		$scope.fittedDate = '';
-		$scope.fittedKms = '';
-		$scope.location = '';
-		$scope.removalDate = '';
-		$scope.tyreRemovedKms = '';
-		$scope.totalKms = '';
-		$scope.reason = '';
-		$scope.actionTaken = '';
-		$scope.tyreCondition = '';
-		$scope.tyreScrappedParty = '';
-		try {
-			var fittedDate = moment(new Date()).format("DD-MM-YYYY");
-			$('#tyreFittedDate_id').val(fittedDate);
-		} catch (e) {}
-		try {
-			var removalDate = moment(new Date()).format("DD-MM-YYYY");
-			$('#tyreRemoveDate_id').val(removalDate);
-		} catch (e) {}
+            $scope.addTyreServiceStatus = true;
+            $scope.updateTyreServiceStatus = false;
+            $('#showTMSTyreServiceModalId').modal('show');
+            $scope.selectedTyreId = 0;
+            $scope.selectedTMSServiceVehId = 0;
+            $scope.totalKms = 0;
+            $scope.depot = '';
+            $scope.tireMake = '';
+            $scope.fittedDate = '';
+            $scope.fittedKms = '';
+            $scope.location = '';
+            $scope.removalDate = '';
+            $scope.tyreRemovedKms = '';
+            $scope.totalKms = '';
+            $scope.reason = '';
+            $scope.actionTaken = '';
+            $scope.tyreCondition = '';
+            $scope.tyreScrappedParty = '';
+            try {
+		var fittedDate = moment(new Date()).format("DD-MM-YYYY");
+		$('#tyreFittedDate_id').val(fittedDate);
+            } catch (e) {}
+            try {
+		var removalDate = moment(new Date()).format("DD-MM-YYYY");
+		$('#tyreRemoveDate_id').val(removalDate);
+            } catch (e) {}
 
-		$('#serviceTyreId').prop('disabled', false);
-		$('#tyreDeport_id').prop('disabled', false);
-		$('#tyreMake_id').prop('disabled', false);
-		try {
-			$("#serviceTyreId").val(0).trigger('change');
-		} catch (e) { }
-		try {
-			$("#tyreScrapId").val('').trigger('change');
-		} catch (e) { }
-		try {
-			$("#selectedTMSServiceVeh_id").val(0).trigger('change');
-		} catch (e) { }
-		try {
-			$("#tyrePosition_id").val("").trigger('change');
-		} catch (e) { }
-	}
-
+            $('#serviceTyreId').prop('disabled', false);
+            $('#tyreDeport_id').prop('disabled', false);
+            $('#tyreMake_id').prop('disabled', false);
+            try {
+            	$("#serviceTyreId").val(0).trigger('change');
+            } catch (e) { }
+            try {
+            	$("#tyreScrapId").val('').trigger('change');
+            } catch (e) { }
+            try {
+            	$("#selectedTMSServiceVeh_id").val(0).trigger('change');
+            } catch (e) { }
+            try {
+		$("#tyrePosition_id").val("").trigger('change');
+            } catch (e) { }
+	};
 	$scope.getTyreServiceFormForUpdate = function(service) {
-		$scope.addTyreServiceStatus = false;
-		$scope.updateTyreServiceStatus = true;
+            $scope.addTyreServiceStatus = false;
+            $scope.updateTyreServiceStatus = true;
 
-		$scope.totalKms = 0;
-		$scope.updateTyreServiceDetails = service;
-		$scope.selectedTMSServiceVehId = service.vehId;
-		$scope.depot = service.depot;
-		$scope.tireMake = service.tireMake;
-		$scope.fittedDate = service.fittedDate;
-		$scope.fittedKms = service.kmsAtTyreFitted;
-		$scope.tyreServiceTyreLocation = service.location
-		$scope.removalDate = service.removalDate;
-		$scope.tyreRemovedKms = service.kmsAtTyreRemoved;
-		$scope.totalKms = service.tyreKms;
-		$scope.reason = service.reason;
-		$scope.actionTaken = service.actionTaken;
-		$scope.tyreCondition = service.tyreCondition;
-		$scope.tyreScrappedParty = service.scrappedToParty;
-		try {
-			var fittedDate = moment($scope.fittedDate).format("DD-MM-YYYY");
-			$('#tyreFittedDate_id').val(fittedDate);
-		} catch (e) {}
-		try {
-			var removalDate = moment($scope.removalDate).format("DD-MM-YYYY");
-			$('#tyreRemoveDate_id').val(removalDate);
-		} catch (e) {}
+            $scope.totalKms = 0;
+            $scope.updateTyreServiceDetails = service;
+            $scope.selectedTMSServiceVehId = service.vehId;
+            $scope.depot = service.depot;
+            $scope.tireMake = service.tireMake;
+            $scope.fittedDate = service.fittedDate;
+            $scope.fittedKms = service.kmsAtTyreFitted;
+            $scope.tyreServiceTyreLocation = service.location
+            $scope.removalDate = service.removalDate;
+            $scope.tyreRemovedKms = service.kmsAtTyreRemoved;
+            $scope.totalKms = service.tyreKms;
+            $scope.reason = service.reason;
+            $scope.actionTaken = service.actionTaken;
+            $scope.tyreCondition = service.tyreCondition;
+            $scope.tyreScrappedParty = service.scrappedToParty;
+            try {
+		var fittedDate = moment($scope.fittedDate).format("DD-MM-YYYY");
+		$('#tyreFittedDate_id').val(fittedDate);
+            } catch (e) {}
+            try {
+		var removalDate = moment($scope.removalDate).format("DD-MM-YYYY");
+		$('#tyreRemoveDate_id').val(removalDate);
+            } catch (e) {}
 
-		$('#showTMSTyreServiceModalId').modal('show');
-		$('#serviceTyreId').prop('disabled', true);
-		$('#tyreDeport_id').prop('disabled', true);
-		$('#tyreMake_id').prop('disabled', true);
-		try {
-			$("#serviceTyreId").val(service.tireId).trigger('change');
-		} catch (e) { }
-		try {
-			$("#tyreScrapId").val($scope.tyreCondition).trigger('change');
-		} catch (e) { }
-		try {
-			$("#selectedTMSServiceVeh_id").val($scope.selectedTMSServiceVehId).trigger('change');
-		} catch (e) { }
-		try {
-			$("#tyrePosition_id").val($scope.tyreServiceTyreLocation).trigger('change');
-		} catch (e) { }
-	}
-
+            $('#showTMSTyreServiceModalId').modal('show');
+            $('#serviceTyreId').prop('disabled', true);
+            $('#tyreDeport_id').prop('disabled', true);
+            $('#tyreMake_id').prop('disabled', true);
+            try {
+		$("#serviceTyreId").val(service.tireId).trigger('change');
+            } catch (e) { }
+            try {
+		$("#tyreScrapId").val($scope.tyreCondition).trigger('change');
+            } catch (e) { }
+            try {
+		$("#selectedTMSServiceVeh_id").val($scope.selectedTMSServiceVehId).trigger('change');
+            } catch (e) { }
+            try {
+		$("#tyrePosition_id").val($scope.tyreServiceTyreLocation).trigger('change');
+            } catch (e) { }
+	};
 	$scope.tyreIdChanged = function() {
-		angular.forEach($rootScope.TMSShortTiresList, function(tire, key)
-		{
-			if(tire.tireId == $scope.selectedTyreId){
-				$scope.depot = tire.depotName;
-				$scope.tireMake = tire.tireMake;
-			}
-		})
-	}
+            angular.forEach($rootScope.TMSShortTiresList, function(tire, key) {
+		if(tire.tireId == $scope.selectedTyreId){
+                    $scope.depot = tire.depotName;
+                    $scope.tireMake = tire.tireMake;
+                }
+            });
+	};
 
 	$scope.kmsCalculator = function(){
-		if($scope.tyreRemovedKms >= $scope.fittedKms){
-
-			$scope.totalKms = $scope.tyreRemovedKms - $scope.fittedKms;
-			return $scope.totalKms;
-		} else {
-			logger.logError("Tyre removal Kms must be greater than tyre fitted Kms");
-			return -1;
-		}
-	}
+            if($scope.tyreRemovedKms >= $scope.fittedKms){
+            	$scope.totalKms = $scope.tyreRemovedKms - $scope.fittedKms;
+		return $scope.totalKms;
+            } else {
+		logger.logError("Tyre removal Kms must be greater than tyre fitted Kms");
+		return -1;
+            }
+	};
 
 	// Add New Tyre Service History
 	$scope.totalKms = 0;
@@ -2009,126 +1913,178 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 	});
 
 	$("#tyreRemovedKms_id").blur(function() {
-		if($scope.tyreRemovedKms >= 0 && $scope.fittedKms >= 0){
-			if($scope.tyreRemovedKms >= $scope.fittedKms){
-				$scope.totalKms = $scope.tyreRemovedKms - $scope.fittedKms;
-			} else{
-				$scope.totalKms = 0;
-				logger.logWarning("Removal Kms should be greater than Fitment Kms");
-			}
+            if($scope.tyreRemovedKms >= 0 && $scope.fittedKms >= 0){
+		if($scope.tyreRemovedKms >= $scope.fittedKms){
+                    $scope.totalKms = $scope.tyreRemovedKms - $scope.fittedKms;
+		} else{
+                    $scope.totalKms = 0;
+                    logger.logWarning("Removal Kms should be greater than Fitment Kms");
 		}
-		else {
-			$scope.totalKms = 0;
-			logger.logWarning("Removal Kms should be greater than Fitment Kms")
-		}
-		$scope.$apply();
+            } else {
+		$scope.totalKms = 0;
+		logger.logWarning("Removal Kms should be greater than Fitment Kms")
+            }
+            $scope.$apply();
 	});
 
 	$scope.addNewTyreServiceHistory = function(){
-		try {
-			var fittedDate = moment($("#tyreFittedDate_id").val(), "D/M/YYYY").valueOf();
-			var removalDate = moment($("#tyreRemoveDate_id").val(), "D/M/YYYY").valueOf();
-			var params = "tireId="+$scope.selectedTyreId+"&depot="+$scope.depot+"&tireMake="+$scope.tireMake
-					+"&vehId="+$scope.selectedTMSServiceVehId+"&fittedDate="+fittedDate
-					+"&kmsAtTireFitted="+$scope.fittedKms+"&location="+$scope.tyreServiceTyreLocation
-					+"&removalDate="+removalDate+"&kmsAtTireRemoved="+$scope.tyreRemovedKms
-					+"&tireKms="+$scope.totalKms+"&reason="+$scope.reason
-					+"&actionTaken="+$scope.actionTaken+"&tireCondition="+$scope.tyreCondition
-					+"&tireScrappedParty="+$scope.tyreScrappedParty;
-			APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/Tire/addServiceHistory?'+params, true)
-		 .then(
-			 function(httpResponse){ // Success block
-				 try{
-					 loading.finish();
-					 if(httpResponse.data.status == true)
-					 {
-						 logger.logSuccess(httpResponse.data.displayMsg);
-						 $scope.pageChanged_services();
-						 $('#showTMSTyreServiceModalId').modal('hide');
-					 } else {
-					 	logger.logError(httpResponse.data.displayMsg);
-					 }
-				 }
-				 catch(error)
-				 {
-					 loading.finish();
-					 console.log("Error :"+error);
-				 }
-			 }, function(httpError) // Error block
-			 {
-				 loading.finish();
-				 console.log("Error while processing request");
-			 }, function(httpInProcess)// In process
-			 {
-				 console.log(httpInProcess);
-			 }
-		 );
-		} catch (e) { loading.finish(); console.log(e); }
-	}
+            try {
+		var fittedDate = moment($("#tyreFittedDate_id").val(), "D/M/YYYY").valueOf();
+		var removalDate = moment($("#tyreRemoveDate_id").val(), "D/M/YYYY").valueOf();
+		var params = "tireId="+$scope.selectedTyreId+"&depot="+$scope.depot+"&tireMake="+$scope.tireMake
+			+"&vehId="+$scope.selectedTMSServiceVehId+"&fittedDate="+fittedDate
+                	+"&kmsAtTireFitted="+$scope.fittedKms+"&location="+$scope.tyreServiceTyreLocation
+			+"&removalDate="+removalDate+"&kmsAtTireRemoved="+$scope.tyreRemovedKms
+                        +"&tireKms="+$scope.totalKms+"&reason="+$scope.reason
+			+"&actionTaken="+$scope.actionTaken+"&tireCondition="+$scope.tyreCondition
+			+"&tireScrappedParty="+$scope.tyreScrappedParty;
+		APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/Tire/addServiceHistory?'+params, true)
+		.then(
+                    function(httpResponse){ // Success block
+                        try{
+                            loading.finish();
+                            if(httpResponse.data.status == true) {
+				logger.logSuccess(httpResponse.data.displayMsg);
+				$scope.pageChanged_services();
+				$('#showTMSTyreServiceModalId').modal('hide');
+                            } else {
+			 	logger.logError(httpResponse.data.displayMsg);
+                            }
+			}
+			catch(error){
+                            loading.finish();
+                            console.log("Error :"+error);
+			}
+                    }, function(httpError) { // Error block
+                        loading.finish();
+			console.log("Error while processing request");
+                    }, function(httpInProcess){// In process
+                        console.log(httpInProcess);
+                    }
+		);
+            } catch (e) { loading.finish(); console.log(e); }
+	};
 
 	$scope.updateTyreService = function(){
-		try {
-			var totalKms = $scope.kmsCalculator();
-			if(totalKms != -1)
-			{
-				var fittedDate = moment($("#tyreFittedDate_id").val(), "D/M/YYYY").valueOf();
-				var removalDate = moment($("#tyreRemoveDate_id").val(), "D/M/YYYY").valueOf();
-				if(removalDate < fittedDate){
-					logger.logError("Tyre removal Date must be greater than tyre fitted Date");
-				} else {
-					var params = "serviceId="+$scope.updateTyreServiceDetails.tireServiceId
-							+"&vehId="+$scope.selectedTMSServiceVehId+"&fittedDate="+fittedDate
-							+"&kmsAtTireFitted="+$scope.fittedKms+"&location="+$scope.tyreServiceTyreLocation
-							+"&removalDate="+removalDate+"&kmsAtTireRemoved="+$scope.tyreRemovedKms
-							+"&tireKms="+$scope.totalKms+"&reason="+$scope.reason
-							+"&actionTaken="+$scope.actionTaken+"&tireCondition="+$scope.tyreCondition
-							+"&tireScrappedParty="+$scope.tyreScrappedParty;
+            try {
+		var totalKms = $scope.kmsCalculator();
+		if(totalKms != -1){
+                    var fittedDate = moment($("#tyreFittedDate_id").val(), "D/M/YYYY").valueOf();
+                    var removalDate = moment($("#tyreRemoveDate_id").val(), "D/M/YYYY").valueOf();
+                    if(removalDate < fittedDate){
+			logger.logError("Tyre removal Date must be greater than tyre fitted Date");
+                    } else {
+			var params = "serviceId="+$scope.updateTyreServiceDetails.tireServiceId
+				+"&vehId="+$scope.selectedTMSServiceVehId+"&fittedDate="+fittedDate
+				+"&kmsAtTireFitted="+$scope.fittedKms+"&location="+$scope.tyreServiceTyreLocation
+				+"&removalDate="+removalDate+"&kmsAtTireRemoved="+$scope.tyreRemovedKms
+				+"&tireKms="+$scope.totalKms+"&reason="+$scope.reason
+				+"&actionTaken="+$scope.actionTaken+"&tireCondition="+$scope.tyreCondition
+				+"&tireScrappedParty="+$scope.tyreScrappedParty;
 
-					APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/Tire/updateService?'+params, true)
-				 .then(
-					 function(httpResponse){ // Success block
-						 try{
-							 loading.finish();
-							 if(httpResponse.data.status == true)
-							 {
-								 logger.logSuccess(httpResponse.data.displayMsg);
-								 $scope.pageChanged_services();
-								 $('#showTMSTyreServiceModalId').modal('hide');
-							 } else {
-								logger.logError(httpResponse.data.displayMsg);
-							 }
-						 }
-						 catch(error)
-						 {
-							 loading.finish();
-							 console.log("Error :"+error);
-						 }
-					 }, function(httpError) // Error block
-					 {
-						 loading.finish();
-						 console.log("Error while processing request");
-					 }, function(httpInProcess)// In process
-					 {
-						 console.log(httpInProcess);
-					 }
-				 );
+			APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/Tire/updateService?'+params, true)
+                        .then(
+                            function(httpResponse){ // Success block
+                                try{
+                                    loading.finish();
+                                    if(httpResponse.data.status == true){
+					logger.logSuccess(httpResponse.data.displayMsg);
+					$scope.pageChanged_services();
+					$('#showTMSTyreServiceModalId').modal('hide');
+                                    } else {
+					logger.logError(httpResponse.data.displayMsg);
+                                    }
 				}
-			}
-		} catch (e) { loading.finish(); console.log(e); }
-	}
+				catch(error) {
+                                    loading.finish();
+                                    console.log("Error :"+error);
+				}
+                            }, function(httpError){ // Error block
+                                loading.finish();
+				console.log("Error while processing request");
+                            }, function(httpInProcess){// In process
+                                console.log(httpInProcess);
+                            }
+			);
+                    }
+		}
+            } catch (e) { loading.finish(); console.log(e); }
+	};
+        
+        // Sensor Service Code Starts Here
+	$scope.totalItems_sensorServices = 0;
+	$scope.currentPage_sensorServices = 1;
+	$scope.itemsPerPage_sensorServices = 10;
+	$scope.maxSize_sensorServices = 3;
+        $scope.startIndex_sensorServices = 0;
+
+	$scope.TMSSensorService_searchWord = "";
+
+	$scope.pageChanged_sensorServices = function(){
+            $scope.nextIndex_sensorServices = ($scope.currentPage_sensorServices - 1) * $scope.itemsPerPage_sensorServices;
+            $scope.getSensorServiceHistory($scope.nextIndex_sensorServices, $scope.TMSSensorService_searchWord);
+	};
+        
+        $scope.sensorServiceID = 0;
+	$scope.getSensorServiceHistory = function(sensorStartIndex, searchWord){
+            try {
+                if(searchWord == undefined || searchWord == 'null') {
+		    searchWord ='';
+		}
+		if(sensorStartIndex == undefined || sensorStartIndex == 'null'){
+		    sensorStartIndex = 0;
+		}
+		
+                $scope.sensorServiceID = $scope.startIndex_sensorServices;
+                APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/Sensor/getSensorServices?'
+                +'&limit='+$scope.itemsPerPage_sensorServices+'&startIndex='+sensorStartIndex+'&searchWord='+searchWord, true)
+ 		.then(
+                    function(httpResponse){ // Success block
+                        try{
+                            loading.finish();
+                            if(httpResponse.data.status == true) {
+				$rootScope.TMSSensorServiceHistory = httpResponse.data.result;
+				$scope.totalItems_sensorServices = httpResponse.data.count;
+                                console.log(httpResponse.data.count);
+                            }
+ 			}
+                        catch(error) {
+                            loading.finish();
+                            console.log("Error :"+error);
+ 			}
+                    }, function(httpError) { // Error block
+                        loading.finish();
+ 			console.log("Error while processing request");
+                    }, function(httpInProcess){ // In process
+                        console.log(httpInProcess);
+                    }
+ 		);
+            } catch (e) { loading.finish(); console.log(e); }
+	};
+
+	// Search functionality
+	var timer_sensorService = false;
+	$scope.searchSensorServices = function() {
+            if(timer_sensorService){
+                $timeout.cancel(timer_sensorService);
+            }
+            timer_sensorService= $timeout(function(){
+		$scope.pageChanged_sensorServices();
+            }, 1000);
+	};
 
 	if($state.current.url == "/tms-vehicles") {
-    $timeout(function() {
-      $scope.pageChanged_vehicles();
-    }, 1000);
+            $timeout(function() {
+              $scope.pageChanged_vehicles();
+            }, 1000);
 	} else if($state.current.url == "/tms-tyre") {
-      //$rootScope.tyreDetailsType = "";
 	    $scope.pageChanged_tyres();
 	} else if($state.current.url == "/tmsTyreService") {
 	    $scope.pageChanged_services();
 	} else if($state.current.url == "/tmsTyreInspection") {
-	    // $scope.getTyreInspectionHistory(0);
 	    $scope.pageChanged_inspection();
+	} else if($state.current.url == "/tmsSensorService") {
+	    $scope.pageChanged_sensorServices();
 	}
 
 }]);
