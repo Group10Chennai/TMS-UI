@@ -9,15 +9,20 @@
 <div class="widget-content table-responsive">
   <form>
     <div class="form-group row ">
-      <div class="col-md-12 col-sm-12 col-xs-12">
-        <div class="input-group">
-          <div class="input-group-addon"><i class="fa fa-search"></i></div>
-          <input type="text" placeholder= "Search" class="form-control" ng-model="TMSSensorService_searchWord"
-           ng-change = "searchSensorServices()">
+        <div class="col-md-10 col-sm-12 col-xs-12">
+            <div class="input-group">
+                <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                <input type="text" placeholder= "Search" class="form-control" ng-model="TMSSensorService_searchWord"
+                ng-change = "searchSensorServices()">
+            </div>
         </div>
-      </div>
+        <div class="col-md-2 col-sm-12 col-12 download_sensorIcon" ng-click = "download_SensorServiceStatus();">
+            <i class="fa fa-download" aria-hidden="true" title="Download Sensor Service List" style="font-size: larger;"> 
+            </i> 
+        </div>
     </div>
-  </form>
+  </form>  
+    
   <table class="table table-fixed table-bordered table-hover" ng-if="getSensorServiceHistory.length > 0">
   	<thead class="tablehead">
 	    <tr class="tablehead">

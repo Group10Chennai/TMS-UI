@@ -1797,6 +1797,18 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 		$scope.pageChanged_services();
             }, 1000);
 	};
+        
+        // download tyre service details
+        $rootScope.download_tyreServiceStatus = function(){
+            try{
+                loading.start();
+                // Download excel
+                window.location = $rootScope.HOST_TMS + "api/tms/downloadTireServiceReport";
+            } catch(e){
+                loading.finish();
+                console.log(e);
+            }
+        };
 
 	$scope.getTyreServiceFormForAdd = function() {
             $scope.addTyreServiceStatus = true;
@@ -2072,6 +2084,18 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 		$scope.pageChanged_sensorServices();
             }, 1000);
 	};
+        
+        // download sensor service details
+        $rootScope.download_SensorServiceStatus = function(){
+            try{
+                loading.start();
+                // Download excel
+                window.location = $rootScope.HOST_TMS + "api/tms/downloadSensorServiceReport";
+            } catch(e){
+                loading.finish();
+                console.log(e);
+            }
+        };
 
 	if($state.current.url == "/tms-vehicles") {
             $timeout(function() {
