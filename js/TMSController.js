@@ -267,7 +267,7 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 	    } catch (e) { loading.finish(); console.log(e); }
 	};
 
-	$scope.tmsVehViewOrgId = 0
+	$scope.tmsVehViewOrgId = 0;
 	$scope.getTMSShortVehDetails = function() {
 	    try {
 		APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getBasicVehDetails?orgId='+$scope.tmsVehViewOrgId, true)

@@ -104,7 +104,7 @@
                         <td class="tablebody-td">{{ updateObj.tyreNumber }} </td>
                         <td class="tablebody-td">{{ updateObj.position }} </td>
                         <td class="tablebody-td">{{ updateObj.sensorUID }} </td>
-                        <td class="tablebody-td">{{ updateObj.dateOfFitment }} </td>
+                        <td class="tablebody-td">{{ updateObj.assignmentTimeDate  | date:'dd-MM-yyyy hh:mm:ss' }} </td>
                         <td class="tablebody-td">{{ updateObj.systemIP }} </td>
                     </tr>
                 </tbody>
@@ -165,7 +165,7 @@
                         <td class="tablebody-td">{{ tms_removeLog.busNumber }} </td>
                         <td class="tablebody-td">{{ tms_removeLog.tyreNumber }} </td>
                         <td class="tablebody-td">{{ tms_removeLog.position }} </td>
-                        <td class="tablebody-td">{{ tms_removeLog.removalTimeDate  | date:'dd-MM-yyyy' }} </td>
+                        <td class="tablebody-td">{{ tms_removeLog.removalTimeDate  | date:'dd-MM-yyyy hh:mm:ss' }} </td>
                         <td class="tablebody-td">{{ tms_removeLog.systemIP }} </td>
                     </tr>
                 </tbody>
