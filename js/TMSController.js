@@ -956,19 +956,19 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
                     param = param+"&tyreId1="+$scope.FLTyreId+"&tyrePosition1=FL";
 		}
 		if($scope.FRTyreId != undefined || $scope.FRTyreId > 0){
-                    param = param+"&tyreId2="+$scope.FRTyreId+"&tyrePosition2=FR"
+                    param = param+"&tyreId2="+$scope.FRTyreId+"&tyrePosition2=FR";
 		}
 		if($scope.RLOTyreId != undefined || $scope.RLOTyreId > 0){
-                    param = param+"&tyreId3="+$scope.RLOTyreId+"&tyrePosition3=RLO"
+                    param = param+"&tyreId3="+$scope.RLOTyreId+"&tyrePosition3=RLO";
 		}
             	if($scope.RLITyreId != undefined || $scope.RLITyreId > 0){
-                    param = param+"&tyreId4="+$scope.RLITyreId+"&tyrePosition4=RLI"
+                    param = param+"&tyreId4="+$scope.RLITyreId+"&tyrePosition4=RLI";
 		}
 		if($scope.RRITyreId != undefined || $scope.RRITyreId > 0){
-                    param = param+"&tyreId5="+$scope.RRITyreId+"&tyrePosition5=RRI"
+                    param = param+"&tyreId5="+$scope.RRITyreId+"&tyrePosition5=RRI";
 		}
 		if($scope.RROTyreId != undefined || $scope.RROTyreId > 0){
-                    param = param+"&tyreId6="+$scope.RROTyreId+"&tyrePosition6=RRO"
+                    param = param+"&tyreId6="+$scope.RROTyreId+"&tyrePosition6=RRO";
 		}
 		APIServices.callGET_API(TyreAssing_URL+param, true)
                 .then(
@@ -2096,7 +2096,7 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
                 console.log(e);
             }
         };
-
+        
 	if($state.current.url == "/tms-vehicles") {
             $timeout(function() {
               $scope.pageChanged_vehicles();

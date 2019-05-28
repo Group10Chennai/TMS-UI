@@ -1,0 +1,228 @@
+
+<div class="modal" id="showTMSDeviceDetailsModalId" role="dialog">
+    <div class="modal-dialog modal-md">
+	<div class="modal-content" >
+	    <div class="modal-header">
+		<h4 class="modal-title" id="modal-title">
+		    <img src="img/tms/device.png" alt="TMS" width="25" height="20" class="fafont-icon"/>
+		    <i class="fafont-icon" ng-show="addDeviceButtonStatus"> Add New Device </i>
+		    <i class="fafont-icon" ng-show="updateDeviceButtonStatus"> Update Device</i>
+		</h4>
+		<button type="button" class="close" data-dismiss="modal" style="cursor: pointer;">&times;</button>
+	    </div>
+	    <div class="modal-body">
+		<div class="form-group row">
+		    <div class="col-1"></div>
+		    <label class="col-3 control-label" for="device">Box Number <em class="imp_asterisk">*</em> </label>
+		    <div class="col-5">
+			<input class="form-control" maxlength="10" id="boxNumber_id" placeholder="Box Number" type="text" pattern= "[0-9]+" ng-model="boxNumber">
+		    </div>
+		</div> <!-- /form-group -->
+                
+                <div class="form-group row">
+		    <div class="col-1"></div>
+		    <label class="col-3 control-label" for="device">IMEI Number <em class="imp_asterisk">*</em> </label>
+		    <div class="col-5">
+			<input class="form-control" maxlength="15" id="imeiNumber_id" placeholder="IMEI Number" type="text" pattern= "[0-9]+" ng-model="imeiNumber">
+		    </div>
+		</div> <!-- /form-group -->
+                
+                <div class="form-group row">
+		    <div class="col-1"></div>
+		    <label class="col-3 control-label" for="device">SIM Number <em class="imp_asterisk">*</em> </label>
+		    <div class="col-5">
+			<input class="form-control" maxlength="13" id="simNumber_id" placeholder="SIM Number" type="text" pattern= "[0-9]+" ng-model="simNumber">
+		    </div>
+		</div> <!-- /form-group -->
+
+                <div class="form-group row">
+		    <div class="col-1"></div>
+		    <label class="col-3 control-label" for="device">Vehicle Name <em class="imp_asterisk">*</em></label>
+		    <div class="col-5" ng-hide="selectedDeviceVehUID">
+			<select id="selectDeviceVehicle" class="select2-style" ng-model="selectedVehicleIds">
+			    <option ng-repeat="vehicle in TMSAllInstockVehicles" value="{{vehicle.vehId}}">
+                                {{vehicle.vehName}}
+                            </option>
+			</select>
+		    </div>
+                   
+                    <div class="col-5" ng-show="selectedDeviceVehUID">
+			<input type="text" value="{{selectedDeviceVehUID}}" disabled/>
+			<img src="img/tms/remove.png" style="cursor: pointer;" alt="Remove Vehicle" width="17" height="17" ng-click = "showVehicleChangeDiv=!showVehicleChangeDiv"/>
+		    </div>
+		</div> <!-- /form-group -->
+		<div class="row" ng-show="showVehicleChangeDiv">
+		    <div class="card card-inverse card-primary col-sm-12 col-lg-12" >
+			<div class="card-block pb-3">
+			    <div class="row">
+				<label class="alert-text"> Are you sure you want deallocate vehicle {{selectedDeviceVehUID}} ?
+				</label>
+			    </div>
+			    <div class="row">
+				<div class = "col-md-5 col-sm-5 col-12">
+				    Deallocating Vehicle Status
+				</div>
+				<div class = "col-md-7 col-sm-7 col-12">
+				    <select id="deallocatedVehicleSelect_id" ng-model="deallocatedSensorStatus">
+                                        <option ng-repeat="deviceStatus in VehicleStatusList" value="{{deviceStatus}}">{{deviceStatus}}</option>
+				    </select>
+				</div>
+			    </div>
+			    <br/>
+			    <div class="row">
+				<div class = "col-md-5 col-sm-5 col-1"></div>
+				<div class = "col-md-7 col-sm-7 col-11">
+				    <button type="button" class="btn btn-danger" ng-click = "deallocateVehicleFromDevice()">Yes</button>
+				    <button type="button" class="btn btn-default" ng-click = "showVehicleChangeDiv = !showVehicleChangeDiv">No</button>
+				</div>
+			    </div>
+			</div>
+		    </div>
+		</div>
+                
+                <div class="form-group row">
+		    <div class="col-1"></div>
+		    <label class="col-3 control-label" for="device">Date Time <em class="imp_asterisk">*</em> </label>
+                    <div class="col-5 row" style=" padding-right: 0px !important;">   
+                        <div class="col-10" style="padding-left: 0px !important; padding-right: 0px !important;">
+                            <input class="form-control date_text" id="deviceDateTime" type="text" placeholder="Device DateTime" ng-model="deviceDateTime">
+                        </div>
+                        <div class="datepicker-masterLog col-2" style="cursor: pointer;" onclick="$('#deviceDateTime').focus();">
+                            <i class="fa fa-calendar" style="cursor: pointer"></i>
+                        </div>
+		    </div>
+		</div> <!-- /form-group -->
+            </div>
+		
+            <!-- Organization end-->
+            <div class="row" >
+                <div class="col-5"></div>
+                <div class="col-6" style="margin-bottom: 10px !important;">
+                    <button type="submit" id="adddevice_save" class="btn btn-success submit"
+		    ng-show="addDeviceButtonStatus" ng-click = "AddDeviceDetails()"> Save </button>
+                    <button type="submit" id="adddevice_save" class="btn btn-success submit"
+		    ng-show="updateDeviceButtonStatus" ng-click = "UpdateDeviceDetails()"> Update </button>
+		</div>
+            </div>
+	</div>
+    </div>
+</div>
+
+<div class="widget-header" style="margin-top: 0.1em;">
+    <i class="fa fa-list" aria-hidden="true"></i>
+    <h3> Device Details </h3>
+    <span style="float: right; margin-right: 33px;">
+	{{nextIndex_device + 1}} - {{nextIndex_device + itemsPerPage_device}} of {{totalItems_device}}
+    </span>
+</div> <!-- /widget-header -->
+
+<div class="widget-content table-responsive ">
+    <form>
+	<div class="form-group row ">
+	    <div class="col-md-12 col-sm-12 col-xs-12">
+		<div class="input-group">
+		    <div class="input-group-addon"><i class="fa fa-search"></i></div>
+		    <input type="text" placeholder= "Search" class="form-control" ng-model="searchStringForDevices" ng-change="searchDevices($event)">
+		</div>
+	    </div>
+            <!-- <div class="col-md-2 col-sm-12 col-12 download_sensorIcon" ng-click = "download_tireStatus();">
+                <i class="fa fa-download" aria-hidden="true" title="Download Tyre List" style="font-size: larger;"> 
+                </i> 
+            </div>-->
+	</div>
+    </form>
+
+    <table class="table table-fixed table-bordered table-hover" ng-if="TMSAllDevices.length > 0">
+  	<thead>
+	    <tr class="tablehead">
+    		<th class="tableHead-center" >
+    		    <a href="#" > # </a>
+    		</th>
+                <th class="tableHead-center" >
+    		    <a href="#" ng-click="sortType = 'imeiNumber'; tmsDevice_sortReverse = !tmsDevice_sortReverse">
+    			IMEI Number
+    			<span ng-show="sortType == 'imeiNumber' && !tmsDevice_sortReverse" class="fa fa-caret-down"></span>
+    			<span ng-show="sortType == 'imeiNumber' && tmsDevice_sortReverse" class="fa fa-caret-up"></span>
+    		    </a>
+    		</th>
+    		<th class="tableHead-center" >
+    		    <a href="#" ng-click="sortType = 'boxNumber'; tmsDevice_sortReverse = !tmsDevice_sortReverse">
+    			Box Number
+    			<span ng-show="sortType == 'boxNumber' && !tmsDevice_sortReverse" class="fa fa-caret-down"></span>
+    			<span ng-show="sortType == 'boxNumber' && tmsDevice_sortReverse" class="fa fa-caret-up"></span>
+    		    </a>
+    		</th>
+    		<th class="tableHead-center" >
+    		    <a href="#" ng-click="sortType = 'simNumber'; tmsDevice_sortReverse = !tmsDevice_sortReverse">
+    			SIM Number
+    			<span ng-show="sortType == 'simNumber' && !tmsDevice_sortReverse" class="fa fa-caret-down"></span>
+    			<span ng-show="sortType == 'simNumber' && tmsDevice_sortReverse" class="fa fa-caret-up"></span>
+    		    </a>
+    		</th>
+                <th class="tableHead-center" >
+    		    <a href="#" ng-click="sortType = 'vehNumber'; tmsDevice_sortReverse = !tmsDevice_sortReverse">
+                        Vehicle
+    			<span ng-show="sortType == 'vehNumber' && !tmsDevice_sortReverse" class="fa fa-caret-down"></span>
+    			<span ng-show="sortType == 'vehNumber' && tmsDevice_sortReverse" class="fa fa-caret-up"></span>
+    		    </a>
+    		</th>
+    		<th class="tableHead-center">
+    		    <a href="#" ng-click="sortType = 'createdOn'; tmsDevice_sortReverse = !tmsDevice_sortReverse">
+			Created On
+			<span ng-show="sortType == 'createdOn' && !tmsDevice_sortReverse" class="fa fa-caret-down"></span>
+			<span ng-show="sortType == 'createdOn' && tmsDevice_sortReverse" class="fa fa-caret-up"></span>
+    		    </a>
+                </th>
+                <th class="tableHead-center">
+    		    <a href="#" ng-click="sortType = 'status'; tmsDevice_sortReverse = !tmsDevice_sortReverse">
+    			Status
+    			<span ng-show="sortType == 'status' && !tmsDevice_sortReverse" class="fa fa-caret-down"></span>
+    			<span ng-show="sortType == 'status' && tmsDevice_sortReverse" class="fa fa-caret-up"></span>
+    		    </a>
+    		</th>
+    		<th class="tableHead-center">
+    		    <a href="#" > Action </a>
+    		</th>
+	    </tr>
+  	</thead>
+	<tbody >
+	    <tr ng-repeat="device in TMSAllDevices | orderBy:sortType:tmsDevice_sortReverse">
+		<td class="tableData-right tablebody-td">{{nextIndex_device + $index + 1 }}</td>
+                <td class="tablebody-td">{{ device.imei }} </td>
+                <td class="tablebody-td">{{ device.boxNumber }} </td>
+		<td class="tablebody-td">{{ device.simNumber }} </td>
+                <td class="tablebody-td">{{ device.vehName }} </td>
+		<td class="tablebody-td">{{ device.deviceDateTime }}</td>
+                <td class="tablebody-td">{{ device.status }} </td>
+		<td class="tableHead-center tablebody-td">
+		    <span data-toggle="tooltip" title="Edit">
+			<button class="btn btn-primary btn-xs" ng-click="getDeviceDetailsFormForUpdate(device)">
+			    <i class="fa fa-pencil" aria-hidden="true"></i>
+			</button>
+		    </span>
+		</td>
+	    </tr>
+	    <button class="material-button material-button-toggle add-popup" type="button" ng-click="getDeviceDetailsFormForAdd()">
+		<span class="fa fa-plus" aria-hidden="true"></span>
+	    </button>
+  	</tbody>
+    </table>
+
+    <uib-pagination total-items="totalItems_device" ng-model="currentPage_device"
+	items-per-page="itemsPerPage_device" max-size="maxSize_device" ng-change="pageChanged_device()"
+	boundary-link-numbers="true" rotate="true" boundary-links="true">
+    </uib-pagination>
+</div>
+
+<script>
+    var p = $("#org-popup").prompt21();
+
+    $(".show-popup").on("click", function () {
+      p.getData(function (err, data) {
+        $(".result").text(JSON.stringify(data, null, 2));
+	    });
+    });
+
+    $(".version").text($.fn.prompt21.version);
+    
+</script>

@@ -137,12 +137,12 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
 	        allowClear: true,
 	        width: 278
 	    });
-	    $('#deallocatedDeviceSelect_id').select2({
+	    $('#deallocatedVehicleSelect_id').select2({
 		placeholder: "Select Status",
 		allowClear: true,
 		width: 227
 	    });
-
+            
 	    $('#sensorOrganizationId').select2 ({
 		placeholder: "Organization",
 	        allowClear: true,
@@ -165,7 +165,13 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
 	        allowClear: true,
 	        width: 250
 	    });
-
+            
+            $('#selectDeviceVehicle').select2({
+                placeholder: "Select Vehicle",
+                allowClear: true,
+                width: 228
+            });
+        
 	    if(sessionStorage.UserLevelId > 0 && sessionStorage.UserLevelId < 5){
 		$('#sensorOrgList').show();
 		$('#bluetoothOrgList').show();
@@ -542,7 +548,7 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
 	$scope.pageChanged_sensor = function(from){
 	    $scope.nextIndex_sensor = ($scope.currentPage_sensor - 1) * $scope.itemsPerPage_sensor;
 	    $rootScope.getTMSAllSensors($scope.sensorStatusFilter, $scope.nextIndex_sensor, $scope.searchStringForSensors);
-	}
+	};
 
 	$scope.AddSensor = function() {
 	    try {
@@ -832,7 +838,7 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
 		var request = "limit="+$scope.itemsPerPage_vehUserDetails+"&startIndex="+nextIndex_vehicle;
 
 		if(searchWord != undefined && searchWord != null && searchWord.trim().length > 0){
-		    // Seach vehicles
+		    // Search vehicles
 		    request = request + "&searchWord=" + searchWord
 		}
 		APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/getUserVehDetials?' + request, true)
@@ -1029,6 +1035,285 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
 	};
         
         
+      //  $scope.vehDetailsList = DashboardDataSharingServices.getVehiclesList();
+        // device details
+        
+        $('#deviceDateTime').datetimepicker({
+            format: 'd-m-Y',
+            onShow: function (ct) {
+                if ($('#deviceDateTime').hasClass('error'))
+                $('#deviceDateTime').removeClass('error');
+            },
+            maxDate: moment().format('DD-MM-YYYY'),
+            defaultTime: '00:00',
+            timepicker: false,
+            value: moment().format("DD-MM-YYYY")
+        });
+        
+        $("#selectDeviceVehicle").prop("disabled", false);
+        
+        $scope.deviceDateTime = moment($("#deviceDateTime").val(), "D/M/YYYY").valueOf();
+        
+        $scope.addSensorButtonStatus = true;
+	$rootScope.TMSAllDevices = new Array();
+        
+	$scope.limit_device = 10;
+	$scope.startIndex_device = 0;
+
+	$scope.totalItems_device = 0;
+	$scope.currentPage_device = 1;
+	$scope.itemsPerPage_device = 10;
+	$scope.maxSize_device = 3;
+
+	$scope.TMSdevice_searchWord = "";
+
+	$scope.pageChanged_device = function(from){
+	    $scope.nextIndex_device = ($scope.currentPage_device - 1) * $scope.itemsPerPage_device;
+	    $rootScope.getTMSAllDevices($scope.deviceStatusFilter, $scope.nextIndex_device, $scope.searchStringForDevices);
+	};
+        
+        // Display Tyre Details        
+        $scope.deviceSID = 0;
+	$rootScope.getTMSAllDevices = function(status, startIndex, searchWord) {
+	    try {
+		if(status == undefined || status == 'All') {
+		    status ='';
+		}
+		if(searchWord == undefined || searchWord == 'null') {
+		    searchWord ='';
+		}
+		if(startIndex == undefined || startIndex == 'null'){
+		    startIndex = 0;
+		}
+		$scope.deviceSID = $scope.startIndex_device;
+		APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/Device/getDevice?status=' + status
+		+'&limit='+$scope.itemsPerPage_device+'&startIndex='+startIndex+'&searchWord='+searchWord, true)
+ 		.then(
+		    function(httpResponse){ // Success block
+ 			try{
+			    loading.finish();
+			    if(httpResponse.data.status == true){
+				$rootScope.TMSAllDevices = httpResponse.data.result;
+				$scope.totalItems_device = httpResponse.data.count;
+			    }
+ 			}
+ 			catch(error){
+ 			    loading.finish();
+			    console.log("Error :"+error);
+ 			}
+ 		    }, function(httpError){ // Error block
+			loading.finish();
+ 			console.log("Error while processing request");
+ 		    }, function(httpInProcess){ // In process
+			console.log(httpInProcess);
+ 		    }
+ 		);
+	    } catch (e) { loading.finish(); console.log(e); }
+	};
+        
+        var timer_device = false;
+	$scope.searchDevices = function() {
+	    if(timer_device){
+		$timeout.cancel(timer_device);
+	    }
+	    timer_device= $timeout(function(){
+		$scope.pageChanged_device('device search');
+	    },1000);
+	};
+                     
+        $scope.getTMSAllInstockVehicles = function(){
+            try {
+		APIServices.callGET_API($rootScope.HOST_TMS + 'api/tms/Device/getUnassignedVehicle?status=Instock', true)
+ 		.then(
+                    function(httpResponse){ // Success block
+                        try{
+                            loading.finish();
+                            if(httpResponse.data.status == true) {
+				$scope.TMSAllInstockVehicles = httpResponse.data.result;
+                            }
+ 			}
+ 			catch(error) {
+                            loading.finish();
+                            console.log("Error :"+error);
+ 			}
+                    }, function(httpError){ // Error block
+                        loading.finish();
+ 			console.log("Error while processing request");
+                    }, function(httpInProcess){ // In process
+                        console.log(httpInProcess);
+                    }
+ 		);
+            } catch (e) { loading.finish(); console.log(e); }
+	};
+        
+        $scope.showVehicleChangeDiv = false;
+        $scope.selectedVehicleIds = 0;
+        
+        $scope.getDeviceDetailsFormForAdd = function(){
+            $('#showTMSDeviceDetailsModalId').modal('show');
+            $scope.showDeviceAddingForm = !$scope.showDeviceAddingForm;
+            
+            $scope.getTMSAllInstockVehicles();
+            $scope.showDeviceAddingForm = true;
+            
+            $scope.updateDeviceButtonStatus = false;
+            $scope.addDeviceButtonStatus = true;
+            
+            $scope.showVehicleChangeDiv = false;
+            $scope.boxNumber = '';
+            $scope.imeiNumber = '';
+            $scope.simNumber = '';
+            $scope.selectedVehicleIds = 0;
+            $scope.deviceDateTime = '';
+            $scope.selectedDeviceVehUID = '';
+            
+            $("#selectDeviceVehicle").prop("disabled", false);
+            
+            try {
+                $("#selectDeviceVehicle").val("").trigger('change');
+            } catch (e) { }
+        };
+        
+        // Add Device Details
+        $scope.AddDeviceDetails = function() {
+            $("#selectDeviceVehicle").prop("disabled", false);
+            try{
+                var params = 'api/tms/Device/Add?deviceName='+$scope.boxNumber +'&IMEI='+$scope.imeiNumber
+                         +'&simNumber='+$scope.simNumber+'&vehId='+$scope.selectedVehicleIds+'&deviceDateTime='+$scope.deviceDateTime;
+            
+                APIServices.callGET_API($rootScope.HOST_TMS + params, true)
+		.then(
+                    function(httpResponse){ // Success block
+                        try{
+                            loading.finish();
+                            if(httpResponse.data.status == true) {
+				logger.logSuccess('Device added successfully');
+				$('#showTMSDeviceDetailsModalId').modal('hide');
+                                $rootScope.getTMSAllDevices();
+                            } else {
+				logger.logError(httpResponse.data.displayMsg);
+                            }
+			}
+			catch(error){
+                            loading.finish();
+                            console.log("Error :"+error);
+			}
+                    }, function(httpError){ // Error block
+                        loading.finish();
+			console.log("Error while processing request");
+                    }, function(httpInProcess){ // In process
+                        console.log(httpInProcess);
+                    }
+		);
+            } catch (e) { loading.finish(); console.log(e); }
+        };
+        
+        $scope.getDeviceDetailsFormForUpdate = function(device) {
+	    $('#showTMSDeviceDetailsModalId').modal('show');
+            
+            $scope.getTMSAllInstockVehicles();
+            $scope.showDeviceAddingForm = true;
+            
+            $scope.updateDeviceButtonStatus = true;
+            $scope.addDeviceButtonStatus = false;
+                        
+            $scope.showVehicleChangeDiv = false;
+            $scope.boxNumber = device.boxNumber;
+            $scope.deviceId = device.deviceId;
+            $scope.imeiNumber = device.imei;
+            $scope.simNumber = device.simNumber;
+            $scope.selectedVehicleIds = device.vehId;
+            $scope.selectedDeviceVehUID = device.vehName;
+            $scope.deviceDateTime = device.deviceDateTime;
+	    $scope.updateDeviceDetails = device;
+            
+            $("#selectDeviceVehicle").prop("disabled", true);
+            
+            try {
+		$("#selectDeviceVehicle").val("").trigger('change');
+            } catch (e) { }
+            try {
+		$("#deallocatedVehicleSelect_id").val($scope.VehicleStatusList[0]).trigger('change');
+            } catch (e) { }
+	};
+        
+        // Update Device Details
+        $scope.UpdateDeviceDetails = function() {
+            $scope.selectedVehicleIds = 0;
+            try {
+		var UPDATE_URL =$rootScope.HOST_TMS + 'api/tms/Device/Update?deviceId ='+$scope.deviceId
+                        +'&IMEI='+$scope.imeiNumber+'&simNumber='+$scope.simNumber
+                        +'&vehId='+$scope.selectedVehicleIds+'&deviceDateTime='+$scope.deviceDateTime;
+                                 
+		APIServices.callGET_API(UPDATE_URL, true)
+		.then(
+                    function(httpResponse){ // Success block
+                        try{
+                            loading.finish();
+                            if(httpResponse.data.status == true){
+                                $('#showTMSDeviceDetailsModalId').modal('hide');
+                                logger.logSuccess('Device updated successfully');
+                                $rootScope.getTMSAllDevices();
+                            }
+                            else {
+                                logger.logError(httpResponse.data.displayMsg);
+                            }
+			}
+			catch(error){
+                            loading.finish();
+                            console.log("Error :"+error);
+			}
+                    }, function(httpError){ // Error block
+                        loading.finish();
+			console.log("Error while processing request");
+                    }, function(httpInProcess){// In process
+                        console.log(httpInProcess);
+                    }
+		);
+            } catch (e) { loading.finish(); console.log(e); }
+	};
+        
+        // deallocate vehicle from device   
+        $scope.VehicleStatusList = ["InStock"];
+
+        $scope.deallocateVehicleFromDevice = function(){
+            try {
+                var status = $("#deallocatedVehicleSelect_id").val();
+                var DEALLOCATE_VEHICLE_URL =$rootScope.HOST_TMS + 'api/tms/Device/removeDevice?IMEI='+$scope.imeiNumber
+                    +'&vehId='+$scope.selectedVehicleIds+"&status="+status;
+                APIServices.callGET_API(DEALLOCATE_VEHICLE_URL, true)
+                .then(
+                    function(httpResponse){ // Success block
+                        try{
+                            loading.finish();
+                            if(httpResponse.data.status == true){
+                                $scope.showVehicleChangeDiv = false;
+                                logger.logSuccess('Vehicle is deallocated from this Device');
+                                $scope.updateDeviceDetails = httpResponse.data.result[0];
+                                $scope.getDeviceDetailsFormForUpdate($scope.updateDeviceDetails);
+                                $("#selectDeviceVehicle").prop("disabled", true);
+                            }
+                            else {
+                                logger.logError(httpResponse.data.displayMsg);
+                            }
+                        }
+                        catch(error){
+                            loading.finish();
+                            console.log("Error :"+error);
+                        }
+                    }, function(httpError){ // Error block
+                        loading.finish();
+                        console.log("Error while processing request");
+                    }, function(httpInProcess){// In process
+                        console.log(httpInProcess);
+                    }
+                );
+            } catch (e) {
+		console.log(e);
+            }
+	};
+
+
 	if($state.current.url == "/tms-sensor") {
 	    $scope.pageChanged_sensor('sensor default');
 	} else if($state.current.url == "/tms-bluetooth") {
@@ -1045,5 +1330,9 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
 	} 
         else if($state.current.url == "/tms-updatelog") {
             $scope.pageChanged_updateRemoveLog();
+        }
+        else if($state.current.url == "/tmsDeviceDetails") {
+            $scope.pageChanged_device();
+            $scope.getTMSAllVehicles();
         }
     }]);

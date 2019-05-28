@@ -288,6 +288,17 @@ angular
     params: { subtitle: 'Tyre Monitor System' },
   })
 
+  .state('app.tmsDeviceDetails', {
+    url: '/tmsDeviceDetails',
+    templateUrl: 'views/pages/tmsDeviceDetails.html',
+    controller: 'TMSSysAdminController',
+    //page title goes here
+    ncyBreadcrumb: {
+      label: 'TMS',
+    },
+    //page subtitle goes here
+    params: { subtitle: 'Tyre Monitor System' },
+  })
  
   .state('app.tms-vehDetails', {
     url: '/vehDetails',
