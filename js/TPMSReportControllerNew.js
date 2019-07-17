@@ -59,49 +59,62 @@ app.controller('TPMSReportControllerNew', ['$scope', '$rootScope', '$state', 'AP
 					for (var ii = 0; ii < selected_vehIds_report.length; ii++) {
 						var wrapper = document.getElementById("myHTMLWrapper");
       
-						var myHTML1 = "<table class='table table-fixed table-bordered table-hover'><thead></thead><tr class='tablehead'></tr><th class='tableHead-center><a href='#' > Serial No</a></th><th class='tableHead-center><a href='#' > VehName-1</a></th><th class='tableHead-center><a href='#' > VehName-2 </a></th>";		
+						var myHTML1 = "<table class='table table-fixed table-bordered table-hover'><thead></thead><tr class='tablehead'></tr><th class='tableHead-center><a href='#' > Serial No</a></th><th class='tableHead-center><a href='#' > VehName</a></th><th class='tableHead-center><a href='#' > Date Time </a></th><th class='tableHead-center><a href='#' > FL </a></th>";		
 						var i=0;
 						var myHTML='';
 						angular.forEach(httpResponse.data.result, function(value, key)
           {
 
-			//angular.forEach(value.tyres, function(tyre, id)
-             // { 
-				//  if(selected_vehIds_report[i]=='undefined'){ 
-
-				// 	console.log("VALUETTTTTT   : "+selected_vehIds_report[i]+"## "+value.vehId);
-				//  }
-				//  if(selected_vehIds_report[i]==='undefined'){ 
-
-				// 	console.log("VALUETTTTTTOOOOOOOO   : "+selected_vehIds_report[i]+"## "+value.vehId);
-				//  }
+			
 				
 				if(selected_vehIds_report[ii]==value.vehId){
 					var addElement='';
 					i++;
-					//console.log("POSITION : "+tyre.position);
-				// 	if (tyre.position == 'FL') {
 					
-				// 	addElement=value.vehName+" ## "+value.device_date_time+" ## "+tyre.pressure+" ## "+tyre.temp;
-				// }
-				// if (tyre.position == 'FR') {
-				
-				// 	addElement=addElement+tyre.pressure+" ## "+tyre.temp;
-				// }
-				//console.log("VALUEssssssss   : "+i);
 				if(i==1){
-					var date = new Date(value.device_date_time);
+					var tempFL='';
+					var pressFL='';
+					if(value.tyres.length > 0){	
+						angular.forEach(value.tyres, function(tyre, id)
+						{
+					
+					
+					tempFL=tyre.temp;
+					pressFL=tyre.pressure;
+						})
+				
+					}
+					var current_datetime = new Date(value.device_date_time);
 
-					date.toString("dd-MM-yyyy HH:mm:ss");	
-					myHTML=myHTML1+"<tr><td class='tablebody-td'>"  + i + "</td><td class='tablebody-td'>"  + value.vehName + "</td><td>"  +  date+ "</td></tr>  ";			
+					//date.toString("dd-MM-yyyy HH:mm:ss");	
+
+					var formatted_date = current_datetime.getDate()+"-"+(current_datetime.getMonth() + 1) + "-" + current_datetime.getFullYear() + " " + current_datetime.getHours() + ":" + current_datetime.getMinutes() + ":" + current_datetime.getSeconds() ;
+
+
+					myHTML=myHTML1+"<tr><td class='tablebody-td'>"  + i + "</td><td class='tablebody-td'>"  + value.vehName + "</td><td>"  +  formatted_date+ "</td><td><span ng-if ='tempFL == '0' || pressFL == '0''><span style='color:green'>"  +  tempFL + "℃ </span></span> - <span style='color:rgba(254, 51, 51, 0.92)'> "+pressFL+" Psi </span></td></tr>  ";			
 					myHTML1+= myHTML;
 					
 					 
 				}else{ 
-					var date = new Date(value.device_date_time);
+					var tempFL='';
+					var pressFL='';
+					if(value.tyres.length > 0){	
+						angular.forEach(value.tyres, function(tyre, id)
+						{
+					
+					
+					tempFL=tyre.temp;
+					pressFL=tyre.pressure;
+						})
+				
+					}
+					var current_datetime = new Date(value.device_date_time);
 
-					date.toString("dd-MM-yyyy HH:mm:ss");	
-					myHTML+="<tr><td class='tablebody-td'>"  + i + "</td><td class='tablebody-td'>"  + value.vehName + "</td><td>"  + date + "</td></tr>  ";	
+					//date.toString("dd-MM-yyyy HH:mm:ss");	
+
+					var formatted_date = current_datetime.getDate()+"-"+(current_datetime.getMonth() + 1) + "-" + current_datetime.getFullYear() + " " + current_datetime.getHours() + ":" + current_datetime.getMinutes() + ":" + current_datetime.getSeconds() ;
+
+					myHTML+="<tr><td class='tablebody-td'>"  + i + "</td><td class='tablebody-td'>"  + value.vehName + "</td><td>"  + formatted_date + "</td><td><span ng-if ='tempFL == '0' || pressFL == '0''><span style='color:green'>"  +  tempFL + "℃ </span></span> - <span style='color:rgba(254, 51, 51, 0.92)'> "+pressFL+" Psi </span></td></tr></tr>  ";	
 					
 				}
 			}
