@@ -462,7 +462,8 @@ app.controller('SideNavController', ['$scope' ,'$rootScope', 'limitToFilter','AP
       $scope.logoutFun_JS = function(msg)
       {
         $rootScope.logoutFun(msg);
-      }
+	  }
+	
       $('#dynamicSideMenu_id').append(sessionStorage.getItem('SIDEMENU'));
 
 }]); // End of SideNavController

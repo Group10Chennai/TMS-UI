@@ -626,7 +626,7 @@ Object.size = function(obj) {
         //});
         //
         //function getVehiclesList(key, heading, pids) {
-        //    console.log(key);
+        
         //    try {
         //        var requestParam = '{ "pids": ['+pids+'] }';
         //        $.ajax({

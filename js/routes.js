@@ -198,6 +198,17 @@ angular
     //page subtitle goes here
     params: { subtitle: 'Tyre Monitor System' },
   })
+  .state('app.tyreTempPressureNew', {
+    url: '/tyreTempPressureNew',
+    templateUrl: 'views/pages/tyreTempPressureNew.html',
+    controller: 'TMSTempPressureControllerNew',
+    //page title goes here
+    ncyBreadcrumb: {
+      label: 'TMS',
+    },
+    //page subtitle goes here
+    params: { subtitle: 'Tyre Monitor System' },
+  })
 
   // Reports
   .state('app.tpms-report', {
@@ -211,6 +222,19 @@ angular
     //page subtitle goes here
     params: { subtitle: 'Tyre Monitor System' },
   })
+  //krishnan added following lines code starts here
+  .state('app.tms-reportNew', {
+    url: '/tms-reportNew',
+    templateUrl: 'views/pages/tpms-reportNew.html',
+    controller: 'TPMSReportControllerNew',
+    //page title goes here
+    ncyBreadcrumb: {
+      label: 'TMS',
+    },
+    //page subtitle goes here
+    params: { subtitle: 'Tyre Monitor System' },
+  })
+  //krishnan added the above lines code ends here
   
   .state('app.tmsSensorService', {
     url: '/tmsSensorService',

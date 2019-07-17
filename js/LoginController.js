@@ -125,7 +125,8 @@ app.controller('LoginController', ['$scope', '$http','$rootScope','APIServices',
             if(httpResponse.data.result == undefined || httpResponse.data.result == null){
 
             } else {
-              $rootScope.SIDEMENU = httpResponse.data.result[0].sideMenu;
+			
+				$rootScope.SIDEMENU = httpResponse.data.result[0].sideMenu;
 
               sessionStorage.setItem('SIDEMENU', $rootScope.SIDEMENU);
               sessionStorage.setItem('UserLevelId', httpResponse.data.result[0].userLevelId);
