@@ -5,7 +5,7 @@
         <div style="cursor:pointer;" ng-click = "loadTPMSLiveData('All');">
           <div class="info-box">
             <span class="info-box-icon bg-blue">
-              <span class="info-box-number ng-binding" >{{ totalTPVehCount }}</span>
+              <span class="info-box-number ng-binding" >{{ totalTPVehCountNew }}</span>
             </span>
             <div class="info-box-content">
                 <span class="info-box-text ng-binding">All</span>
@@ -18,7 +18,7 @@
         <div style="cursor:pointer;" ng-click = "loadTPMSLiveData('Good');" >
           <div class="info-box">
             <span class="info-box-icon bg-greens">
-              <span class="info-box-number ng-binding" >{{NontroubledVehCount}}</span>
+              <span class="info-box-number ng-binding" >{{NontroubledVehCountNew}}</span>
             </span>
             <div class="info-box-content">
                 <span class="info-box-text ng-binding">In Range</span>
@@ -31,7 +31,7 @@
         <div style="cursor:pointer;" ng-click = "loadTPMSLiveData('Bad');" >
           <div class="info-box">
             <span class="info-box-icon bg-danger">
-              <span class="info-box-number ng-binding" >{{troubledVehCount}}</span>
+              <span class="info-box-number ng-binding" >{{troubledVehCountNew}}</span>
             </span>
             <div class="info-box-content">
                 <span class="info-box-text ng-binding">Off Range</span>

@@ -29,6 +29,7 @@ app.controller('NavController', ['$scope', '$rootScope', '$state', 'APIServices'
 
   // Tyre pressure & Temperature chart
   $rootScope.troubledVehCount = ""; $rootScope.NontroubledVehCount = "";
+  $rootScope.troubledVehCountNew = ""; $rootScope.NontroubledVehCountNew = "";//added by krish
   $rootScope.troubledVehChartData = [];
 
 	function deleteAllCookies() {
@@ -165,9 +166,13 @@ app.controller('NavController', ['$scope', '$rootScope', '$state', 'APIServices'
   			    if(httpResponse.data.status == true) {
                                 
                                 // Tyre Temp & Pressure data
-      				$rootScope.troubledVehCount = httpResponse.data.badTPVehCount;
-                                $rootScope.NontroubledVehCount = httpResponse.data.goodTPVehCount;
-                                $rootScope.totalTPVehCount = $rootScope.troubledVehCount + $rootScope.NontroubledVehCount;
+					  $rootScope.troubledVehCount = httpResponse.data.badTPVehCount;
+					  $rootScope.troubledVehCountNew = httpResponse.data.badTPVehCountNew;
+								$rootScope.NontroubledVehCount = httpResponse.data.goodTPVehCount;
+								$rootScope.NontroubledVehCountNew = httpResponse.data.goodTPVehCountNew;
+								//$rootScope.NontroubledVehCountNew = httpResponse.data.goodTPVehCountNew;
+								$rootScope.totalTPVehCount = $rootScope.troubledVehCount + $rootScope.NontroubledVehCount;
+								$rootScope.totalTPVehCountNew = $rootScope.troubledVehCountNew + $rootScope.NontroubledVehCountNew;
       				// var vehiclesList = DashboardDataSharingServices.getVehiclesList();
                                 $scope.updatePieChart($rootScope.troubledVehCount, $rootScope.NontroubledVehCount);
                                 
