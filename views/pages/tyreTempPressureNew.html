@@ -114,15 +114,16 @@
                         </a>
                     </th>
                     <th class="tableHead-center">
-                      <a href="#" data-toggle="tooltip" title="Rear Right Inner">
-                            RRI
-                      </a>
-                    </th>
-                    <th class="tableHead-center">
                         <a href="#" data-toggle="tooltip" title="Rear Right Outer">
                             RRO
                         </a>
                     </th>
+                    <th class="tableHead-center">
+                      <a href="#" data-toggle="tooltip" title="Rear Right Inner">
+                            RRI
+                      </a>
+                    </th>
+                  
                     <!--<td style="width: 0.5%"></td>-->
             </tr>
           </thead>
@@ -251,6 +252,36 @@
                   </span>
               </span>
           </td>
+          <td class="tablebody-td" ng-repeat ="tyre in vehicle.tyres" ng-if = "tyre.position == 'RRO'"> 
+            <span ng-if ="pressTempType == 'T'">
+                <span ng-if ="tyre.temp == '0'">
+                    <span style="color:#263238"> {{tyre.temp}} ℃ </span> 
+                </span>
+                <span ng-if ="tyre.temp != '0'">
+                    <span style="color:green" ng-if ="tyre.temp != '-' && (tyre.temp >= minMaxTempPressureValues.minTemp && tyre.temp <= minMaxTempPressureValues.maxTemp)"> {{tyre.temp}} ℃ </span> 
+                    <span style="color:rgba(254, 51, 51, 0.92)" ng-if ="tyre.temp != '-' && (tyre.temp < minMaxTempPressureValues.minTemp || tyre.temp > minMaxTempPressureValues.maxTemp)"> {{tyre.temp}} ℃ </span>
+                </span>
+            </span>
+            <span ng-if ="pressTempType == 'P'">
+                <span ng-if ="tyre.pressure == '0'">
+                    <span style="color:#263238"> {{tyre.pressure}} Psi </span> 
+                </span>
+                <span ng-if ="tyre.pressure != '0'">
+                    <span style="color:rgba(254, 51, 51, 0.92)" ng-if ="tyre.pressure != '-' && (tyre.pressure < minMaxTempPressureValues.minPressure || tyre.pressure > minMaxTempPressureValues.maxPressure)"> {{tyre.pressure}} Psi </span> 
+                    <span style="color:green" ng-if ="tyre.pressure != '-' && (tyre.pressure >= minMaxTempPressureValues.minPressure && tyre.pressure <= minMaxTempPressureValues.maxPressure)"> {{tyre.pressure}} Psi </span> 
+                </span>
+            </span>
+            <span ng-if ="pressTempType == 'B'">
+                <span ng-if ="tyre.temp == '0' || tyre.pressure == '0'">
+                    <span style="color:#263238"> {{tyre.temp}} ℃ </span> - <span style="color:#263238"> {{tyre.pressure }} Psi </span>
+                </span>
+                <span ng-if ="tyre.temp != '0' && tyre.pressure != '0'">
+                    <span style="color:green" ng-if ="tyre.temp != '-' && (tyre.temp >= minMaxTempPressureValues.minTemp && tyre.temp <= minMaxTempPressureValues.maxTemp)"> {{tyre.temp}} ℃ </span> 
+                    <span style="color:rgba(254, 51, 51, 0.92)" ng-if ="tyre.temp != '-' && (tyre.temp < minMaxTempPressureValues.minTemp || tyre.temp > minMaxTempPressureValues.maxTemp)"> {{tyre.temp}} ℃ </span> - <span style="color:green" ng-if ="tyre.pressure != '-' && (tyre.pressure >= minMaxTempPressureValues.minPressure && tyre.pressure <= minMaxTempPressureValues.maxPressure)"> {{tyre.pressure}} Psi </span> 
+                    <span style="color:rgba(254, 51, 51, 0.92)" ng-if ="tyre.pressure != '-' && (tyre.pressure < minMaxTempPressureValues.minPressure || tyre.pressure > minMaxTempPressureValues.maxPressure)"> {{tyre.pressure}} Psi </span> 
+                </span>
+            </span>
+        </td>
           <td class="tablebody-td" ng-repeat ="tyre in vehicle.tyres" ng-if = "tyre.position == 'RRI'"> 
               <span ng-if ="pressTempType == 'T'">
                   <span ng-if ="tyre.temp == '0'">
@@ -281,36 +312,7 @@
                   </span>
               </span>
           </td>
-          <td class="tablebody-td" ng-repeat ="tyre in vehicle.tyres" ng-if = "tyre.position == 'RRO'"> 
-              <span ng-if ="pressTempType == 'T'">
-                  <span ng-if ="tyre.temp == '0'">
-                      <span style="color:#263238"> {{tyre.temp}} ℃ </span> 
-                  </span>
-                  <span ng-if ="tyre.temp != '0'">
-                      <span style="color:green" ng-if ="tyre.temp != '-' && (tyre.temp >= minMaxTempPressureValues.minTemp && tyre.temp <= minMaxTempPressureValues.maxTemp)"> {{tyre.temp}} ℃ </span> 
-                      <span style="color:rgba(254, 51, 51, 0.92)" ng-if ="tyre.temp != '-' && (tyre.temp < minMaxTempPressureValues.minTemp || tyre.temp > minMaxTempPressureValues.maxTemp)"> {{tyre.temp}} ℃ </span>
-                  </span>
-              </span>
-              <span ng-if ="pressTempType == 'P'">
-                  <span ng-if ="tyre.pressure == '0'">
-                      <span style="color:#263238"> {{tyre.pressure}} Psi </span> 
-                  </span>
-                  <span ng-if ="tyre.pressure != '0'">
-                      <span style="color:rgba(254, 51, 51, 0.92)" ng-if ="tyre.pressure != '-' && (tyre.pressure < minMaxTempPressureValues.minPressure || tyre.pressure > minMaxTempPressureValues.maxPressure)"> {{tyre.pressure}} Psi </span> 
-                      <span style="color:green" ng-if ="tyre.pressure != '-' && (tyre.pressure >= minMaxTempPressureValues.minPressure && tyre.pressure <= minMaxTempPressureValues.maxPressure)"> {{tyre.pressure}} Psi </span> 
-                  </span>
-              </span>
-              <span ng-if ="pressTempType == 'B'">
-                  <span ng-if ="tyre.temp == '0' || tyre.pressure == '0'">
-                      <span style="color:#263238"> {{tyre.temp}} ℃ </span> - <span style="color:#263238"> {{tyre.pressure }} Psi </span>
-                  </span>
-                  <span ng-if ="tyre.temp != '0' && tyre.pressure != '0'">
-                      <span style="color:green" ng-if ="tyre.temp != '-' && (tyre.temp >= minMaxTempPressureValues.minTemp && tyre.temp <= minMaxTempPressureValues.maxTemp)"> {{tyre.temp}} ℃ </span> 
-                      <span style="color:rgba(254, 51, 51, 0.92)" ng-if ="tyre.temp != '-' && (tyre.temp < minMaxTempPressureValues.minTemp || tyre.temp > minMaxTempPressureValues.maxTemp)"> {{tyre.temp}} ℃ </span> - <span style="color:green" ng-if ="tyre.pressure != '-' && (tyre.pressure >= minMaxTempPressureValues.minPressure && tyre.pressure <= minMaxTempPressureValues.maxPressure)"> {{tyre.pressure}} Psi </span> 
-                      <span style="color:rgba(254, 51, 51, 0.92)" ng-if ="tyre.pressure != '-' && (tyre.pressure < minMaxTempPressureValues.minPressure || tyre.pressure > minMaxTempPressureValues.maxPressure)"> {{tyre.pressure}} Psi </span> 
-                  </span>
-              </span>
-          </td>
+          
           </tr>
         </tbody>
         </table>
