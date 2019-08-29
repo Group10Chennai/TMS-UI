@@ -128,7 +128,7 @@
 				<input type="text" placeholder= "Search" class="form-control" ng-model="searchStringForDevices" ng-change="searchDevices($event)">
 			</div>
         </div>
-        <div class="col-md-2 col-sm-12 col-12 download_sensorIcon" ng-click = "download_DeviceStatus();">
+        <div class="col-md-2 col-sm-12 col-12 download_sensorIcon" onclick="download_DeviceStatus();" ng-click="">
 			<i class="fa fa-download" aria-hidden="true" title="Download Fitment Details" style="font-size: larger;"> 
 			</i> 
 		</div>
@@ -220,6 +220,11 @@
 </div>
 
 <script>
+	function download_DeviceStatus(){ 
+		window.location = "https://tpms-api.placer.in/TMS/" + "api/tms/downloadDeviceReport";
+		//window.location = newLocation;
+  return false;
+	}
     var p = $("#org-popup").prompt21();
 
     $(".show-popup").on("click", function () {

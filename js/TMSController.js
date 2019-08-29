@@ -484,17 +484,17 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
                 console.log(e);
             }
 		};
-		$rootScope.download_DeviceStatus = function(){
-            try{
-                loading.start();
-				// Download excel
+		// $rootScope.download_DeviceStatus = function(){
+        //     try{
+        //         loading.start();
+		// 		// Download excel
 			
-                window.location = $rootScope.HOST_TMS + "api/tms/downloadDeviceReport";
-            } catch(e){
-                loading.finish();
-                console.log(e);
-            }
-		};
+        //         window.location = $rootScope.HOST_TMS + "api/tms/downloadDeviceReport";
+        //     } catch(e){
+        //         loading.finish();
+        //         console.log(e);
+        //     }
+		// };
 //download_DeviceStatus
 
 	$scope.getTMSVehicles = function(id){
