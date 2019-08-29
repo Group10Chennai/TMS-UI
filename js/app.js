@@ -36,7 +36,7 @@ angular
   return $rootScope.$stateParams = $stateParams;
 }]).run(['$rootScope',function($rootScope) {
 
-    $rootScope.HOST_TMS11111 = "http://172.16.0.229:8080/TMS/";
+    $rootScope.HOST_TMS5555 = "http://172.16.0.229:8080/TMS/";
     $rootScope.HOST_TMS1 = "https://tpms.placer.in/TMS/";
     $rootScope.HOST_TMS = "https://tpms-api.placer.in/TMS/";
     $rootScope.HOST_TMS11= "https://intranet.group10.in/CANtrackerAPI/";   //testing server

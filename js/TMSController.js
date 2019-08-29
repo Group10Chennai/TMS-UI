@@ -473,7 +473,30 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
                 console.log(e);
             }
         };
-        
+		
+		$rootScope.download_TyreInspectionStatus = function(){
+            try{
+                loading.start();
+                // Download excel
+                window.location = $rootScope.HOST_TMS + "api/tms/downloadTireInspectionReport";
+            } catch(e){
+                loading.finish();
+                console.log(e);
+            }
+		};
+		$rootScope.download_DeviceStatus = function(){
+            try{
+                loading.start();
+				// Download excel
+			
+                window.location = $rootScope.HOST_TMS + "api/tms/downloadDeviceReport";
+            } catch(e){
+                loading.finish();
+                console.log(e);
+            }
+		};
+//download_DeviceStatus
+
 	$scope.getTMSVehicles = function(id){
             if(id == "semi"){
                         $rootScope.showSemiConfigVehData = true;
@@ -1201,7 +1224,7 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 		var TyreAssing_URL =$rootScope.HOST_TMS + 'api/tms/assignTyreToVeh?';
 		var param = "vehId="+$scope.assignTyreVehDetails.vehId+"&tyreId="+$scope.assignTyreDetails.tireId
                             +"&tyrePosition="+$scope.fittedTyrePosition+"&fitmentDate="+fittedDate
-                            +"&fitmentKM="+$scope.tyreFitmentKM;
+                            +"&fitmentKM="+$scope.tyreFitmentKM+"&treadDepthLocation1="+$scope.treadDepthLoc1+"&treadDepthLocation2="+$scope.treadDepthLoc2+"&treadDepthLocation3="+$scope.treadDepthLoc3+"&tyrePressurePSI="+$scope.tyrePressurePSI;
 		APIServices.callGET_API(TyreAssing_URL+param, true)
                 .then(
                     function(httpResponse){ // Success block
@@ -1245,7 +1268,8 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
         
         $rootScope.download_tireStatus = function(){
             try{
-                loading.start();
+			 
+				loading.start();
                 // Download excel
                 window.location = $rootScope.HOST_TMS + "api/tms/downloadTireList";
             } catch(e){
@@ -2110,5 +2134,6 @@ app.controller('TMSController', ['$scope', '$rootScope', '$state', 'APIServices'
 	} else if($state.current.url == "/tmsSensorService") {
 	    $scope.pageChanged_sensorServices();
 	}
+	
 
 }]);
