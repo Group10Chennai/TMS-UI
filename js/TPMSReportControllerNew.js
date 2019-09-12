@@ -47,7 +47,8 @@ app.controller('TPMSReportControllerNew', ['$scope', '$rootScope', '$state', 'AP
                     fileStatus : downloadStatus
           }
 		  
-		  
+		  var myEl = angular.element( document.querySelector( '#myHTMLWrapper' ) );
+myEl.empty();
   		$http.post($rootScope.HOST_TMS + "api/tms/getTPReportDataNew", request)
   		.then(function successCallback(httpResponse){
 		    try {
@@ -59,7 +60,7 @@ app.controller('TPMSReportControllerNew', ['$scope', '$rootScope', '$state', 'AP
 					for (var ii = 0; ii < selected_vehIds_report.length; ii++) {
 						var wrapper = document.getElementById("myHTMLWrapper");
       
-						var myHTML1 = "<table class='table table-fixed table-bordered table-hover'><thead></thead><tr class='tablehead'></tr><th class='tableHead-center><a href='#' > Serial No</a></th><th class='tableHead-center><a href='#' > VehName</a></th><th class='tableHead-center><a href='#' > Date Time </a></th><th class='tableHead-center><a href='#' > FL </a></th>";		
+						var myHTML1 = "<table class='table table-fixed table-bordered table-hover'><thead></thead><tr class='tablehead'></tr><th class='tableHead-center><a href='#' > Serial No</a></th><th class='tableHead-center><a href='#' > VehName</a></th><th class='tableHead-center><a href='#' > Date Time </a></th><th class='tableHead-center><a href='#' > FL </a></th><th class='tableHead-center><a href='#' > FR </a></th><th class='tableHead-center><a href='#' > RLO </a></th><th class='tableHead-center><a href='#' > RLI </a></th><th class='tableHead-center><a href='#' > RRO </a></th><th class='tableHead-center><a href='#' > RRI </a></th>";		
 						var i=0;
 						var myHTML='';
 						angular.forEach(httpResponse.data.result, function(value, key)
@@ -70,58 +71,202 @@ app.controller('TPMSReportControllerNew', ['$scope', '$rootScope', '$state', 'AP
 				if(selected_vehIds_report[ii]==value.vehId){
 					var addElement='';
 					i++;
-					
+					//console.log("HELLLO ; "+selected_vehIds_report[ii],value.vehId);
+				//	console.log("VALUES :  "+i);	
 				if(i==1){
 					var tempFL='';
 					var pressFL='';
+					var tempFR='';
+					var pressFR='';
+					var tempRLO='';
+					var pressRLO='';
+					var tempRLI='';
+					var pressRLI='';
+					var tempRRO='';
+					var pressRRO='';
+					var tempRRI='';
+					var pressRRI='';
+
+				//	console.log("LENGTH "+value.tyres.length);
 					if(value.tyres.length > 0){	
 						angular.forEach(value.tyres, function(tyre, id)
 						{
 					
-					
-					tempFL=tyre.temp;
-					pressFL=tyre.pressure;
+						if(tyre.position==="FL")	{
+					tempFL=tyre.temp+"℃";
+					if(tempFL==="-℃"){ 
+						tempFL="";
+					 }
+					pressFL=tyre.pressure+"Psi";
+                     if(pressFL==="-Psi"){ 
+						pressFL="";
+					 }
+
+
+						}
+						if(tyre.position==="FR")	{
+							tempFR=tyre.temp+"℃";
+							if(tempFR==="-℃"){ 
+								tempFR="";
+							 }
+							pressFR=tyre.pressure+"Psi";
+							if(pressFR==="-Psi"){ 
+								pressFR="";
+							 }
+								}
+								if(tyre.position==="RLO")	{
+									tempRLO=tyre.temp+"℃";
+									if(tempRLO==="-℃"){ 
+										tempRLO="";
+									 }
+									pressRLO=tyre.pressure+"Psi";
+									if(pressRLO==="-Psi"){ 
+										pressRLO="";
+									 }
+										}
+										if(tyre.position==="RLI")	{
+											tempRLI=tyre.temp+"℃";
+											if(tempRLI==="-℃"){ 
+												tempRLI="";
+											 }
+											pressRLI=tyre.pressure+"Psi";
+											if(pressRLI==="-Psi"){ 
+												pressRLI="";
+											 }
+												}
+												if(tyre.position==="RRO")	{
+													tempRRO=tyre.temp+"℃";
+													if(tempRRO==="-℃"){ 
+														tempRRO="";
+													 }
+													pressRRO=tyre.pressure+"Psi";
+													if(pressRRO==="-Psi"){ 
+														pressRRO="";
+													 }
+														}
+														if(tyre.position==="RRI")	{
+															tempRRI=tyre.temp+"℃";
+															if(tempRRI==="-℃"){ 
+																tempRRI="";
+															 }
+															pressRRI=tyre.pressure+"Psi";
+															if(pressRRI==="-Psi"){ 
+																pressRRI="";
+															 }
+																}
+
+
 						})
 				
 					}
 					var current_datetime = new Date(value.device_date_time);
-
+				
 					//date.toString("dd-MM-yyyy HH:mm:ss");	
 
 					var formatted_date = current_datetime.getDate()+"-"+(current_datetime.getMonth() + 1) + "-" + current_datetime.getFullYear() + " " + current_datetime.getHours() + ":" + current_datetime.getMinutes() + ":" + current_datetime.getSeconds() ;
+					//console.log("AAAAAAAAAAA "+tempFL);
 
-
-					myHTML=myHTML1+"<tr><td class='tablebody-td'>"  + i + "</td><td class='tablebody-td'>"  + value.vehName + "</td><td>"  +  formatted_date+ "</td><td><span ng-if ='tempFL == '0' || pressFL == '0''><span style='color:green'>"  +  tempFL + "℃ </span></span> - <span style='color:rgba(254, 51, 51, 0.92)'> "+pressFL+" Psi </span></td></tr>  ";			
+					myHTML=myHTML1+"<tr><td class='tablebody-td'>"  + i + "</td><td class='tablebody-td'>"  + value.vehName + "</td><td>"  +  formatted_date+ "</td><td><span ><span >"  +  tempFL + " </span></span> - <span > "+pressFL+" Psi </span></td> <td><span ><span >"  +  tempFR + " </span></span> - <span > "+pressFR+" </span></td><td><span ><span >"  +  tempRLO + " </span></span> - <span > "+pressRLO+" </span></td><td><span ><span >"  +  tempRRI + " </span></span> - <span > "+pressRRI+" </span></td><td><span ><span >"  +  tempRRO + " </span></span> - <span > "+pressRRO+"  </span></td><td><span ><span >"  +  tempRRI + " </span></span> - <span > "+pressRRI+" </span></td></tr>  ";			
 					myHTML1+= myHTML;
 					
 					 
 				}else{ 
+				//	console.log("VALUES-ELSEEEE :  "+i);	
 					var tempFL='';
 					var pressFL='';
+					var tempFR='';
+					var pressFR='';
+					var tempRLO='';
+					var pressRLO='';
+					var tempRLI='';
+					var pressRLI='';
+					var tempRRO='';
+					var pressRRO='';
+					var tempRRI='';
+					var pressRRI='';
+					//console.log("LENGTH1111111111 "+value.tyres.length);
 					if(value.tyres.length > 0){	
 						angular.forEach(value.tyres, function(tyre, id)
 						{
+							//console.log("2222222222 "+tyre.temp);
 					
-					
-					tempFL=tyre.temp;
-					pressFL=tyre.pressure;
+							if(tyre.position==="FL")	{
+								tempFL=tyre.temp+"℃";
+								if(tempFL==="-℃"){ 
+									tempFL="";
+								 }
+								pressFL=tyre.pressure+"Psi";
+								if(pressFL==="-Psi"){ 
+									pressFL="";
+								 }
+									}
+									if(tyre.position==="FR")	{
+										tempFR=tyre.temp+"℃";
+										if(tempFR==="-℃"){ 
+											tempFR="";
+										 }
+										pressFR=tyre.pressure+"Psi";
+										if(pressFR==="-Psi"){ 
+											pressFR="";
+										 }
+											}
+											if(tyre.position==="RLO")	{
+												tempRLO=tyre.temp+"℃";
+												if(tempRLO==="-℃"){ 
+													tempRLO="";
+												 }
+												pressRLO=tyre.pressure+"Psi";
+												if(pressRLO==="-Psi"){ 
+													pressRLO="";
+												 }
+													}
+													if(tyre.position==="RLI")	{
+														tempRLI=tyre.temp+"℃";
+														if(tempRLI==="-℃"){ 
+															tempRLI="";
+														 }
+														pressRLI=tyre.pressure+"Psi";
+														if(pressRLI==="-Psi"){ 
+															pressRLI="";
+														 }
+															}
+															if(tyre.position==="RRO")	{
+																tempRRO=tyre.temp+"℃";
+																if(tempRRO==="-℃"){ 
+																	tempRRO="";
+																 }
+																pressRRO=tyre.pressure+"Psi";
+																if(pressRRO==="-Psi"){ 
+																	pressRRO="";
+																 }
+																	}
+																	if(tyre.position==="RRI")	{
+																		tempRRI=tyre.temp+"℃";
+																		if(tempRRI==="-℃"){ 
+																			tempRRI="";
+																		 }
+																		pressRRI=tyre.pressure+"Psi";
+																		if(pressRRI==="-Psi"){ 
+																			pressRRI="";
+																		 }
+																			}									
 						})
 				
 					}
 					var current_datetime = new Date(value.device_date_time);
 
 					//date.toString("dd-MM-yyyy HH:mm:ss");	
-
+				
 					var formatted_date = current_datetime.getDate()+"-"+(current_datetime.getMonth() + 1) + "-" + current_datetime.getFullYear() + " " + current_datetime.getHours() + ":" + current_datetime.getMinutes() + ":" + current_datetime.getSeconds() ;
 
-					myHTML+="<tr><td class='tablebody-td'>"  + i + "</td><td class='tablebody-td'>"  + value.vehName + "</td><td>"  + formatted_date + "</td><td><span ng-if ='tempFL == '0' || pressFL == '0''><span style='color:green'>"  +  tempFL + "℃ </span></span> - <span style='color:rgba(254, 51, 51, 0.92)'> "+pressFL+" Psi </span></td></tr></tr>  ";	
+					myHTML+="<tr><td class='tablebody-td'>"  + i + "</td><td class='tablebody-td'>"  + value.vehName + "</td><td>"  + formatted_date + "</td><td><span ><span>"  +  tempFL + " </span></span> - <span> "+pressFL+" </span></td><td><span ><span>"  +  tempFR + " </span></span> - <span> "+pressFR+" </span></td><td><span ><span>"  +  tempRLO + " </span></span> - <span> "+pressRLO+" </span></td><td><span ><span>"  +  tempRLI + " </span></span> - <span> "+pressRLI+" </span></td><td><span ><span>"  +  tempRRO + " </span></span> - <span> "+pressRRO+" </span></td><td><span ><span>"  +  tempRRI + " </span></span> - <span> "+pressRRI+" </span></td></tr></tr>  ";	
 					
 				}
 			}
 			
 			
 			
-		  // })
+		  // })..
 		   
 		   });
 		   myHTML+="</table>";
@@ -129,6 +274,7 @@ app.controller('TPMSReportControllerNew', ['$scope', '$rootScope', '$state', 'AP
 		   $("#myHTMLWrapper").append(myHTML);
 		   //$("#myHTMLWrapper").empty();
 		  // wrapper.innerHTML = myHTML;
+		  console.log("ENDDDDDDDD ; ");	
 		}
 					
 // 					var wrapper = document.getElementById("myHTMLWrapper");
