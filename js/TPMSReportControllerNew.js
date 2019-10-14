@@ -72,7 +72,7 @@ myEl.empty();
 					var addElement='';
 					i++;
 					//console.log("HELLLO ; "+selected_vehIds_report[ii],value.vehId);
-				//	console.log("VALUES :  "+i);	
+				//	console.log("VALUES :  "+i);..	
 				if(i==1){
 					var tempFL='';
 					var pressFL='';

@@ -103,6 +103,12 @@
         
        
         <div class="form-group row ">
+                <div class="col-md-8 col-sm-12 col-xs-12 input-file-container row">
+                        <input class="input-file" id="my-file" type = "file" file-model = "myFile" accept=".xls,.xlsx"/>
+                        <label tabindex="0" for="my-file" class="input-file-trigger">Select a file...</label>
+                        <p class="file-return" style="margin-left: 2%"></p>
+                        <button ng-click = "uploadTyreInspectionFile()" class="btn-upload"> Upload </button>
+                    </div>
             <div class="col-md-10 col-sm-12 col-xs-12">
                 <div class="input-group">
                     <div class="input-group-addon"><i class="fa fa-search"></i></div>
