@@ -63,11 +63,12 @@ myEl.empty();
 						var myHTML1 = "<table class='table table-fixed table-bordered table-hover'><thead></thead><tr class='tablehead'></tr><th class='tableHead-center><a href='#' > Serial No</a></th><th class='tableHead-center><a href='#' > VehName</a></th><th class='tableHead-center><a href='#' > Date Time </a></th><th class='tableHead-center><a href='#' > FL </a></th><th class='tableHead-center><a href='#' > FR </a></th><th class='tableHead-center><a href='#' > RLO </a></th><th class='tableHead-center><a href='#' > RLI </a></th><th class='tableHead-center><a href='#' > RRO </a></th><th class='tableHead-center><a href='#' > RRI </a></th>";		
 						var i=0;
 						var myHTML='';
+						
 						angular.forEach(httpResponse.data.result, function(value, key)
           {
 
 			
-				
+			//alert(value.vehId);
 				if(selected_vehIds_report[ii]==value.vehId){
 					var addElement='';
 					i++;
@@ -270,11 +271,11 @@ myEl.empty();
 		   
 		   });
 		   myHTML+="</table>";
-		   console.log("myHTML-END  : ");
+		   //console.log("myHTML-END  : ");
 		   $("#myHTMLWrapper").append(myHTML);
 		   //$("#myHTMLWrapper").empty();
 		  // wrapper.innerHTML = myHTML;
-		  console.log("ENDDDDDDDD ; ");	
+		  //console.log("ENDDDDDDDD ; ");	
 		}
 					
 // 					var wrapper = document.getElementById("myHTMLWrapper");
@@ -392,12 +393,15 @@ myEl.empty();
     }
 	}, 1000);
 
-  $scope.download_TPMSHistoryReport = function(){
-    $scope.getTPMSReportData($scope.selected_vehIds_report, false, startDateTime, endDateTime, true, function(TPMSReportDataResponse)
-    {
-      // Call API for download
-      window.location = $rootScope.HOST_TMS + "api/tms/downloadExcelReport";
-    });
+  $scope.download_TPMSHistoryNewReport = function(){
+  
+	//$scope.getTPMSReportData($scope.selected_vehIds_report, false, startDateTime, endDateTime, true, function(TPMSReportDataResponse)
+    //{
+	window.location = $rootScope.HOST_TMS + "api/tms/downloadExcelReportNew";
+		
+	 
+	  
+   // });
   }
 
   $scope.Back2Top = function(){
