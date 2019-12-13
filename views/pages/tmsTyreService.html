@@ -179,49 +179,70 @@
     		</th>
     		<th class="tableHead-center">
     		    <a href="#" ng-click="sortType = 'tireNumber'; service_sortReverse = !service_sortReverse">
-    			Tyre Number
+					Vehicle
+    			<span ng-show="sortType == 'tireNumber' && !service_sortReverse" class="fa fa-caret-down"></span>
+    			<span ng-show="sortType == 'tireNumber' && service_sortReverse" class="fa fa-caret-up"></span>
+    		    </a>
+			</th>
+			<th class="tableHead-center">
+    		    <a href="#" ng-click="sortType = 'tireNumber'; service_sortReverse = !service_sortReverse">
+					Tyre Number
     			<span ng-show="sortType == 'tireNumber' && !service_sortReverse" class="fa fa-caret-down"></span>
     			<span ng-show="sortType == 'tireNumber' && service_sortReverse" class="fa fa-caret-up"></span>
     		    </a>
     		</th>
     		<th class="tableHead-center">
     		    <a href="#" ng-click="sortType = 'vehName'; service_sortReverse = !service_sortReverse">
-    			Vehicle
+    			Fitted Date
     			<span ng-show="sortType == 'vehName' && !service_sortReverse" class="fa fa-caret-down"></span>
     			<span ng-show="sortType == 'vehName' && service_sortReverse" class="fa fa-caret-up"></span>
     		    </a>
     		</th>
     		<th class="tableHead-center">
   		    <a href="#" ng-click="sortType = 'tyreKms'; service_sortReverse = !service_sortReverse">
-      			Tyre Kms
+      			 Kms at which tyre fitted
       			<span ng-show="sortType == 'tyreKms' && !service_sortReverse" class="fa fa-caret-down"></span>
       			<span ng-show="sortType == 'tyreKms' && service_sortReverse" class="fa fa-caret-up"></span>
   		    </a>
     		</th>
     		<th class="tableHead-center" >
     		    <a href="#" ng-click="sortType = 'reason'; service_sortReverse = !service_sortReverse">
-    			Reason
+    			Location
     			<span ng-show="sortType == 'reason' && !service_sortReverse" class="fa fa-caret-down"></span>
     			<span ng-show="sortType == 'reason' && service_sortReverse" class="fa fa-caret-up"></span>
     		    </a>
     		</th>
     		<th class="tableHead-center" >
     		    <a href="#" ng-click="sortType = 'actionTaken'; service_sortReverse = !service_sortReverse">
-    		      Action Taken
+    		      Tyre Removal Date
     		      <span ng-show="sortType == 'actionTaken' && !service_sortReverse" class="fa fa-caret-down"></span>
     		      <span ng-show="sortType == 'actionTaken' && service_sortReverse" class="fa fa-caret-up"></span>
     		    </a>
     		</th>
     		<th class="tableHead-center">
     		    <a href="#" ng-click="sortType = 'tyreCondition'; service_sortReverse = !service_sortReverse">
-    		      Tyre Condition
+    		     Kms at which tyre removed
     		      <span ng-show="sortType == 'tyreCondition' && !service_sortReverse" class="fa fa-caret-down"></span>
     		      <span ng-show="sortType == 'tyreCondition' && service_sortReverse" class="fa fa-caret-up"></span>
     		    </a>
     		</th>
     		<th class="tableHead-center">
     		    <a href="#" ng-click="sortType = 'scrappedToParty'; service_sortReverse = !service_sortReverse">
-    		      Scrapped Party
+    		      Tyre Kms
+    		      <span ng-show="sortType == 'scrappedToParty' && !service_sortReverse" class="fa fa-caret-down"></span>
+    		      <span ng-show="sortType == 'scrappedToParty' && service_sortReverse" class="fa fa-caret-up"></span>
+    		    </a>
+			</th>
+			<th class="tableHead-center">
+    		    <a href="#" ng-click="sortType = 'scrappedToParty'; service_sortReverse = !service_sortReverse">
+    		      Reason for removed
+    		      <span ng-show="sortType == 'scrappedToParty' && !service_sortReverse" class="fa fa-caret-down"></span>
+    		      <span ng-show="sortType == 'scrappedToParty' && service_sortReverse" class="fa fa-caret-up"></span>
+    		    </a>
+			</th>
+			<th class="tableHead-center">
+    		    <a href="#" ng-click="sortType = 'scrappedToParty'; service_sortReverse = !service_sortReverse">
+    		      Action Taken
     		      <span ng-show="sortType == 'scrappedToParty' && !service_sortReverse" class="fa fa-caret-down"></span>
     		      <span ng-show="sortType == 'scrappedToParty' && service_sortReverse" class="fa fa-caret-up"></span>
     		    </a>
@@ -234,13 +255,16 @@
   	<tbody >
 	    <tr ng-repeat="service in TMSTireServiceHistory | orderBy:sortType:service_sortReverse">
 		<td class="tableData-right tablebody-td">{{nextIndex_services + $index + 1}}</td>
-		<td class="tablebody-td">{{ service.tireNumber }} </td>
 		<td class="tablebody-td">{{ service.vehName }} </td>
-		<td class="tableData-right tablebody-td">{{ service.tyreKms }} </td>
-		<td class="tablebody-td">{{ service.reason }}</td>
-		<td class="tablebody-td">{{ service.actionTaken }} </td>
-		<td class="tablebody-td">{{ service.tyreCondition }} </td>
-		<td class="tablebody-td">{{ service.scrappedToParty}}</td>
+		<td class="tablebody-td">{{ service.tireNumber }} </td>
+		<td class="tablebody-td">{{ service.fittedDate | date : 'dd-MM-yyyy HH:mm:ss'}} </td>
+		<td class="tableData-right tablebody-td">{{ service.kmsAtTyreFitted }} </td>
+		<td class="tablebody-td">{{ service.location }}</td>
+		<td class="tablebody-td">{{ service.removalDate | date : 'dd-MM-yyyy HH:mm:ss' }} </td>
+		<td class="tablebody-td">{{ service.kmsAtTyreRemoved }} </td>
+		<td class="tablebody-td">{{ service.tyreKms}}</td>
+		<td class="tablebody-td">{{ service.reason}}</td>
+		<td class="tablebody-td">{{ service.actionTaken}}</td>
 		<td class="tableHead-center tablebody-td">
 		    <span data-toggle="tooltip" title="Edit">
 		      <button class="btn btn-primary btn-xs" ng-click="getTyreServiceFormForUpdate(service)">

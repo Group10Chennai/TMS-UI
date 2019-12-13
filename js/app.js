@@ -35,9 +35,9 @@ angular
   $rootScope.$state = $state;
   return $rootScope.$stateParams = $stateParams;
 }]).run(['$rootScope',function($rootScope) {
-  $rootScope.HOST_TMS1111122 = "http://172.16.0.229:8080/TMS/";
+  $rootScope.HOST_TMS111111111111111 = "http://172.16.0.229:8080/TMS/"; //Ram Manni Machine
   $rootScope.HOST_TMS1 = "https://tpms.placer.in/TMS/";
-  $rootScope.HOST_TMS = "https://tpms-api.placer.in/TMS/";
+  $rootScope.HOST_TMS = "https://tpms-api.placer.in/TMS/";//Live Server
   $rootScope.HOST_TMSdddddddddd= "https://intranet.group10.in/CANtrackerAPI/";
     
     $rootScope.rootSelectedDeportId = 0;
