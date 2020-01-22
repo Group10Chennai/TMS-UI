@@ -1222,12 +1222,13 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
             $scope.deviceId = device.deviceId;
             $scope.imeiNumber = device.imei;
             $scope.simNumber = device.simNumber;
-            $scope.selectedVehicleIds = device.vehId;
+			$scope.selectedVehicleIds = device.vehId;
+			// alert($scope.selectedVehicleIds);
             $scope.selectedDeviceVehUID = device.vehName;
             $scope.deviceDateTime = device.deviceDateTime;
 	    $scope.updateDeviceDetails = device;
             
-            $("#selectDeviceVehicle").prop("disabled", true);
+            $("#selectDeviceVehicle").prop("disabled", false);
             
             try {
 		$("#selectDeviceVehicle").val("").trigger('change');
@@ -1239,11 +1240,13 @@ app.controller('TMSSysAdminController', ['$scope', '$rootScope', '$state', 'APIS
         
         // Update Device Details
         $scope.UpdateDeviceDetails = function() {
-            $scope.selectedVehicleIds = 0;
+		   // $scope.selectedVehicleIds = 0;
+		   var vehIdUpdate=document.getElementById("selectDeviceVehicle").value;
+		   //alert('111' + vehIdUpdate);
+		   var simnadIMei=$scope.simNumber+'-'+vehIdUpdate;
             try {
 		var UPDATE_URL =$rootScope.HOST_TMS + 'api/tms/Device/Update?deviceId ='+$scope.deviceId
-                        +'&IMEI='+$scope.imeiNumber+'&simNumber='+$scope.simNumber
-                        +'&vehId='+$scope.selectedVehicleIds+'&deviceDateTime='+$scope.deviceDateTime;
+                        +'&IMEI='+$scope.imeiNumber+'&simNumber='+simnadIMei+'&deviceDateTime='+$scope.deviceDateTime;
                                  
 		APIServices.callGET_API(UPDATE_URL, true)
 		.then(
